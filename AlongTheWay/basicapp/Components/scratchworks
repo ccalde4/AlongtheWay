@@ -1,0 +1,25 @@
+export default class Comp1 extends Component {
+  render() {
+    return (
+      <View style={{width: 400, height: 550, backgroundColor: 'lightyellow'}} >
+       <Text > Im a map </Text>
+
+      </View>
+    );
+  }
+}
+ <MapView
+
+                 provider={'google'}
+                 style={styles.map}
+                 initialRegion={{
+                 latitude: LATITUDE,
+                 longitude: LONGITUDE,
+                 latitudeDelta: LATITUDE_DELTA,
+                 longitudeDelta: LONGITUDE_DELTA,
+               }}
+               customMapStyle={mapstyle2}
+               mapType = {'standard'}
+
+
+               />
