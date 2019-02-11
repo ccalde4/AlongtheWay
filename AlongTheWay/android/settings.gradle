@@ -1,4 +1,0 @@
-//match this to whatever you named your project
-rootProject.name = 'AwesomeProject'
-
-include ':app'
