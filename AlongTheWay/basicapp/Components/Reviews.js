@@ -1,21 +1,29 @@
-import React, {Component} from 'react';
-import { AppRegistry, TextInput } from 'react-native';
-export default class writeReview extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { text: 'Write Review' };
-  }
+import React from 'react';
+import { connect } from 'react-native';
 
-  render() {
-    return (
-      <TextInput
-        style={{height: 40, borderColor: 'black', borderWidth: 1}}
-        onChangeText={(text) => this.setState({text})}
-        value={this.state.text}
-      />
-    );
-  }
-}
+const mapStateToProps = state => ({
+  currentUser: state.session.currentUser
+});
 
-// skip this line if using Create React Native App
-AppRegistry.registerComponent('AlongtheWay', () => UselessTextInput);
+const Review = props => {
+  const { first_name, rating, review } = props.review;
+
+  return(
+    <div className='review-container'>
+      <div className='review-name-container'>
+        <div className='initial-circle'>{first_name ? first_name[0] : props.currentUser.first_name[0]}</div>
+        <h3 className='review-name'>{first_name || props.currentUser.first_name}</h3>
+      </div>
+      <div className='review-rating-container'>
+        <div className={rating > 0 ? 'star-icon-yellow' : 'star-icon-gray'}></div>
+        <div className={rating > 1 ? 'star-icon-yellow' : 'star-icon-gray'}></div>
+        <div className={rating > 2 ? 'star-icon-yellow' : 'star-icon-gray'}></div>
+        <div className={rating > 3 ? 'star-icon-yellow' : 'star-icon-gray'}></div>
+        <div className={rating > 4 ? 'star-icon-yellow' : 'star-icon-gray'}></div>
+      </div>
+      <div className='review-review-container'>{review}</div>
+    </div>
+  );
+};
+
+export default connect(mapStateToProps, null)(Review);
