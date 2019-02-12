@@ -9,8 +9,10 @@
   "dependencies": {
     "react": "16.6.3",
     "react-native": "0.58.1",
+    "react-native-elements": "^1.0.0",
     "react-native-foursquare-api": "0.0.4",
-    "react-native-maps": "^0.23.0"
+    "react-native-maps": "^0.23.0",
+    "react-native-search-bar": "^3.4.2"
   },
   "devDependencies": {
     "babel-core": "7.0.0-bridge.0",

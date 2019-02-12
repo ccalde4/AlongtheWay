@@ -54,31 +54,31 @@ export default class ControlBar extends Component {
 const styles = StyleSheet.create({
 
 button1: {
-width: 50,
-height: 50,
+width: 40,
+height: 40,
 backgroundColor: 'red'
 },
 button2: {
-width: 50,
-height: 50,
+width: 40,
+height: 40,
 backgroundColor: 'orange'
 },
 button3: {
 
-width: 50,
-height: 50,
+width: 40,
+height: 40,
 backgroundColor: 'yellow'
 },
 button4: {
 
-width: 50,
-height: 50,
+width: 40,
+height: 40,
 backgroundColor: 'green'
 },
 button5: {
 
-width: 50,
-height: 50,
+width: 40,
+height: 40,
 backgroundColor: 'blue'
 },
 
@@ -88,9 +88,11 @@ flex: 1,
 flexDirection: 'row',
 justifyContent: 'space-around',
 alignItems: 'center',
-backgroundColor: 'lightblue',
-width: 400,
-height: 120
+width: 420,
+height: 100,
+position: 'absolute',
+bottom: 20,
+
 
 
 },
