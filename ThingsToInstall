@@ -1,6 +1,6 @@
 Install react-native maps
 Install react-native-elements
 install react native-vector-icons
-
+install react-native-foursquare-api
 
 To install these just run npm install all the other dependencies are already included in the Github
