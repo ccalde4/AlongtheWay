@@ -26,6 +26,12 @@ export default class App extends Component {
 
              mapsType: 'standard',
              redClicked: true,
+             orangeClicked: true,
+             yellowClicked: true,
+             greenClicked: true,
+             blueClicked: true,
+
+
             }
        }
 
@@ -63,6 +69,9 @@ export default class App extends Component {
 
      render() {
       return (
+      //<View style =alignItems: 'center'}}>
+      //<SearchBar name = 'Test' />
+
 
       <View style={styles.Gui} >
 
@@ -71,14 +80,16 @@ export default class App extends Component {
                     the two it takes are: mapsTypes as state and the dimensions of desired size of map
                */}
 
+
+
            <MapGui mapsType ={this.state.mapsType}  styling = {styles.map} />
 
 
                {/* Control bar is just a basic UI component that i put buttons on*/}
                {/* I pass a function to it like described in class.  i call it redClick but this name is arbitrary*/}
 
-           <ControlBar redClick = {this.onRedClick.bind(this)}/>
 
+             <ControlBar redClick = {this.onRedClick.bind(this)}/>
       </View>
     );
   }
@@ -91,7 +102,7 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   Gui: {
   flexDirection: 'column',
-  padding: 10,
+  padding: 0,
   flex:1,
   backgroundColor: "pink",
   justifyContent: "space-around",
@@ -100,14 +111,14 @@ const styles = StyleSheet.create({
 
    mapWindow:{
 
-      width: 400,
-      height: 470,
+      width: 420,
+      height: 400,
       backgroundColor: 'green',
-      padding: 10
+      padding: 0
       },
     map: {
-                width: 400,
-                height: 470,
+                width: 420,
+                height: 660,
 
 
     },
