@@ -17,7 +17,7 @@ export default class App extends React.Component {
     return (
       <SearchBar
         containerStyle = {styles.map}
-        placeholder="Avery"
+        placeholder=""
         onChangeText={this.updateSearch}
         value={search}
       />
