@@ -2,8 +2,8 @@ import React from 'react';
 import { SearchBar } from 'react-native-elements';
 import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, TextInput, ScrollView} from 'react-native';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete'
-import LocationItem from 'C:\Users\Osamh\Documents\GitHub\AlongtheWay\AlongTheWay\basicapp\ComponentsLocationItem';
-import {API_KEY} from './key';
+import LocationItem from 'C:\Users\Osamh\Documents\GitHub\AlongtheWay\AlongTheWay\basicapp\Components\LocationItem';
+
 
 
 
@@ -16,7 +16,6 @@ export default class App extends React.Component {
                locationResults,
                fetchDetails,
                isSearching
-
                }) => (
                 <React.Fragment>
                     {console.log('locationResults', locationResults)}
@@ -37,9 +36,7 @@ export default class App extends React.Component {
                         </ScrollView>
                             </React.Fragment>
                     )}
-
         </GoogleAutoComplete>
-
       </View>
     );
   }
@@ -47,13 +44,9 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-
-
         backgroundColor: '#4286f4',
         alignItems: 'center',
         justifyContent: 'center',
-
-
     },
     textInput: {
         height: 40,
@@ -61,6 +54,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         paddingHorizontal: 16
     },
+
 
 });
 

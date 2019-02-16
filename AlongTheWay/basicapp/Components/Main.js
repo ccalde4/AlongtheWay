@@ -58,7 +58,7 @@ export default class Main extends Component {
 
 
             <MapGui mapsType ={this.state.mapsType}  styling = {styles.map2} />
-             <SearchBar/>
+
            <ControlBar redClick = {this.onRedClick.bind(this)}/>
 
 
