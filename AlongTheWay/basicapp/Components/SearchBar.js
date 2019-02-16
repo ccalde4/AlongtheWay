@@ -1,8 +1,10 @@
 import React from 'react';
 import { SearchBar } from 'react-native-elements';
 import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, TextInput, ScrollView} from 'react-native';
-import { GoogleAutoComplete } from 'react-native-google-autocomplete'
-import LocationItem from 'C:\Users\Osamh\Documents\GitHub\AlongtheWay\AlongTheWay\basicapp\Components\LocationItem';
+import { GoogleAutoComplete } from 'react-native-google-autocomplete';
+import LocationItem from '../Components/LocationItem';
+
+
 
 
 
@@ -11,7 +13,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <GoogleAutoComplete apiKey = {API_KEY} debounce = {500} minLength ={2}>
+        <GoogleAutoComplete key = 'AIzaSyCvfftvHMnURvTGkaiVyHQMdcYsGZsCVNs' debounce = {500} minLength ={2}>
             {({handleTextChange,
                locationResults,
                fetchDetails,

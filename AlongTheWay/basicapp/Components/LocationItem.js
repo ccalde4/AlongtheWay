@@ -3,11 +3,9 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 class LocationItem extends PureComponent{
 
-
-
         render(){
             return(
-                <TouchableOpacity style=styles.root>
+                <TouchableOpacity style = {styles.root}>
                     <Text>{this.props.description}</Text>
                 </TouchableOpacity>
             );
