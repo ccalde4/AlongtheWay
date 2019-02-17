@@ -16,6 +16,7 @@ try {
       }
     )
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+<<<<<<< HEAD
 
      // Alert.alert("Location Permission Granted.");
     }
@@ -55,11 +56,66 @@ export default class App extends Component {
 
        }
      async componentDidMount() {
+=======
+
+     // Alert.alert("Location Permission Granted.");
+    }
+    else {
+
+      Alert.alert("Location Permission Not Granted");
+
+    }
+  } catch (err) {
+    console.warn(err)
+  }
+
+
+>>>>>>> Avery's-Branch
+
+    await request_location_runtime_permission()
+
+<<<<<<< HEAD
+  }
+=======
+export default class App extends Component {
+
+     constructor(props){
+     super(props);
+     this.state = {
+        isSearching : false,
+     }
+
+     }
+
+       onSearch(){
+       this.setState(previousState => (
+
+                     {isSearching: !previousState.isSearching }
+                                                                 )
+                             );
+
+       }
+     async componentDidMount() {
+>>>>>>> Avery's-Branch
 
     await request_location_runtime_permission()
 
   }
 
+
+      render(){
+
+     {
+          if(!this.state.isSearching)
+          {return( <Main onSearch = {this.onSearch.bind(this)}/> );}
+          else
+          {return( <SearchBar/> );}
+     }
+
+      }
+
+
+}
 
       render(){
 

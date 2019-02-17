@@ -3,6 +3,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+<<<<<<< HEAD
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -11,7 +12,13 @@
         android:targetSdkVersion="23"
         />
 
+=======
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+>>>>>>> Avery's-Branch
 
+    <uses-sdk android:minSdkVersion="16"
+        android:targetSdkVersion="27"
+        />
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
@@ -33,6 +40,11 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBZf0EaGbRWZ98gqmcWrk9IGwV-Y1nIZ48"/>
+<<<<<<< HEAD
+=======
+
+    </application>
+>>>>>>> Avery's-Branch
 
 
 
