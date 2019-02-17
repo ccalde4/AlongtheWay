@@ -16,7 +16,7 @@ try {
       }
     )
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-<<<<<<< HEAD
+
 
      // Alert.alert("Location Permission Granted.");
     }
