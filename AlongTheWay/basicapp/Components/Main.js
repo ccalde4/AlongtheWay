@@ -150,7 +150,7 @@ export default class Main extends Component {
             />
             {/* <FilterButton style = {styles.button1}  text = 'search'/> */}
             {/* <SearchBar/> */}
-             { <DecoySearch onSearch = {this.props.onSearch}/>}
+             {/* <DecoySearch onSearch = {this.props.onSearch}/> */}
 
             <ControlBar
               red = {this.state.redClicked}           onRedClick = {this.onRedClicked.bind(this)}
