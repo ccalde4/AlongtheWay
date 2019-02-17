@@ -9,3 +9,7 @@ react-native-elements
 react native-vector-icons
 
 react-native-foursquare-api
+
+react-native-google-autocomplete
+
+react-native-google-places-autocomplete
