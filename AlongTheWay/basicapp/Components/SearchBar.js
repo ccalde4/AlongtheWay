@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchBar } from 'react-native-elements';
-import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, TextInput, ScrollView} from 'react-native';
+import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, TextInput, ScrollView, Image} from 'react-native';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 import LocationItem from '../Components/LocationItem';
 
@@ -13,7 +13,8 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <GoogleAutoComplete key = 'AIzaSyCvfftvHMnURvTGkaiVyHQMdcYsGZsCVNs' debounce = {500} minLength ={2}>
+        <GoogleAutoComplete apiKey =  {'AIzaSyCvfftvHMnURvTGkaiVyHQMdcYsGZsCVNs'} debounce = {500} minLength ={2}>
+
             {({handleTextChange,
                locationResults,
                fetchDetails,
@@ -46,7 +47,7 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#4286f4',
+        backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
     },
