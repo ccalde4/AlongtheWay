@@ -1,14 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- * @lint-ignore-every XPLATJSCOPYRIGHT1
- */
-
-import React, {Component} from 'react';
-import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard} from 'react-native';
+@@ -12,22 +12,74 @@ import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard} from 'react-native';
 import ControlBar from './basicapp/Components/ControlBar';
 import MapGui from './basicapp/Components/MapGui';
 import Main from './basicapp/Components/Main';
@@ -26,6 +16,7 @@ try {
       }
     )
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+<<<<<<< HEAD
 
      // Alert.alert("Location Permission Granted.");
     }
@@ -41,7 +32,6 @@ try {
 
 
 }
-
 export default class App extends Component {
 
      constructor(props){
@@ -83,4 +73,9 @@ export default class App extends Component {
 
 
 
+
+
+
+
+    
 
