@@ -1,0 +1,32 @@
+//import React, { Component } from 'react'
+//import { Button } from 'react-native'
+//export default class App extends React.Component {
+
+
+
+  //    render(){
+//      <View>
+             //  <View>
+            //      <Button
+          //               onPress={onPressLearnMore}
+        //                 title="Learn More"
+      //                   color="#841584"
+    //                     accessibilityLabel="Learn more about this purple button"
+  //                     />
+//               </View>
+
+//               <View>
+
+            //    <Button
+          //             onPress={onPressLearnMore}
+        //               title="Learn More"
+      //                 color="#841584"
+    //                   accessibilityLabel="Learn more about this purple button"
+  //                   />
+//
+    //             </View>
+  //          </View>
+//
+//      }
+//}
+
