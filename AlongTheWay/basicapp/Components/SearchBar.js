@@ -2,7 +2,7 @@ import React from 'react';
 
 import { SearchBar } from 'react-native-elements';
 
-import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, TextInput, ScrollView, Image} from 'react-native';
+import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, TextInput, ScrollView, ActivityIndicator} from 'react-native';
 
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 
@@ -46,7 +46,7 @@ export default class App extends React.Component {
 
                     {console.log('locationResults', locationResults)}
 
-                  <View>
+                  <View style = {styles.inputWrapper}>
 
                    <TextInput
 
@@ -56,7 +56,10 @@ export default class App extends React.Component {
 
                     onChangeText ={handleTextChange}
 
+
+
                     />
+
 
                         </View>
 
@@ -115,6 +118,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16
 
     },
+
 
 
 

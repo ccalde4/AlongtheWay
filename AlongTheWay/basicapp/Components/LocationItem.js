@@ -1,11 +1,16 @@
 import React, {PureComponent} from 'react';
 
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, Alert, StyleSheet, TouchableOpacity} from 'react-native';
 
 
 
 class LocationItem extends PureComponent{
 
+       _handlePress = async() => {
+        const res = await this.props.fetchDetails(this.props.place_id)
+        console.log('result', res)
+        Alert.alert(JSON.stringify(res))
+       }
 
 
         render(){
