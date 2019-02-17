@@ -40,9 +40,9 @@ export default class Options extends Component<Props> {
           </View>
 
           <View style={styles.container}>
-                  <Text style={{fontWeight: 'bold',fontSize: 20, textAlign: 'left'}}> Radius </Text>
+                  <Text style={{fontWeight: 'bold',fontSize: 20, textAlign: 'center'}}> Radius </Text>
                   <Slider
-                   style={{ width: 300 }}
+                   style={{ width: 400 }}
                    step={1}
                    minimumValue={1}
                    maximumValue={100}
