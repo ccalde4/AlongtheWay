@@ -1,6 +1,8 @@
 import React, {PureComponent} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
+
+
 class LocationItem extends PureComponent{
 
         render(){

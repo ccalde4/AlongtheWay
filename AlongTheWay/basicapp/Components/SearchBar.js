@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchBar } from 'react-native-elements';
-import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, TextInput, ScrollView, Image} from 'react-native';
+import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, TextInput, ScrollView} from 'react-native';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 import LocationItem from '../Components/LocationItem';
 
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         height: 40,
-        width: 300,
+        width: 400,
         borderWidth: 1,
         paddingHorizontal: 16
     },
