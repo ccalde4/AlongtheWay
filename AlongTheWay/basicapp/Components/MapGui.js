@@ -7,13 +7,11 @@ import mapstyle2 from '../MapStyles/mapstyle2';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
-const LATITUDE = 30.414175;
-const LONGITUDE = -91.186256;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
-  const MapGui = ({mapsType,styling}) =>(
+  const MapGui = ({mapsType,styling,lat,long}) =>(
 
       <MapView.Animated
 
@@ -21,17 +19,32 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
                  mapType = {mapsType}
                  provider = {'google'}
                  style = {styling}
-                 initialRegion={
+
+                 region={
                   {
-                  latitude: LATITUDE,
-                  longitude: LONGITUDE,
+                  latitude: lat,
+                  longitude: long,
                   latitudeDelta: LATITUDE_DELTA,
                   longitudeDelta: LONGITUDE_DELTA,
                   }
-                 }
-                customMapStyle = {mapstyle2}
 
-               />
+                 }
+
+
+
+                customMapStyle = {mapstyle1}
+
+               >
+               <MapView.Marker
+                        coordinate = {{
+                        latitude: lat,
+                        longitude: long
+
+                         }
+                        }
+
+                       />
+           </MapView.Animated>
 
 )
 

@@ -1,39 +1,121 @@
+import React from 'react';
+
 import { SearchBar } from 'react-native-elements';
-import React, {Component} from 'react';
-import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard} from 'react-native';
+
+import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, TextInput, ScrollView, ActivityIndicator} from 'react-native';
+
+import { GoogleAutoComplete } from 'react-native-google-autocomplete';
+
+import LocationItem from '../Components/LocationItem';
+
+
+
+
+
+
+
+
+
+
+
+
 
 export default class App extends React.Component {
-  state = {
-    search: '',
-  };
-
-  updateSearch = search => {
-    this.setState({ search });
-  };
 
   render() {
-    const { search } = this.state;
 
     return (
-      <SearchBar
-        containerStyle = {styles.map}
-        placeholder="Avery"
-        onChangeText={this.updateSearch}
-        value={search}
-      />
+
+      <View style={styles.container}>
+
+        <GoogleAutoComplete apiKey =  {'AIzaSyCvfftvHMnURvTGkaiVyHQMdcYsGZsCVNs'} debounce = {500} minLength ={2}>
+
+
+
+            {({handleTextChange,
+
+               locationResults,
+
+               fetchDetails,
+
+               isSearching
+
+               }) => (
+
+                <React.Fragment>
+
+                    {console.log('locationResults', locationResults)}
+
+                  <View style = {styles.inputWrapper}>
+
+                   <TextInput
+
+                    style={styles.textInput}
+
+                    placeholder="Type Here..."
+
+                    onChangeText ={handleTextChange}
+
+
+
+                    />
+
+
+                        </View>
+
+                        <ScrollView>
+
+                        {locationResults.map(el => (
+
+                            <LocationItem
+
+                                {...el}
+
+                                key={el.id}
+
+                                />
+
+                            ))}
+
+                        </ScrollView>
+
+                            </React.Fragment>
+
+                    )}
+
+        </GoogleAutoComplete>
+
+      </View>
+
     );
+
   }
+
 }
+
 
 
 const styles = StyleSheet.create({
 
+    container: {
 
-    map: {
-                width: 400,
-                height: 100,
-                position: 'absolute',
-                top: 10,
+        backgroundColor: 'white',
+
+        alignItems: 'center',
+
+        justifyContent: 'center',
+
+    },
+
+    textInput: {
+
+        height: 40,
+
+        width: 400,
+
+        borderWidth: 1,
+
+        paddingHorizontal: 16
 
     },
 
@@ -41,4 +123,7 @@ const styles = StyleSheet.create({
 
 
 
+
 });
+
+
