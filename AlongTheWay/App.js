@@ -1,4 +1,4 @@
-@@ -12,22 +12,74 @@ import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard} from 'react-native';
+ import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard} from 'react-native';
 import ControlBar from './basicapp/Components/ControlBar';
 import MapGui from './basicapp/Components/MapGui';
 import Main from './basicapp/Components/Main';
@@ -16,7 +16,7 @@ try {
       }
     )
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-<<<<<<< HEAD
+
 
      // Alert.alert("Location Permission Granted.");
     }
