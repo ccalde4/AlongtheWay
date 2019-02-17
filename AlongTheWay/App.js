@@ -1,85 +1,79 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- * @lint-ignore-every XPLATJSCOPYRIGHT1
- */
-
-import React, {Component} from 'react';
-import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, Platform, PermissionsAndroid, Alert} from 'react-native';
+@@ -12,22 +12,74 @@ import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard} from 'react-nativ
 import ControlBar from './basicapp/Components/ControlBar';
 import MapGui from './basicapp/Components/MapGui';
 import Main from './basicapp/Components/Main';
+import SearchBar from './basicapp/Components/SearchBar';
+import {Platform, PermissionsAndroid, Alert} from 'react-native';
 
-export async function request_location_runtime_permission(){
 
-    try{
-        const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-            'title': 'ReactNativeCode Location Permission',
-            'message': 'ReactNativeCode App needs access to your location '
-        }
-       )
-       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+export async function request_location_runtime_permission() {
+try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        'title': 'ReactNativeCode Location Permission',
+        'message': 'ReactNativeCode App needs access to your location '
+      }
+    )
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
 
-        Alert.alert("Location Permission Granted.");
-       }
-       else {
-
-        Alert.alert("Location Permission Not Granted");
-
-       }
-    } catch (err){
-      console.warn(err)
+     // Alert.alert("Location Permission Granted.");
     }
+    else {
+
+      Alert.alert("Location Permission Not Granted");
+
+    }
+  } catch (err) {
+    console.warn(err)
+  }
+
+
+
 }
 
 export default class App extends Component {
 
       render(){
+     constructor(props){
+     super(props);
+     this.state = {
+        isSearching : false,
+     }
 
       return(
+     }
 
       <Main/>
+       onSearch(){
+       this.setState(previousState => (
 
       );
+                     {isSearching: !previousState.isSearching }
+                                                                 )
+                             );
+
+       }
+     async componentDidMount() {
+
+    await request_location_runtime_permission()
+
+  }
+
+
+      render(){
+
+     {
+          if(!this.state.isSearching)
+          {return( <Main onSearch = {this.onSearch.bind(this)}/> );}
+          else
+          {return( <SearchBar/> );}
+     }
 
       }
 
-      async componentDidMount(){
-              await request_location_runtime_permission()
-
-          }
-
-         /* render() {
-            return(
-                <View style={styles.MainContainer}>
-
-                    <Text>React Native Runtime Permission Request</Text>
-
-                </View>
-            );
-
-      }*/
 }
 
-const styles = StyleSheet.create({
-    MainContainer:{
-    flex:1,
-    paddingTop: (Platform.OS) === 'ios' ? 20:0,
-    justifyContent: 'center',
-    margin: 20
-    }
-    });
-
-
-
-
-
-
-
+}
 
 
