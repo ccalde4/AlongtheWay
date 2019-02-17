@@ -1,32 +1,69 @@
-//import React, { Component } from 'react'
-//import { Button } from 'react-native'
-//export default class App extends React.Component {
+import React, {Component} from 'react';
+import {Platform, StyleSheet, Text, View} from 'react-native';
+import { Button } from 'react-native-elements';
+import { Header } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { ButtonGroup } from 'react-native-elements';
+
+type Props = {};
+
+export default class App extends Component<Props> {
+
+    state = {
+      index: 0
+    }
+
+    updateIndex = (index) => {
+      this.setState({index})
+    }
+
+  render() {
+
+    return (
+      <View style={styles.container}>
+        <Header
+         leftComponent={{ icon: 'menu', color: '#fff' }}
+         centerComponent={{ text: 'Options', style: { color: '#fff' } }}
+         rightComponent={{ icon: 'home', color: '#fff' }}
+          />
+
+          <View style = {styles.welcome}>
+                <Button
+                  title="Solid Button"
+                />
+                </View>
+
+          <View style = {styles.group}>
+          <ButtonGroup
+                  selectedBackgroundColor="pink"
+                  onPress={this.updateIndex}
+                  selectedIndex={this.state.index}
+                  buttons={['Standard', 'Satellite']}
+                  containerStyle={{height: 30}} />
+          </View>
+
+
+      </View>
 
 
 
-  //    render(){
-//      <View>
-             //  <View>
-            //      <Button
-          //               onPress={onPressLearnMore}
-        //                 title="Learn More"
-      //                   color="#841584"
-    //                     accessibilityLabel="Learn more about this purple button"
-  //                     />
-//               </View>
 
-//               <View>
+    );
+  }
+}
 
-            //    <Button
-          //             onPress={onPressLearnMore}
-        //               title="Learn More"
-      //                 color="#841584"
-    //                   accessibilityLabel="Learn more about this purple button"
-  //                   />
-//
-    //             </View>
-  //          </View>
-//
-//      }
-//}
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  group: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+});
