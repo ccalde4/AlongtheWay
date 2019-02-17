@@ -1,4 +1,4 @@
-@@ -12,22 +12,74 @@ import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard} from 'react-native'
+@@ -12,22 +12,74 @@ import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard} from 'react-native';
 import ControlBar from './basicapp/Components/ControlBar';
 import MapGui from './basicapp/Components/MapGui';
 import Main from './basicapp/Components/Main';
