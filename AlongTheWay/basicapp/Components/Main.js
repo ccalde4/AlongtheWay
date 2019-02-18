@@ -33,10 +33,11 @@ export default class Main extends Component {
            this.state = {
              lat: null,
              long: null,
+             radius: this.props.radius,
              params: {
                             "ll": "30.414175,-91.186256",
-                            "query": 'Coffee',
-
+                            "query": 'Pizza',
+                            "limit": "3"
 
                           },
              isSearching: false,
@@ -56,190 +57,135 @@ export default class Main extends Component {
        }
 
 
-            makeFetchParams(){
+        onRedClicked(){
+           this.setState( (previousState) => ({redClicked: !previousState.redClicked}) );
 
+            if(this.state.redClicked){ this.setState({ mapsType: 'standard'}) }
 
-
-            }
-
-
-
-
+             else{ this.setState({mapsType: 'satellite'}) }
+        }
 
 
         onPizzaClicked(){
-          this.setState(previousState => (
-
-              {pizzaClicked: !previousState.pizzaClicked }
-                                                          )
-                      );
+          this.setState( (previousState) => ({pizzaClicked: !previousState.pizzaClicked}) );
+          console.log(this.state.items.response.venues[1].location.lat);
+          console.log('hi')
         }
+
+
         onCoffeeClicked(){
-          this.setState(previousState => (
-
-              {coffeeClicked: !previousState.coffeeClicked }
-                                                          )
-                      );
+          this.setState( (previousState) => ({coffeeClicked: !previousState.coffeeClicked}) );
         }
+
+
         onBurgerClicked(){
-          this.setState(previousState => (
+        this.setState((previousState) => ( {burgerClicked: !previousState.burgerClicked} ));
+         }
 
-              {burgerClicked: !previousState.burgerClicked }
-                                                          )
-                      );
-        }
-        onLocalClicked(){
-                  this.setState(previousState => (
 
-                      {localClicked: !previousState.localClicked }
-                                                                  )
-                              );
-                }
-        onParksClicked(){
-          this.setState(previousState => (
+         onLocalClicked(){
+         this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
+          }
 
-              {parksClicked: !previousState.parksClicked }
-                                                          )
-                      );
-        }
+
+
+         onParksClicked(){
+         this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
+          }
+
+
         onCornClicked(){
-          this.setState(previousState => (
-
-              {cornClicked: !previousState.cornClicked }
-                                                          )
-                      );
+          this.setState( (previousState) => ({cornClicked: !previousState.cornClicked}) );
+          this.props.onReview();
         }
+
+
         onBurritoClicked(){
-          this.setState(previousState => (
-
-              {burritoClicked: !previousState.burritoClicked }
-                                                          )
-                      );
+          this.setState( (previousState) => ({burritoClicked: !previousState.burritoClicked }) );
+          this.props.inOptions();
         }
+
 
        onFetchClicked(){
-        /*this.setState(previousState => (
-          {fetchClicked: !previousState.fetchClicked }
-           )
-                   );
-         */
-           let params = this.state.params;
 
-        foursquare.venues.getVenues(params)
+        foursquare.venues.getVenues(this.state.params)
+          .then( (venues) =>{Alert.alert("venues were fetched"); this.setState({items:venues}); console.log(this.state.items);} )
 
-        .then((venues) =>{ Alert.alert("venues were fetched"); this.setState({items:venues}); console.log(this.state.items);
-                   })
-
-                 .catch(function(err){
-                 console.log(err);
-                 Alert.alert("error fetching");
-              });
-
+            .catch(
+             function(err)
+             {
+              console.log(err);
+              Alert.alert("error fetching");
+              }
+                );
 
        }
 
 
 
 
-
-
-
-     render() {
+     render()
+     {
       return (
 
-      <View style={styles.Gui}  >
+       <View style={styles.Gui}  >
 
-           { this.state.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> : <MapGui
-             mapsType ={this.state.mapsType}
-             styling = {styles.map2}
-             lat = {this.state.lat}
-             long = {this.state.long}
-             markers = {this.state.items}
+           {
+              this.state.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> :
+               <MapGui
 
-            /> }
+                mapsType ={this.state.mapsType}
+                styling = {styles.map2}
+                lat = {this.state.lat}
+                long = {this.state.long}
+                markers = {this.state.items}
+                radius = {this.state.radius}
+
+               />
+           }
 
              {/* <DecoySearch onSearch = {this.props.onSearch}/> */}
 
-           { this.state.lat === null ? null : <ControlBar
-              red = {this.state.redClicked}           onRedClick = {this.onRedClicked.bind(this)}
-              pizza = {this.state.pizzaClicked}       onPizzaClick = {this.onPizzaClicked.bind(this)}
-              coffee = {this.state.coffeeClicked}     onCoffeeClick = {this.onCoffeeClicked.bind(this)}
-              fetch = {this.state.fetchClicked}       onFetchClick = {this.onFetchClicked.bind(this)}
-              more = {this.state.moreClicked}
-              burger = {this.state.burgerClicked}     onBurgerClick = {this.onBurgerClicked.bind(this)}
-              local = {this.state.localClicked}       onLocalClick = {this.onLocalClicked.bind(this)}
-              parks = {this.state.parksClicked}       onParksClick = {this.onParksClicked.bind(this)}
-              corn = {this.state.cornClicked}         onCornClick = {this.onCornClicked.bind(this)}
-              burrito = {this.state.burritoClicked}   onBurritoClick = {this.onBurritoClicked.bind(this)}
+           {
+              this.state.lat === null ? null :
+               <ControlBar
 
+                red = {this.state.redClicked}           onRedClick = {this.onRedClicked.bind(this)}
+                pizza = {this.state.pizzaClicked}       onPizzaClick = {this.onPizzaClicked.bind(this)}
+                coffee = {this.state.coffeeClicked}     onCoffeeClick = {this.onCoffeeClicked.bind(this)}
+                fetch = {this.state.fetchClicked}       onFetchClick = {this.onFetchClicked.bind(this)}
+                more = {this.state.moreClicked}
+                burger = {this.state.burgerClicked}     onBurgerClick = {this.onBurgerClicked.bind(this)}
+                local = {this.state.localClicked}       onLocalClick = {this.onLocalClicked.bind(this)}
+                parks = {this.state.parksClicked}       onParksClick = {this.onParksClicked.bind(this)}
+                corn = {this.state.cornClicked}         onCornClick = {this.onCornClicked.bind(this)}
+                burrito = {this.state.burritoClicked}   onBurritoClick = {this.onBurritoClicked.bind(this)}
 
-            /> }
+               />
+            }
 
-
-
-
-      </View>
-
-
-    );
+       </View>
+      );
   }
    componentDidMount() {
 
-                    navigator.geolocation.getCurrentPosition(
-                        position => {
+         navigator.geolocation.getCurrentPosition( (position) =>
+           {
+            this.setState({
+               lat: position.coords.latitude,
+               long: position.coords.longitude,
+             });
+           },
+          (error) => console.log(error.message),
+          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+                                                 );
 
-                        this.setState({
-
-
-                                   lat: position.coords.latitude,
-                                    long: position.coords.longitude,
-
-
-                                   });
-                                    },
-                             (error) => console.log(error.message),
-                           { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-                            );
-
-
-                                    /*   this.watchID = navigator.geolocation.watchPosition(
-                                         position => {
-                                         this.setState({
-
-                                         lat: position.coords.latitude,
-                                         long: position.coords.longitude,
-
-
-                                          });
-                                           },
-                                           (error) => console.log(error.message),
-                                                                      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-                                       ); */
 
                }
-               componentWillUnmount() {
-                 navigator.geolocation.clearWatch(this.watchID);
-               }
-                onRedClicked()
-                      {
-                          this.setState(previousState => (
+     componentWillUnmount(){ navigator.geolocation.clearWatch(this.watchID); }
 
-                                  {redClicked: !previousState.redClicked }
-                                                        )
-                          );
-                          if(this.state.redClicked)
-                          {
-                             this.setState(
-                                { mapsType: 'standard'}
-                             )
-                          }
-                          else
-                          {
-                              this.setState(
-                                {mapsType: 'satellite'}
-                              )
-                          }
-                      }
+
+
 
 
 

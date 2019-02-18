@@ -12,7 +12,7 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
-  const MapGui = ({mapsType,styling,lat,long,markers,region}) =>(
+  const MapGui = ({mapsType,styling,lat,long,markers,region,radius}) =>(
 
       <MapView.Animated
 
@@ -21,7 +21,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
                  provider = {'google'}
                  style = {styling}
 
-                 onRegionChangeComplete = {(region)=>console.log(region)}
+
 
                  initialRegion={
                   {
@@ -59,7 +59,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
                                   }
 
                            }
-                          radius = {1000}
+                          radius = {radius}
                          strokeColor = { '#1a66ff' }
 
                          fillColor = { 'rgba(230,238,255,0.5)' }
