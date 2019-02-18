@@ -1,9 +1,10 @@
- import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard} from 'react-native';
+import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard} from 'react-native';
 import ControlBar from './basicapp/Components/ControlBar';
 import MapGui from './basicapp/Components/MapGui';
 import Main from './basicapp/Components/Main';
 import SearchBar from './basicapp/Components/SearchBar';
 import {Platform, PermissionsAndroid, Alert} from 'react-native';
+import React, {Component} from 'react';
 
 
 export async function request_location_runtime_permission() {
@@ -38,6 +39,7 @@ export default class App extends Component {
      super(props);
      this.state = {
         isSearching : false,
+        //optionsClicked: false,
      }
 
      }

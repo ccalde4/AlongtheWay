@@ -1,27 +1,10 @@
 import React, {Component} from 'react';
-import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, Dimensions} from 'react-native';
+import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard} from 'react-native';
 import ControlBar from '../Components/ControlBar';
 import MapGui from '../Components/MapGui';
 import SearchBar from '../Components/SearchBar';
-import DecoySearch from '../Buttons/DecoySearch';
-import {PermissionsAndroid,Alert} from 'react-native';
-const { width, height } = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+import MapView, {Marker} from "react-native-maps";
 
-
-var foursquare = require('react-native-foursquare-api')({
-  clientID: '1KVMYPHAH15IRBPS4AAA4PYAPXCSU15ACB20L0B1DRUDGFFX',
-  clientSecret: '5O5Z3YVLXKYLF5HBRUQPVRIP5KFTUK2OIUJNI52DMFZEEMME',
-  style: 'foursquare', // default: 'foursquare'
-  version: '20190214' //  default: '20140806'
-});
-/*var params = {
-  "ll": "10.652814,-61.3969835",
-  "query": 'Movie Towne',
-
-};*/
 
 export default class Main extends Component {
 
@@ -31,208 +14,95 @@ export default class Main extends Component {
           super(props)
 
            this.state = {
-             lat: 0,
-             long: -0,
-             params: {
-                            "ll": "10.652814,-61.3969835",
-                            "query": 'Movie Towne',
-
-                          },
-             isSearching: false,
 
              mapsType: 'standard',
-             redClicked: false, pizzaClicked: false, coffeeClicked: false, fetchClicked: false, blueClicked: false,
-             burgerClicked: false, localClicked: false, parksClicked: false, cornClicked: false, burritoClicked: false,
-             items: [],
-             watchID: null
+             redClicked: true,
+             latitude: null,
+             longitude: null,
+             radius: 1000
             }
-
-              var filters = [this.state.pizzaClicked,this.state.coffeeClicked,this.state.burgerClicked,this.state.localClicked,
-                             this.state.parksClicked,this.state.cornClicked,this.state.burritoClicked
-                            ]
-
        }
 
 
 
+       onRedClick()
+       {
 
+           this.setState(previousState => (
 
+                   {redClicked: !previousState.redClicked }
+                                         )
+           );
 
-        onPizzaClicked(){
-          this.setState(previousState => (
+           if(this.state.redClicked)
+           {
 
-              {pizzaClicked: !previousState.pizzaClicked }
-                                                          )
-                      );
-        }
-        onCoffeeClicked(){
-          this.setState(previousState => (
+              this.setState(
 
-              {coffeeClicked: !previousState.coffeeClicked }
-                                                          )
-                      );
-        }
-        onBurgerClicked(){
-          this.setState(previousState => (
+                 { mapsType: 'standard'}
+              )
+           }
+           else
+           {
 
-              {burgerClicked: !previousState.burgerClicked }
-                                                          )
-                      );
-        }
-        onLocalClicked(){
-                  this.setState(previousState => (
+               this.setState(
 
-                      {localClicked: !previousState.localClicked }
-                                                                  )
-                              );
-                }
-        onParksClicked(){
-          this.setState(previousState => (
+                 {mapsType: 'satellite'}
 
-              {parksClicked: !previousState.parksClicked }
-                                                          )
-                      );
-        }
-        onCornClicked(){
-          this.setState(previousState => (
-
-              {cornClicked: !previousState.cornClicked }
-                                                          )
-                      );
-        }
-        onBurritoClicked(){
-          this.setState(previousState => (
-
-              {burritoClicked: !previousState.burritoClicked }
-                                                          )
-                      );
-        }
-
-       onFetchClicked(){
-        /*this.setState(previousState => (
-          {fetchClicked: !previousState.fetchClicked }
-           )
-                   );
-         */
-           let params = this.state.params;
-
-        foursquare.venues.getVenues(params)
-
-        .then((venues) =>{ Alert.alert("venues were fetched"); this.setState({items:venues}); console.log(this.state.items);
-                   })
-
-                 .catch(function(err){
-                 console.log(err);
-                 Alert.alert("error fetching");
-              });
+               )
+           }
 
 
        }
 
 
-
-
-
-
-
-     render() {
-      return (
-
-      <View style={styles.Gui}  >
-
-            <MapGui
-             mapsType ={this.state.mapsType}
-             styling = {styles.map2}
-             lat = {this.state.lat}
-             long = {this.state.long}
-
-
-            />
-            {/* <FilterButton style = {styles.button1}  text = 'search'/> */}
-            {/* <SearchBar/> */}
-             { <DecoySearch onSearch = {this.props.onSearch}/>}
-
-            <ControlBar
-              red = {this.state.redClicked}           onRedClick = {this.onRedClicked.bind(this)}
-              pizza = {this.state.pizzaClicked}       onPizzaClick = {this.onPizzaClicked.bind(this)}
-              coffee = {this.state.coffeeClicked}     onCoffeeClick = {this.onCoffeeClicked.bind(this)}
-              fetch = {this.state.fetchClicked}       onFetchClick = {this.onFetchClicked.bind(this)}
-              more = {this.state.moreClicked}
-              burger = {this.state.burgerClicked}     onBurgerClick = {this.onBurgerClicked.bind(this)}
-              local = {this.state.localClicked}       onLocalClick = {this.onLocalClicked.bind(this)}
-              parks = {this.state.parksClicked}       onParksClick = {this.onParksClicked.bind(this)}
-              corn = {this.state.cornClicked}         onCornClick = {this.onCornClicked.bind(this)}
-              burrito = {this.state.burritoClicked}   onBurritoClick = {this.onBurritoClicked.bind(this)}
-
-
-            />
-
-
-
-
-      </View>
-
+  componentDidMount() {
+      navigator.geolocation.getCurrentPosition(
+      position => {
+        this.setState({
+          latitude:       position.coords.latitude,
+          longitude:      position.coords.longitude,
+          error: null
+        });
+        },
+        error => this.setState({error: error.message}),
+        {enableHighAccuracy: true, timeout: 20000, maximumAge: 2000}
     );
-  }
-   componentDidMount() {
-
-                    navigator.geolocation.getCurrentPosition(
-                        position => {
-
-                        this.setState({
-
-
-                                   lat: position.coords.latitude,
-                                    long: position.coords.longitude,
-
-
-                                   });
-                                    },
-                             (error) => console.log(error.message),
-                           { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-                            );
-
-
-                                     /*  this.watchID = navigator.geolocation.watchPosition(
-                                         position => {
-                                         this.setState({
-
-                                         lat: position.coords.latitude,
-                                         long: position.coords.longitude,
-
-
-                                          });
-                                           }
-                                       );*/
-
-               }
-               componentWillUnmount() {
-                 navigator.geolocation.clearWatch(this.watchID);
-               }
-                onRedClicked()
-                      {
-                          this.setState(previousState => (
-
-                                  {redClicked: !previousState.redClicked }
-                                                        )
-                          );
-                          if(this.state.redClicked)
-                          {
-                             this.setState(
-                                { mapsType: 'standard'}
-                             )
-                          }
-                          else
-                          {
-                              this.setState(
-                                {mapsType: 'satellite'}
-                              )
-                          }
-                      }
-
-
-
 }
+
+componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
+  }
+
+    onRegionChange(region, lastLat, lastLong) {
+        this.setState({
+          mapRegion: region,
+          // If there are no new values set the current ones
+          lastLat: lastLat || this.state.lastLat,
+          lastLong: lastLong || this.state.lastLong
+        });
+      }
+
+
+    render() {
+        return (
+        <View style={styles.container}>
+          {this.state.latitude === null ? <Text> Loading </Text> : <MapGui
+            mapsType = {this.state.mapsType}
+            lat = {this.state.latitude}
+            long = {this.state.longitude}
+            styling = {styles.map2}
+            radius = {this.state.radius}
+          />
+
+          /* <Marker coordinate={this.state}/> */
+             }
+           <ControlBar redClick = {this.onRedClick.bind(this)}/>
+           </View>
+           );
+        }
+  }
+
 
 
 
@@ -262,19 +132,21 @@ const styles = StyleSheet.create({
 
         },
 
-button1: {
-alignItems: 'center',
-borderRadius: 50,
-width: 50,
-height: 50,
-backgroundColor: 'red',
-position: 'absolute',
-top:10
+        container: {
 
-},
+
+       flexDirection: 'column',
+       padding: 10,
+       flex: 1,
+       backgroundColor: 'pink',
+       justifyContent: 'space-around',
+       alignItems: "center"
+        },
+
 
 
 
 
 });
+
 
