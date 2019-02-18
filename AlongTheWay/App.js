@@ -39,7 +39,7 @@ export default class App extends Component {
      super(props);
      this.state = {
         isSearching : false,
-        optionsClicked: false,
+        //optionsClicked: false,
      }
 
      }
