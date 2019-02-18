@@ -127,7 +127,7 @@ export default class Main extends Component {
 
         foursquare.venues.getVenues(params)
 
-        .then((venues) =>{ Alert.alert("venues were fetched"); this.setState({items:venues}); console.log(this.state.items);
+        .then((venues) =>{ Alert.alert("venues were fetched"); this.setState({items:venues}); console.warn(this.state.items);
                    })
 
                  .catch(function(err){
