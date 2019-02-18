@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, Dimensions} from 'react-native';
+import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, Dimensions,ActivityIndicator} from 'react-native';
 import ControlBar from '../Components/ControlBar';
 import MapGui from '../Components/MapGui';
 import SearchBar from '../Components/SearchBar';
@@ -31,11 +31,12 @@ export default class Main extends Component {
           super(props)
 
            this.state = {
-             lat: 0,
-             long: -0,
+             lat: null,
+             long: null,
              params: {
-                            "ll": "10.652814,-61.3969835",
-                            "query": 'Movie Towne',
+                            "ll": "30.414175,-91.186256",
+                            "query": 'Coffee',
+
 
                           },
              isSearching: false,
@@ -44,6 +45,7 @@ export default class Main extends Component {
              redClicked: false, pizzaClicked: false, coffeeClicked: false, fetchClicked: false, blueClicked: false,
              burgerClicked: false, localClicked: false, parksClicked: false, cornClicked: false, burritoClicked: false,
              items: [],
+
              watchID: null
             }
 
@@ -52,6 +54,13 @@ export default class Main extends Component {
                             ]
 
        }
+
+
+            makeFetchParams(){
+
+
+
+            }
 
 
 
@@ -140,19 +149,18 @@ export default class Main extends Component {
 
       <View style={styles.Gui}  >
 
-            <MapGui
+           { this.state.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> : <MapGui
              mapsType ={this.state.mapsType}
              styling = {styles.map2}
              lat = {this.state.lat}
              long = {this.state.long}
+             markers = {this.state.items}
 
+            /> }
 
-            />
-            {/* <FilterButton style = {styles.button1}  text = 'search'/> */}
-            {/* <SearchBar/> */}
              {/* <DecoySearch onSearch = {this.props.onSearch}/> */}
 
-            <ControlBar
+           { this.state.lat === null ? null : <ControlBar
               red = {this.state.redClicked}           onRedClick = {this.onRedClicked.bind(this)}
               pizza = {this.state.pizzaClicked}       onPizzaClick = {this.onPizzaClicked.bind(this)}
               coffee = {this.state.coffeeClicked}     onCoffeeClick = {this.onCoffeeClicked.bind(this)}
@@ -165,12 +173,13 @@ export default class Main extends Component {
               burrito = {this.state.burritoClicked}   onBurritoClick = {this.onBurritoClicked.bind(this)}
 
 
-            />
+            /> }
 
 
 
 
       </View>
+
 
     );
   }
@@ -193,7 +202,7 @@ export default class Main extends Component {
                             );
 
 
-                                     /*  this.watchID = navigator.geolocation.watchPosition(
+                                    /*   this.watchID = navigator.geolocation.watchPosition(
                                          position => {
                                          this.setState({
 
@@ -202,8 +211,10 @@ export default class Main extends Component {
 
 
                                           });
-                                           }
-                                       );*/
+                                           },
+                                           (error) => console.log(error.message),
+                                                                      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+                                       ); */
 
                }
                componentWillUnmount() {
@@ -241,7 +252,7 @@ const styles = StyleSheet.create({
   flexDirection: 'column',
   padding: 10,
   flex:1,
-  backgroundColor: "pink",
+  backgroundColor: "gray",
   justifyContent: "space-around",
   alignItems: "center",
   },
