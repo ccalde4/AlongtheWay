@@ -37,3 +37,42 @@ const LONGITUDE = -91.186256;
 
 
                                         	})*/
+
+
+                                        	 //  return(
+                                                           /*  <ReviewForm addReview = {(comment,rating)=>{console.log(rating);
+                                                                let reviewState = this.state.reviews;
+                                                                    reviewState.push(comment);
+                                                            this.setState( {reviews: reviewState} );
+                                                              console.log(this.state.reviews);}
+                                                            }/> */
+
+                                               // <ReviewForm addReview = {(userReview) => {this.addReview(userReview)}}/>
+
+
+                                                /*<Options onRadiusChange = {this.onRadiusChange.bind(this)}/> */
+
+                                              //  );
+val => this.setState({ radius: val })
+
+
+
+
+
+
+
+
+
+ /*   this.watchID = navigator.geolocation.watchPosition(
+                                         position => {
+                                         this.setState({
+
+                                         lat: position.coords.latitude,
+                                         long: position.coords.longitude,
+
+
+                                          });
+                                           },
+                                           (error) => console.log(error.message),
+                                                                      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+                                       ); */
