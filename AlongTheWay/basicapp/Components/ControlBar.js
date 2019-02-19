@@ -32,7 +32,7 @@ export default class ControlBar extends Component {
 
             <FilterButton2 style = {styles.button1} text = 'MapType' clicked = {this.props.onRedClick} />
 
-            <FilterButton style = {styles.button2} text = 'Pizza'   clicked = {this.props.onPizzaClick}/>
+            <FilterButton2 style = {styles.button2} text = 'Pizza'   clicked = {this.props.onPizzaClick}/>
 
             <FilterButton2 style = {styles.button3} text = 'Coffee'  clicked = {()=>{}}/>
 

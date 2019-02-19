@@ -36,7 +36,7 @@ export default class Main extends Component {
              radius: this.props.radius,
              params: {
                             "ll": "30.414175,-91.186256",
-                            "query": 'Pizza',
+                            "query": 'Coffee',
                             "limit": "3"
 
                           },
@@ -68,7 +68,7 @@ export default class Main extends Component {
 
         onPizzaClicked(){
           this.setState( (previousState) => ({pizzaClicked: !previousState.pizzaClicked}) );
-          console.log(this.state.items.response.venues[1].location.lat);
+          console.log(this.state.items.response.venues[1].name);
           console.log('hi')
         }
 
