@@ -1,21 +1,21 @@
-import { Text, View, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import React, {Component} from 'react';
 
-const FilterButton = ({clicked,style,text,isPressed})=>(
+const FilterButton = ({clicked,label,isPressed,color})=>(
 
 
 
+          <View style = {styles.buttonFormat}>
 
+            <TouchableOpacity onPress = {clicked}>
 
-          <View style = {styles.buttonStyle}>
+             <View style ={{alignItems: 'center', borderRadius: 50, width: 50, height: 50, backgroundColor: color}} >
+                 { isPressed ? <View style ={styles.checked}/> : <View style ={styles.unchecked}/>}
+              </View>
 
-           <TouchableOpacity onPress = {clicked}>
-                 <View style ={style} >
-                      { isPressed ? <View style ={styles.checked}/> : <View style ={styles.unchecked}/>}
-                 </View>
-           </TouchableOpacity>
+            </TouchableOpacity>
 
-          <Text> {text} </Text>
+               <Text> {label} </Text>
 
           </View>
 
@@ -50,12 +50,23 @@ backgroundColor: 'gray'
 },
 
 
-buttonStyle: {
+buttonFormat: {
   width: 80,
   height: 70,
 flexDirection: 'column',
 alignItems: 'center',
 },
+buttonStyles:{
+
+alignItems: 'center',
+borderRadius: 50,
+width: 50,
+height: 50,
+backgroundColor: 'red'
+
+}
+
+
 
 
 

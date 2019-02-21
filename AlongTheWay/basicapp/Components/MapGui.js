@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet, Dimensions} from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import Callout from 'react-native-maps';
 import mapstyle1 from '../MapStyles/mapstyle1';
 import mapstyle2 from '../MapStyles/mapstyle2';
@@ -16,29 +16,20 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
       <MapView.Animated
 
-
                  mapType = {mapsType}
                  provider = {'google'}
+                 customMapStyle = {mapstyle1}
                  style = {styling}
-
-
-
-                 initialRegion={
-                  {
+                 initialRegion={{
                   latitude: lat,
                   longitude: long,
                   latitudeDelta: LATITUDE_DELTA,
                   longitudeDelta: LONGITUDE_DELTA,
-                  }
+                  }}
 
-                 }
-
-
-
-                customMapStyle = {mapstyle1}
 
                >
-               <MapView.Marker
+               <Marker
                         coordinate = {{
                         latitude: lat,
                         longitude: long
@@ -48,28 +39,29 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
                         }
                         description = {'Current Location'}
 
-
                        />
-                         <MapView.Circle
-                          center = {
-                          {
+
+                        <MapView.Circle
+
+                          center = {{
                           latitude: lat,
                           longitude: long
 
-                                  }
+                           }}
 
-                           }
                           radius = {radius}
-                         strokeColor = { '#1a66ff' }
+                          strokeColor = { '#1a66ff' }
+                          fillColor = { 'rgba(230,238,255,0.5)' }
 
-                         fillColor = { 'rgba(230,238,255,0.5)' }
+                        />
+                             {
+                               //    console.log(markers.response.venues[1].name),
+                             console.log("From MapGui")
+
+                             }
 
 
-
-                                  />
-
-
-           </MapView.Animated>
+      </MapView.Animated>
 
 )
 

@@ -16,6 +16,8 @@ import SearchBar from './basicapp/Components/SearchBar';
 import {Platform, PermissionsAndroid, Alert} from 'react-native';
 import Options from './basicapp/Components/Option'
 import ReviewForm from './basicapp/Components/ReviewForm';
+import firebase from 'react-native-firebase';
+
 
 
 export async function request_location_runtime_permission() {
@@ -56,12 +58,19 @@ export default class App extends Component {
      super(props);
      this.state = {
         isSearching : false,
+         inOptions: false,
+         isReviewing: false,
         radius: 1000,
-        isReviewing: false,
-        inOptions: false,
         reviews: [],
         mapsType: 'standard'
      }
+     firebase.auth()
+       .signInAnonymously()
+       .then(credential => {
+         if (credential) {
+           console.log('default app user ->', credential.user.toJSON());
+         }
+       });
 
      }
 
@@ -95,11 +104,12 @@ export default class App extends Component {
 
 
 
-     {
+
            if(this.state.inOptions)
            {
             return( <Options onRadiusChange = {(radius) => {this.onRadiusChange(radius)}}
-                            radius = {this.state.radius} inOptions = {this.inOptions.bind(this)} />)
+                             radius = {this.state.radius}
+                             inOptions = {this.inOptions.bind(this)} />)
 
            }
 
@@ -113,13 +123,15 @@ export default class App extends Component {
              return( <SearchBar/> );
           }
 
-          else
-          {
-            return( <Main onSearch = {this.onSearch.bind(this)} onReview = {this.onReview.bind(this)}
-                                     inOptions = {this.inOptions.bind(this)} radius = {this.state.radius}
-                                     onReview = {this.onReview.bind(this)}/> );
-          }
-     }
+
+
+            return( <Main onSearch = {this.onSearch.bind(this)}
+                          onReview = {this.onReview.bind(this)}
+                          inOptions = {this.inOptions.bind(this)}
+                          radius = {this.state.radius}
+                          onReview = {this.onReview.bind(this)}/> );
+
+
 
       }
 

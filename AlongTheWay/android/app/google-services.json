@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "479710569503",
+    "firebase_url": "https://fir-demo-6977a.firebaseio.com",
+    "project_id": "fir-demo-6977a",
+    "storage_bucket": "fir-demo-6977a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479710569503:android:86d103bc00d1e58c",
+        "android_client_info": {
+          "package_name": "com.alongtheway"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "479710569503-icjbdckt7fe4se4iauert4ghv1a71o5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFZ81w0YZT5T_E9TqTq-ao8BoEzmvE5bU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
