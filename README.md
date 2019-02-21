@@ -13,3 +13,5 @@ react-native-foursquare-api
 react-native-google-autocomplete
 
 react-native-google-places-autocomplete
+
+react-native-firebase (go to firebase website and get own googleservices.json if not working) 
