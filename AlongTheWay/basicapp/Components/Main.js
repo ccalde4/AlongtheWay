@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
-import { Text, View,StyleSheet, KeyboardAvoidingView,Keyboard, Dimensions,ActivityIndicator} from 'react-native';
+import { Text, View,StyleSheet, Dimensions,ActivityIndicator} from 'react-native';
 import ControlBar from '../Components/ControlBar';
 import MapGui from '../Components/MapGui';
 import SearchBar from '../Components/SearchBar';
 import DecoySearch from '../Buttons/DecoySearch';
 import {PermissionsAndroid,Alert} from 'react-native';
-const { width, height } = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+import DismissKeyboard from 'dismissKeyboard';
+
+
 
 
 var foursquare = require('react-native-foursquare-api')({
@@ -17,11 +16,7 @@ var foursquare = require('react-native-foursquare-api')({
   style: 'foursquare', // default: 'foursquare'
   version: '20190214' //  default: '20140806'
 });
-/*var params = {
-  "ll": "10.652814,-61.3969835",
-  "query": 'Movie Towne',
 
-};*/
 
 export default class Main extends Component {
 
@@ -35,15 +30,14 @@ export default class Main extends Component {
              long: null,
              radius: this.props.radius,
              params: {
-                            "ll": "30.414175,-91.186256",
-                            "query": 'Coffee',
-                            "limit": "3"
+                "ll": "30.414175,-91.186256",
+                "query": 'Coffee',
+                "limit": "3"
 
-                          },
-             isSearching: false,
+              },
 
              mapsType: 'standard',
-             redClicked: false, pizzaClicked: false, coffeeClicked: false, fetchClicked: false, blueClicked: false,
+             redClicked: false, pizzaClicked: false, coffeeClicked: false, fetchClicked: false, moreClicked: false,
              burgerClicked: false, localClicked: false, parksClicked: false, cornClicked: false, burritoClicked: false,
              items: [],
 
@@ -51,17 +45,16 @@ export default class Main extends Component {
             }
 
               var filters = [this.state.pizzaClicked,this.state.coffeeClicked,this.state.burgerClicked,this.state.localClicked,
-                             this.state.parksClicked,this.state.cornClicked,this.state.burritoClicked
+                             this.state.parksClicked,this.state.cornClicked,this.state.burritoClicked,this.state.moreClicked
                             ]
 
        }
 
 
         onRedClicked(){
-           this.setState( (previousState) => ({redClicked: !previousState.redClicked}) );
+         //  this.setState( (previousState) => ({redClicked: !previousState.redClicked}) );
 
-            if(this.state.redClicked){ this.setState({ mapsType: 'standard'}) }
-
+            if(this.state.mapsType ==='satellite'){ this.setState({ mapsType: 'standard'}) }
              else{ this.setState({mapsType: 'satellite'}) }
         }
 
@@ -69,12 +62,16 @@ export default class Main extends Component {
         onPizzaClicked(){
           this.setState( (previousState) => ({pizzaClicked: !previousState.pizzaClicked}) );
           console.log(this.state.items.response.venues[1].name);
-          console.log('hi')
+          console.log('hi from Test Button')
         }
 
 
         onCoffeeClicked(){
           this.setState( (previousState) => ({coffeeClicked: !previousState.coffeeClicked}) );
+        }
+
+        onMoreClicked(){
+          this.setState( (previousState) => ({moreClicked: !previousState.moreClicked}) );
         }
 
 
@@ -135,7 +132,7 @@ export default class Main extends Component {
                <MapGui
 
                 mapsType ={this.state.mapsType}
-                styling = {styles.map2}
+                styling = {styles.map}
                 lat = {this.state.lat}
                 long = {this.state.long}
                 markers = {this.state.items}
@@ -144,7 +141,7 @@ export default class Main extends Component {
                />
            }
 
-             {/* <DecoySearch onSearch = {this.props.onSearch}/> */}
+            {/*  <DecoySearch onSearch = {this.props.onSearch}/>  */}
 
            {
               this.state.lat === null ? null :
@@ -154,7 +151,7 @@ export default class Main extends Component {
                 pizza = {this.state.pizzaClicked}       onPizzaClick = {this.onPizzaClicked.bind(this)}
                 coffee = {this.state.coffeeClicked}     onCoffeeClick = {this.onCoffeeClicked.bind(this)}
                 fetch = {this.state.fetchClicked}       onFetchClick = {this.onFetchClicked.bind(this)}
-                more = {this.state.moreClicked}
+                more = {this.state.moreClicked}         onMoreClick = {this.onMoreClicked.bind(this)}
                 burger = {this.state.burgerClicked}     onBurgerClick = {this.onBurgerClicked.bind(this)}
                 local = {this.state.localClicked}       onLocalClick = {this.onLocalClicked.bind(this)}
                 parks = {this.state.parksClicked}       onParksClick = {this.onParksClicked.bind(this)}
@@ -203,34 +200,10 @@ const styles = StyleSheet.create({
   alignItems: "center",
   },
 
-    map: {
-                width: 400,
-                height: 400,
+  map: {
+    ...StyleSheet.absoluteFillObject,
 
-    },
-
-        map2: {
-
-                   ...StyleSheet.absoluteFillObject,
-
-
-
-
-
-        },
-
-button1: {
-alignItems: 'center',
-borderRadius: 50,
-width: 50,
-height: 50,
-backgroundColor: 'red',
-position: 'absolute',
-top:10
-
-},
-
-
+   },
 
 
 });
