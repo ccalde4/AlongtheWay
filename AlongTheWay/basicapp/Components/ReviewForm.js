@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Text,TextInput, View, StyleSheet, Dimensions, TouchableOpacity,TouchableWithoutFeedback,KeyboardAvoidingView} from 'react-native';
+import { Text,TextInput, View,ScrollView, StyleSheet,Keyboard, Dimensions, TouchableOpacity,TouchableWithoutFeedback,KeyboardAvoidingView} from 'react-native';
 const { width, height } = Dimensions.get('window');
 
 
@@ -14,6 +14,9 @@ const { width, height } = Dimensions.get('window');
 
      }
 }
+   componentWillUnmount(){
+           Keyboard.dismiss()
+   }
 
     onOneClick(){this.setState({rating:1})}
     onTwoClick(){this.setState({rating:2})}
@@ -39,9 +42,9 @@ const { width, height } = Dimensions.get('window');
       return(
 
 
-          <View style = {styles.Gui}>
+          <View style = {styles.Gui}   >
 
-                                    <Text> Leave A Rating                             {this.state.rating} </Text>
+                    <Text> Leave A Rating                             {this.state.rating} </Text>
 
                 <View style = {styles.layout2}>
                   <View style = {styles.row2} >
@@ -68,14 +71,14 @@ const { width, height } = Dimensions.get('window');
 
                      </View>
                  </View>
-
-                  <KeyboardAvoidingView style = {styles.textIn} behavior = "padding" enabled>
+                   <ScrollView  keyboardShouldPersistTaps = {"never"} style = {styles.textIn}>
+                  <KeyboardAvoidingView  behavior = "padding" enabled>
                            <View >
-                             <TextInput placeholder = {'Leave a comment'}  onChangeText={(text) => this.setState({text})}
+                             <TextInput  placeholder = {'Leave a comment'}  onChangeText={(text) => this.setState({text})}
                                value = {this.state.text}/>
                             </View>
                    </KeyboardAvoidingView>
-
+                    </ScrollView>
 
                    <TouchableOpacity style = {styles.enter} onPress = {this.onEnterClick.bind(this)}>
                               <View>
