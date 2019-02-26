@@ -22,20 +22,22 @@ export default class ControlBar extends Component {
     return (
 
     <View style ={styles.layout} >
-
+         {/* // First five buttons displayed by default  */}
      <View style = {styles.row}>
 
-       <FilterButton label = 'MapType'
+       <FilterButton label = 'Re Center'
                      color = 'crimson'
                      clicked = {this.props.onRedClick}  />
 
-       <FilterButton label = 'Test'
+       <FilterButton label = 'Pizza'
                      color = 'darksalmon'
-                     clicked = {this.props.onPizzaClick}/>
+                     clicked = {this.props.onPizzaClick}
+                     isPressed = {this.props.pizza}      />
 
        <FilterButton label = 'Coffee'
                      color = 'darkkhaki'
-                     clicked = {()=>{}}                 />
+                     clicked = {this.props.onCoffeeClick}
+                     isPressed = {this.props.coffee}    />
 
        <FilterButton label = 'Fetch Data'
                      color = 'darkolivegreen'
@@ -51,17 +53,17 @@ export default class ControlBar extends Component {
 
        </View>
 
-
+           {/* //Conditional rendering of buttons to be displayed if more is clicked  */}
         {this.state.isMoreClicked ?
 
          <View style = {styles.row}>
 
-          <FilterButton label = 'Burger'
+          <FilterButton label = 'Burgers'
                         color = 'peachpuff'
                         clicked = {this.props.onBurgerClick}
                         isPressed = {this.props.burger}  />
 
-          <FilterButton label = 'Local'
+          <FilterButton label = 'Chicken'
                         color = 'lightcoral'
                         clicked = {this.props.onLocalClick}
                         isPressed = {this.props.local}   />

@@ -1,12 +1,18 @@
 import React, {Component} from 'react';
-import { Text, View,StyleSheet, Dimensions,ActivityIndicator} from 'react-native';
+import { Text, View,StyleSheet,Keyboard, Dimensions,ActivityIndicator} from 'react-native';
 import ControlBar from '../Components/ControlBar';
 import MapGui from '../Components/MapGui';
 import SearchBar from '../Components/SearchBar';
 import DecoySearch from '../Buttons/DecoySearch';
 import {PermissionsAndroid,Alert} from 'react-native';
 import DismissKeyboard from 'dismissKeyboard';
+import MapView, { AnimatedRegion, Animated } from 'react-native-maps';
 
+var Places = require('../APIs/Places');
+const { width, height } = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
 
@@ -16,7 +22,7 @@ var foursquare = require('react-native-foursquare-api')({
   style: 'foursquare', // default: 'foursquare'
   version: '20190214' //  default: '20140806'
 });
-
+var query = "Donuts";
 
 export default class Main extends Component {
 
@@ -28,14 +34,17 @@ export default class Main extends Component {
            this.state = {
              lat: null,
              long: null,
+
              radius: this.props.radius,
              params: {
                 "ll": "30.414175,-91.186256",
-                "query": 'Coffee',
-                "limit": "3"
+                "query": `${query}`,
+                "limit": "10"
 
               },
+              region :null,
 
+             center : false,
              mapsType: 'standard',
              redClicked: false, pizzaClicked: false, coffeeClicked: false, fetchClicked: false, moreClicked: false,
              burgerClicked: false, localClicked: false, parksClicked: false, cornClicked: false, burritoClicked: false,
@@ -44,6 +53,8 @@ export default class Main extends Component {
              watchID: null
             }
 
+
+
               var filters = [this.state.pizzaClicked,this.state.coffeeClicked,this.state.burgerClicked,this.state.localClicked,
                              this.state.parksClicked,this.state.cornClicked,this.state.burritoClicked,this.state.moreClicked
                             ]
@@ -51,62 +62,126 @@ export default class Main extends Component {
        }
 
 
+       onRegionChange(region){
+         this.setState({region})
+          console.log(region)
+       }
+
+       goTo(){
+
+
+       }
+
+
+            //toggle for a button described in function name
         onRedClicked(){
-         //  this.setState( (previousState) => ({redClicked: !previousState.redClicked}) );
+          this.setState({
+            region: {
+               latitude: this.state.lat,
+               longitude: this.state.long,
+               latitudeDelta: LATITUDE_DELTA,
+               longitudeDelta: LONGITUDE_DELTA,
+                }
+          })
 
-            if(this.state.mapsType ==='satellite'){ this.setState({ mapsType: 'standard'}) }
-             else{ this.setState({mapsType: 'satellite'}) }
+         //   if(this.state.mapsType ==='satellite'){ this.setState({ mapsType: 'standard'}) }
+           //  else{ this.setState({mapsType: 'satellite'}) }
+         // this.setState( (previousState) => ({center: !previousState.center}) );
+
         }
 
-
+             //toggle for "Test" Button click only after you click fetch
         onPizzaClicked(){
+          this.setState({ burgerClicked: false});
+          this.setState({ coffeeClicked: false});
+          this.setState({ localClicked: false});
           this.setState( (previousState) => ({pizzaClicked: !previousState.pizzaClicked}) );
-          console.log(this.state.items.response.venues[1].name);
-          console.log('hi from Test Button')
+          this.setState({params: {
+            "ll": "30.414175,-91.186256",
+            "query": "Pizza",
+            "limit": "10",
+             "radius": `${this.state.radius}`
+
+              }})
+
+
         }
 
-
+             //toggle for a button described in function name
         onCoffeeClicked(){
-          this.setState( (previousState) => ({coffeeClicked: !previousState.coffeeClicked}) );
-        }
+        this.setState({ burgerClicked: false});
+        this.setState({ pizzaClicked: false});
+        this.setState({ localClicked: false});
+        this.setState( (previousState) => ({coffeeClicked: !previousState.coffeeClicked}) );
 
+          this.setState({params: {
+             "ll": "30.414175,-91.186256",
+             "query": "Coffee",
+             "limit": "10",
+              "radius": `${this.state.radius}`
+              }})
+
+
+        }
+             //toggle for a button described in function name
         onMoreClicked(){
           this.setState( (previousState) => ({moreClicked: !previousState.moreClicked}) );
         }
 
-
+              //toggle for a button described in function name
         onBurgerClicked(){
-        this.setState((previousState) => ( {burgerClicked: !previousState.burgerClicked} ));
+         this.setState({ coffeeClicked: false});
+         this.setState({ pizzaClicked: false});
+         this.setState({ localClicked: false});
+         this.setState((previousState) => ( {burgerClicked: !previousState.burgerClicked} ));
+               this.setState({params: {
+               "ll": "30.414175,-91.186256",
+               "query": "Burgers",
+               "limit": "10",
+               "radius":`${this.state.radius}`
+
+                  }})
+
          }
 
-
+              //toggle for a button described in function name
          onLocalClicked(){
+         this.setState({ coffeeClicked: false});
+         this.setState({ pizzaClicked: false});
+         this.setState({ burgerClicked: false});
          this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
+         this.setState({params: {
+                        "ll": "30.414175,-91.186256",
+                        "query": "Chicken",
+                        "limit": "10",
+                        "radius":`${this.state.radius}`
+                           }})
+
           }
 
 
-
+               //toggle for a button described in function name
          onParksClicked(){
          this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
           }
 
-
+               //toggle for pulling up ReviewForm
         onCornClicked(){
           this.setState( (previousState) => ({cornClicked: !previousState.cornClicked}) );
           this.props.onReview();
         }
 
-
+                //toggle for pulling up options page
         onBurritoClicked(){
           this.setState( (previousState) => ({burritoClicked: !previousState.burritoClicked }) );
           this.props.inOptions();
         }
 
-
-       onFetchClicked(){
+               //Function for getting venues from foursquare Api
+         onFetchClicked(){
 
         foursquare.venues.getVenues(this.state.params)
-          .then( (venues) =>{Alert.alert("venues were fetched"); this.setState({items:venues}); console.log(this.state.items);} )
+          .then( (venues) =>{ this.setState({items:venues.response}); } )
 
             .catch(
              function(err)
@@ -127,6 +202,7 @@ export default class Main extends Component {
 
        <View style={styles.Gui}  >
 
+
            {
               this.state.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> :
                <MapGui
@@ -137,12 +213,16 @@ export default class Main extends Component {
                 long = {this.state.long}
                 markers = {this.state.items}
                 radius = {this.state.radius}
-
+                region = {this.state.region}
+                onRegionChange = {this.onRegionChange.bind(this)}
                />
+
            }
 
-            {/*  <DecoySearch onSearch = {this.props.onSearch}/>  */}
-
+            {
+               this.state.lat === null ? null :
+              <DecoySearch onSearch = {this.props.onSearch}/>
+             }
            {
               this.state.lat === null ? null :
                <ControlBar
@@ -164,6 +244,8 @@ export default class Main extends Component {
        </View>
       );
   }
+
+    //Getting current location
    componentDidMount() {
 
          navigator.geolocation.getCurrentPosition( (position) =>
@@ -172,6 +254,13 @@ export default class Main extends Component {
                lat: position.coords.latitude,
                long: position.coords.longitude,
              });
+             this.setState({ region:{
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            latitudeDelta: LATITUDE_DELTA,
+                            longitudeDelta: LONGITUDE_DELTA
+                          }});
+
            },
           (error) => console.log(error.message),
           { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
@@ -179,6 +268,8 @@ export default class Main extends Component {
 
 
                }
+
+
      componentWillUnmount(){ navigator.geolocation.clearWatch(this.watchID); }
 
 

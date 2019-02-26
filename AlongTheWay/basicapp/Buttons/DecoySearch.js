@@ -9,9 +9,9 @@ export default class DecoySearch extends Component {
 
   render() {
     return (
-      <TouchableOpacity style ={styles.layout}  onPress = {this.props.onSearch}>
-             <View style = {styles.text}>
-                <Text > Search </Text>
+      <TouchableOpacity style ={styles.layout}   onPress = {this.props.onSearch}>
+             <View >
+                <Text style = {styles.text} > Search For A Place </Text>
 
               </View>
         </TouchableOpacity>
@@ -22,25 +22,23 @@ export default class DecoySearch extends Component {
 const styles = StyleSheet.create({
 
 text: {
-flex: 1,
-flexDirection: 'row',
-alignItems: 'stretch',
+fontSize: 20,
+
 
 },
 
 layout: {
-
-flex: 1,
-flexDirection: 'column',
-justifyContent: 'space-around',
-alignItems: 'center',
-width: 420,
+opacity: .9,
+justifyContent: 'center',
+paddingLeft: 10,
+width: 340,
 height: 50,
+borderRadius: 50,
 position: 'absolute',
-top: 10,
-backgroundColor: 'gray'
+top: 15,
+backgroundColor: 'lightgray'
 
-},
+}
 
 });
 
