@@ -37,8 +37,7 @@ this.params ;
 
     var config = Config.getConfig();
     var urlString = config.apiUrl + "/search?" + querystring.stringify(this.getParams());
-
-     var headers =  {
+    var headers =  {
      headers:{
                 'Authorization': 'Bearer ' + config.creds.key}
                 }
@@ -47,6 +46,17 @@ this.params ;
           .catch((error)=>{console.log(error)});
         */
 }
+
+   getDetails(place_id){
+       var config = Config.getConfig();
+       var urlString = "https://api.yelp.com/v3/businesses/"+place_id ;
+       var headers =  {
+           headers:{
+                   'Authorization': 'Bearer ' + config.creds.key}
+                   }
+         return request(urlString,headers);
+
+   }
 
 
 

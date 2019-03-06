@@ -43,8 +43,13 @@ this.params ;
         /* .then((response)=>{this.setPlaces(response)})
           .catch((error)=>{console.log(error)});
         */
-}
+    }
 
+    getDetails(place_id){
+     var config = Config.getConfig();
+     var urlString = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id + '&' + querystring.stringify(config.creds);
+     return request(urlString);
+    }
 
 
 

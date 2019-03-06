@@ -45,7 +45,13 @@ this.params ;
         /* .then((response)=>{this.setPlaces(response)})
           .catch((error)=>{console.log(error)});
         */
-}
+   }
+
+   getDetails(place_id){
+     var config = Config.getConfig();
+      var urlString = config.apiUrl + "/venues/" + place_id + '?' + querystring.stringify(config.creds);
+      return request(urlString);
+   }
 
 
 
