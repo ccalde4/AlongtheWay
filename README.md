@@ -15,3 +15,5 @@ react-native-google-autocomplete
 react-native-google-places-autocomplete (Delete this if installed not needed)
 
 react-native-firebase (go to firebase website and get own googleservices.json if not working) 
+
+react-native-star-rating
