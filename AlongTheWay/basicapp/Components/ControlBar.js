@@ -27,7 +27,7 @@ export default class ControlBar extends Component {
 
        <FilterButton label = 'Re Center'
                      color = 'crimson'
-                     clicked = {this.props.onRedClick}  />
+                     clicked = {this.props.onRedClick}   />
 
        <FilterButton label = 'Pizza'
                      color = 'darksalmon'
@@ -37,12 +37,12 @@ export default class ControlBar extends Component {
        <FilterButton label = 'Coffee'
                      color = 'darkkhaki'
                      clicked = {this.props.onCoffeeClick}
-                     isPressed = {this.props.coffee}    />
+                     isPressed = {this.props.coffee}     />
 
        <FilterButton label = 'Fetch Data'
                      color = 'darkolivegreen'
                      clicked = {this.props.onFetchClick}
-                     isPressed = {this.props.fetch}     />
+                     isPressed = {this.props.fetch}      />
 
        <FilterButton label = ' More '
                      color = 'teal'

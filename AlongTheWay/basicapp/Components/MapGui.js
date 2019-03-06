@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet, Dimensions} from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Marker, AnimatedRegion} from 'react-native-maps';
 import Callout from 'react-native-maps';
 import mapstyle1 from '../MapStyles/mapstyle1';
 import mapstyle2 from '../MapStyles/mapstyle2';

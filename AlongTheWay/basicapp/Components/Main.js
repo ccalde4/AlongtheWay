@@ -1,14 +1,11 @@
 import React, {Component} from 'react';
-import { Text, View,StyleSheet,Keyboard, Dimensions,ActivityIndicator} from 'react-native';
+import { Text, View,StyleSheet,Keyboard, Dimensions,ActivityIndicator,PermissionsAndroid,Alert} from 'react-native';
 import ControlBar from '../Components/ControlBar';
 import MapGui from '../Components/MapGui';
 import SearchBar from '../Components/SearchBar';
 import DecoySearch from '../Buttons/DecoySearch';
-import {PermissionsAndroid,Alert} from 'react-native';
-import DismissKeyboard from 'dismissKeyboard';
 import MapView, { AnimatedRegion, Animated } from 'react-native-maps';
-
-var Places = require('../APIs/Places');
+import Foursquare from '../APIs/Foursquare/Foursquare'
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
@@ -16,14 +13,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
 
-var foursquare = require('react-native-foursquare-api')({
-  clientID: '1KVMYPHAH15IRBPS4AAA4PYAPXCSU15ACB20L0B1DRUDGFFX',
-  clientSecret: '5O5Z3YVLXKYLF5HBRUQPVRIP5KFTUK2OIUJNI52DMFZEEMME',
-  style: 'foursquare', // default: 'foursquare'
-  version: '20190214' //  default: '20140806'
-});
-var query = "Donuts";
-
+var f;
 export default class Main extends Component {
 
 
@@ -32,31 +22,34 @@ export default class Main extends Component {
           super(props)
 
            this.state = {
+
              lat: null,
              long: null,
-
              radius: this.props.radius,
              params: {
                 "ll": "30.414175,-91.186256",
-                "query": `${query}`,
+                "query": "donuts",
                 "limit": "10"
 
               },
-              region :null,
-
-             center : false,
+             region :null,
              mapsType: 'standard',
-             redClicked: false, pizzaClicked: false, coffeeClicked: false, fetchClicked: false, moreClicked: false,
-             burgerClicked: false, localClicked: false, parksClicked: false, cornClicked: false, burritoClicked: false,
+             redClicked:     false , pizzaClicked: false , coffeeClicked: false  ,
+             fetchClicked:   false , moreClicked:  false , burgerClicked: false  ,
+             localClicked:   false , parksClicked: false , cornClicked:   false  ,
+             burritoClicked: false ,
+
              items: [],
 
              watchID: null
             }
 
+              f = new Foursquare();
 
-
-              var filters = [this.state.pizzaClicked,this.state.coffeeClicked,this.state.burgerClicked,this.state.localClicked,
-                             this.state.parksClicked,this.state.cornClicked,this.state.burritoClicked,this.state.moreClicked
+              var filters = [this.state.pizzaClicked   , this.state.coffeeClicked,
+                             this.state.burgerClicked  , this.state.localClicked,
+                             this.state.parksClicked   , this.state.cornClicked,
+                             this.state.burritoClicked , this.state.moreClicked
                             ]
 
        }
@@ -67,13 +60,7 @@ export default class Main extends Component {
           console.log(region)
        }
 
-       goTo(){
 
-
-       }
-
-
-            //toggle for a button described in function name
         onRedClicked(){
           this.setState({
             region: {
@@ -83,14 +70,11 @@ export default class Main extends Component {
                longitudeDelta: LONGITUDE_DELTA,
                 }
           })
-
-         //   if(this.state.mapsType ==='satellite'){ this.setState({ mapsType: 'standard'}) }
+            //   if(this.state.mapsType ==='satellite'){ this.setState({ mapsType: 'standard'}) }
            //  else{ this.setState({mapsType: 'satellite'}) }
-         // this.setState( (previousState) => ({center: !previousState.center}) );
-
         }
 
-             //toggle for "Test" Button click only after you click fetch
+
         onPizzaClicked(){
           this.setState({ burgerClicked: false});
           this.setState({ coffeeClicked: false});
@@ -100,14 +84,14 @@ export default class Main extends Component {
             "ll": "30.414175,-91.186256",
             "query": "Pizza",
             "limit": "10",
-             "radius": `${this.state.radius}`
-
+             "radius": `${this.state.radius}`,
+              "intent":"browse"
               }})
 
 
         }
 
-             //toggle for a button described in function name
+
         onCoffeeClicked(){
         this.setState({ burgerClicked: false});
         this.setState({ pizzaClicked: false});
@@ -117,18 +101,20 @@ export default class Main extends Component {
           this.setState({params: {
              "ll": "30.414175,-91.186256",
              "query": "Coffee",
-             "limit": "10",
-              "radius": `${this.state.radius}`
+             "limit": "50",
+              "radius": `${this.state.radius}`,
+
               }})
 
 
         }
-             //toggle for a button described in function name
+
         onMoreClicked(){
           this.setState( (previousState) => ({moreClicked: !previousState.moreClicked}) );
+
         }
 
-              //toggle for a button described in function name
+
         onBurgerClicked(){
          this.setState({ coffeeClicked: false});
          this.setState({ pizzaClicked: false});
@@ -144,7 +130,7 @@ export default class Main extends Component {
 
          }
 
-              //toggle for a button described in function name
+
          onLocalClicked(){
          this.setState({ coffeeClicked: false});
          this.setState({ pizzaClicked: false});
@@ -160,28 +146,32 @@ export default class Main extends Component {
           }
 
 
-               //toggle for a button described in function name
+
          onParksClicked(){
-         this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
+
+
+        // this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
           }
 
-               //toggle for pulling up ReviewForm
+
         onCornClicked(){
           this.setState( (previousState) => ({cornClicked: !previousState.cornClicked}) );
           this.props.onReview();
         }
 
-                //toggle for pulling up options page
+
         onBurritoClicked(){
           this.setState( (previousState) => ({burritoClicked: !previousState.burritoClicked }) );
           this.props.inOptions();
         }
 
-               //Function for getting venues from foursquare Api
+
          onFetchClicked(){
 
-        foursquare.venues.getVenues(this.state.params)
-          .then( (venues) =>{ this.setState({items:venues.response}); } )
+           f.setParams(this.state.params);
+
+           f.search()
+          .then( (venues) =>{ this.setState({items:venues.response});console.log(venues.response) } )
 
             .catch(
              function(err)
@@ -215,6 +205,7 @@ export default class Main extends Component {
                 radius = {this.state.radius}
                 region = {this.state.region}
                 onRegionChange = {this.onRegionChange.bind(this)}
+
                />
 
            }
