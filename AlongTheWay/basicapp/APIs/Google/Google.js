@@ -5,7 +5,7 @@ import Config from './config/config';
 class Google  {
 
 constructor(){
-this.places ;
+
 this.params ;
 
 }
@@ -21,17 +21,7 @@ this.params ;
 
    }
 
-   setPlaces(places){
 
-   this.places = places;
-
-   }
-
-   getPlaces(){
-
-     return this.places;
-
-     }
 
    search(){
 
@@ -40,25 +30,17 @@ this.params ;
 
 
       return request(urlString);
-        /* .then((response)=>{this.setPlaces(response)})
-          .catch((error)=>{console.log(error)});
-        */
+
     }
 
     getDetails(place_id){
      var config = Config.getConfig();
-     var urlString = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id + '&' + querystring.stringify(config.creds);
+     var urlString = config.apiUrl+" /details/json?placeid=" + place_id + '&' + querystring.stringify(config.creds);
+
      return request(urlString);
     }
 
 
-
-
-
-
-
 }
-
-
 
 export default Google;

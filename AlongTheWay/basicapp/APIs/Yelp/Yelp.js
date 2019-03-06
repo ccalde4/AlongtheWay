@@ -4,11 +4,11 @@ import Config from './config/config';
 
 class Yelp  {
 
-constructor(){
-this.places ;
-this.params ;
+ constructor(){
 
-}
+ this.params ;
+
+ }
    setParams(params){
 
      this.params = params;
@@ -21,17 +21,7 @@ this.params ;
 
    }
 
-   setPlaces(places){
 
-   this.places = places;
-
-   }
-
-   getPlaces(){
-
-     return this.places;
-
-     }
 
    search(){
 
@@ -42,14 +32,12 @@ this.params ;
                 'Authorization': 'Bearer ' + config.creds.key}
                 }
       return request(urlString,headers);
-        /* .then((response)=>{this.setPlaces(response)})
-          .catch((error)=>{console.log(error)});
-        */
-}
 
-   getDetails(place_id){
+    }
+
+    getDetails(place_id){
        var config = Config.getConfig();
-       var urlString = "https://api.yelp.com/v3/businesses/"+place_id ;
+       var urlString = config.apiUrl + "/" + place_id ;
        var headers =  {
            headers:{
                    'Authorization': 'Bearer ' + config.creds.key}
@@ -59,14 +47,6 @@ this.params ;
    }
 
 
-
-
-
-
-
-
 }
-
-
 
 export default Yelp;
