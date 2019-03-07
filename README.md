@@ -18,4 +18,6 @@ react-native-firebase (go to firebase website and get own googleservices.json if
 
 react-native-star-rating
 
+react-native-fs
+
 querystring

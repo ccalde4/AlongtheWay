@@ -1,0 +1,15 @@
+import * as RNFS from 'react-native-fs';
+
+export default class ControlBar extends Component {
+
+
+RNFS.writeFile(savePath, contents, 'ascii').then(res => {
+    ...
+})
+.catch(err => {
+    ...
+    console.log(err.message, err.code);
+    ...
+});
+
+}
