@@ -8,7 +8,7 @@ react-native-elements
 
 react native-vector-icons
 
-react-native-foursquare-api
+react-native-foursquare-api (no need for this i created our own version)
 
 react-native-google-autocomplete
 
