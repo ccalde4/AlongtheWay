@@ -15,12 +15,13 @@ export default class App extends Component {
   super();
 
    foursquare = new Foursquare();
-   google = new Google();
-   yelp = new Yelp();
+   google     = new Google();
+   yelp       = new Yelp();
+
   }
 
 
-        hi(){
+       async hi(){
 
                    //some params notation differs slightly depending on provider, website has list of available params
              foursquare.setParams({
@@ -43,21 +44,19 @@ export default class App extends Component {
                              });
                //returns info for given place by its id (no params needed atm)
                //each id given for a result cant be used for another api(i think) ex. a venueId from foursquare wont work for yelp or google
-               yelp.getDetails("rdjLjIlAjaZ2rxmWf-V5HQ")
-               .then((response)=>{console.log(response)})
-               .catch((error)=>{console.log(error)});
+                let data1 = await yelp.getDetails("rdjLjIlAjaZ2rxmWf-V5HQ");
+                console.log(data1);
 
 
                //returns results of search based of given params
-               foursquare.search()
-               .then((results)=>{console.log(results)})
-               .catch((error)=>{console.log(error)});
 
-              //Comment out some of these so that the console isnt as hard to read
+                let data2 = await foursquare.search();
+                console.log(data2);
 
-              google.getDetails("ChIJdU4_JianJoYReG7XAV8wXP0")
-              .then((response)=>{console.log(response)})
-              .catch((error)=>{console.log(error)});
+              //Comment out some of these so that the console isn't as hard to read
+
+                let data3 = await google.getDetails("ChIJdU4_JianJoYReG7XAV8wXP0");
+                console.log(data3);
   }
 
   render() {

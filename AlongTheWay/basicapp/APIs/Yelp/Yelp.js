@@ -31,18 +31,19 @@ class Yelp  {
      headers:{
                 'Authorization': 'Bearer ' + config.creds.key}
                 }
-      return request(urlString,headers);
+      return request(urlString,headers).catch((err)=>{console.log("search failed")});
 
     }
 
     getDetails(place_id){
+
        var config = Config.getConfig();
        var urlString = config.apiUrl + "/" + place_id ;
        var headers =  {
            headers:{
                    'Authorization': 'Bearer ' + config.creds.key}
                    }
-         return request(urlString,headers);
+         return request(urlString,headers).catch((err)=>{console.log("search failed")});
 
    }
 

@@ -10,7 +10,7 @@ export default class DecoySearch extends Component {
   render() {
     return (
       <TouchableOpacity style ={styles.layout}   onPress = {this.props.onSearch}>
-             <View >
+             <View>
                 <Text style = {styles.text} > Search For A Place </Text>
 
               </View>

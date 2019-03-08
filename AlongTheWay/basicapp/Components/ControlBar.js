@@ -53,7 +53,7 @@ export default class ControlBar extends Component {
 
        </View>
 
-           {/* //Conditional rendering of buttons to be displayed if more is clicked  */}
+           {/* //Conditional rendering of buttons to be displayed if More is clicked  */}
         {this.state.isMoreClicked ?
 
          <View style = {styles.row}>

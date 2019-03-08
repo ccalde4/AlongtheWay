@@ -29,7 +29,7 @@ this.params ;
     var urlString = config.apiUrl + "/nearbysearch/json?" + querystring.stringify(this.getParams()) + '&' + querystring.stringify(config.creds);
 
 
-      return request(urlString);
+      return request(urlString).catch((err)=>{console.log("search failed")});
 
     }
 
@@ -37,7 +37,7 @@ this.params ;
      var config = Config.getConfig();
      var urlString = config.apiUrl+" /details/json?placeid=" + place_id + '&' + querystring.stringify(config.creds);
 
-     return request(urlString);
+     return request(urlString).catch((err)=>{console.log("search failed")});
     }
 
 

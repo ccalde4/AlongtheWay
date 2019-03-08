@@ -39,17 +39,21 @@ var { winHeight, winWidth } = Dimensions.get('window');
          <View style = {styles.Gui}   >
 
                            <View style = {styles.firstLine} >
-                           <Text style = {{fontSize: 20}} > Review your experience at: {"\n"} [insert place name here] </Text>
+                            <Text style = {{fontSize: 20}} > Review your experience at: {"\n"} [insert place name here] </Text>
                            </View>
 
                              <ScrollView  keyboardShouldPersistTaps = {"never"} style = {styles.commentBox}>
-                                                     <KeyboardAvoidingView  behavior = "padding" enabled>
-                                                              <View style = {styles.textIn}>
-                                                                <TextInput  placeholder = {'Leave a comment...'}  onChangeText={(text) => this.setState({text})}
-                                                                  value = {this.state.text}/>
-                                                               </View>
-                                                      </KeyboardAvoidingView>
-                                                       </ScrollView>
+                                  <KeyboardAvoidingView  behavior = "padding" enabled>
+                                    <View style = {styles.textIn}>
+
+                                      <TextInput  placeholder = {'Leave a comment...'}
+                                                  onChangeText={(text) => this.setState({text})}
+                                                  value = {this.state.text}
+                                                />
+
+                                    </View>
+                                  </KeyboardAvoidingView>
+                             </ScrollView>
 
                          <View style = {styles.stars}>
                             <Text style = {styles.starText} > Rate your experience: </Text>
