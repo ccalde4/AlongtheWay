@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View,TouchableOpacity} from 'react-native';
-import Config from './APIs/Foursquare/config/config';
-import Foursquare from './APIs/Foursquare/Foursquare';
-import Google from './APIs/Google/Google';
-import Yelp from './APIs/Yelp/Yelp';
+
+import Foursquare from './basicapp/APIs/Foursquare/Foursquare';
+import Google from './basicapp/APIs/Google/Google';
+import Yelp from './basicapp/APIs/Yelp/Yelp';
 
 
   //************COPY AND PASTE THIS IN App.js AND RUN(react-native log-android) TO SEE HOW APIS WORK************\\
