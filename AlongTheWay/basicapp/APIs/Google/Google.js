@@ -35,7 +35,7 @@ this.params ;
 
     getDetails(place_id){
      var config = Config.getConfig();
-     var urlString = config.apiUrl+" /details/json?placeid=" + place_id + '&' + querystring.stringify(config.creds);
+     var urlString = config.apiUrl+"/details/json?placeid=" + place_id + '&' + querystring.stringify(config.creds);
 
      return request(urlString).catch((err)=>{console.log("search failed")});
     }
