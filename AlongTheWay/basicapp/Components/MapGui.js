@@ -11,26 +11,39 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
-  const MapGui = ({mapsType,styling,lat,long,markers,region,radius,onRegionChange,onCornClick}) =>(
+  export default class MapGui extends Component {
 
+   shouldComponentUpdate(newProps,newState){
+       if(this.props.center!==newProps.center){
+         return true;
+       }
+       if(this.props.radius!==newProps.radius){
+         return true;
+       }
+   return (newProps.markers!==this.props.markers) ;
+
+   }
+   render(){
+   return(
       <MapView.Animated
                   ref = {(map)=>{this.map = map}}
-                  mapType = {mapsType}
+                  mapType = {this.props.mapsType}
                   provider = {'google'}
                   customMapStyle = {mapstyle1}
-                  style = {styling}
+                  style = {this.props.styling}
                   initialRegion={{
-                  latitude: lat,
-                  longitude: long,
+                  latitude: this.props.lat,
+                  longitude: this.props.long,
                   latitudeDelta: LATITUDE_DELTA,
                   longitudeDelta: LONGITUDE_DELTA,
                   }}
-                  region = {region}
-                  onRegionChangeComplete = {onRegionChange}
+                  region = {this.props.region}
+
+                  onRegionChangeComplete = {this.props.onRegionChange}
       >
 
       <Marker
-         coordinate = {{latitude: lat,longitude: long}}
+         coordinate = {{latitude: this.props.lat,longitude: this.props.long}}
                         title = {'Current Location'}
                         pinColor = {'indigo'}
 
@@ -38,15 +51,15 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
       />
 
          <MapView.Circle
-           center = {{ latitude: lat, longitude: long }}
-           radius = {radius}
+           center = {{ latitude: this.props.lat, longitude: this.props.long }}
+           radius = {this.props.radius}
            strokeColor = { '#1a66ff' }
            fillColor = { 'rgba(230,238,255,0.5)' }
 
           />
 
          {
-          markers.venues ? markers.venues.map(marker => (
+          this.props.markers.venues ? this.props.markers.venues.map(marker => {return(
            <Marker
               key = {marker.id}
               coordinate={ {latitude: marker.location.lat,longitude: marker.location.lng} }
@@ -57,19 +70,20 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
               onPress={e => console.log(e.nativeEvent.id)}
               pinColor = {'turquoise'}
             >
-                 <Callout tooltip = {true}  >
-                   <View style = {styles.call}  >
-                       <Text style = {styles.text} > {marker.name} </Text>
+                 <Callout >
+                   <View style = {styles.call}>
+                     <Text style = {styles.text}> {marker.name} </Text>
                    </View>
                   </Callout>
             </Marker>
-            ))
+           ) })
            : console.log("no markers")
          }
 
       </MapView.Animated>
-  )
-
+      );
+      }
+}
 
   const styles = StyleSheet.create({
     call:{
@@ -82,6 +96,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
     justifyContent: 'center',
     alignItems: 'center'
 
+
     },
     text:{
     fontSize: 10,
@@ -92,4 +107,3 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
   });
-export default MapGui;
