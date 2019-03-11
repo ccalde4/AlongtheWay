@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet, Dimensions,TouchableOpacity} from 'react-native';
-import MapView, {Marker, AnimatedRegion,Callout} from 'react-native-maps';
+import MapView, {Marker,Circle, Animated,Callout} from 'react-native-maps';
 import mapstyle1 from '../MapStyles/mapstyle1';
 import mapstyle2 from '../MapStyles/mapstyle2';
 import mapstyle3 from '../MapStyles/mapstyle3';
@@ -20,12 +20,17 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
        if(this.props.radius!==newProps.radius){
          return true;
        }
-   return (newProps.markers!==this.props.markers) ;
+
+   if(this.props.render!==newProps.render){
+     return true;
+   }
+   return false;
 
    }
    render(){
+   console.log("I rendered!!! at MapGui")
    return(
-      <MapView.Animated
+      <Animated
                   ref = {(map)=>{this.map = map}}
                   mapType = {this.props.mapsType}
                   provider = {'google'}
@@ -38,39 +43,40 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
                   longitudeDelta: LONGITUDE_DELTA,
                   }}
                   region = {this.props.region}
-
                   onRegionChangeComplete = {this.props.onRegionChange}
       >
 
       <Marker
-         coordinate = {{latitude: this.props.lat,longitude: this.props.long}}
-                        title = {'Current Location'}
-                        pinColor = {'indigo'}
+                 coordinate = {{latitude: this.props.lat,longitude: this.props.long}}
+                 title = {'Current Location'}
+                 pinColor = {'indigo'}
 
 
       />
 
-         <MapView.Circle
-           center = {{ latitude: this.props.lat, longitude: this.props.long }}
-           radius = {this.props.radius}
-           strokeColor = { '#1a66ff' }
-           fillColor = { 'rgba(230,238,255,0.5)' }
+       <Circle
+                 center = {{latitude: this.props.lat,
+                            longitude: this.props.long }}
+                 radius = {this.props.radius}
+                 strokeColor = { '#1a66ff' }
+                 fillColor = { 'rgba(230,238,255,0.5)' }
 
-          />
+       />
 
          {
           this.props.markers.venues ? this.props.markers.venues.map(marker => {return(
            <Marker
-              key = {marker.id}
-              coordinate={ {latitude: marker.location.lat,longitude: marker.location.lng} }
-              //title={marker.name}
-              //identifier = {marker.name}
-              //description={marker.location.address}
-              //onPress = {onCornClick}
-              onPress={e => console.log(e.nativeEvent.id)}
-              pinColor = {'turquoise'}
+                  key = {marker.id}
+                  coordinate={ {latitude: marker.location.lat,
+                                longitude: marker.location.lng} }
+                //title={marker.name}
+                //identifier = {marker.name}
+                //description={marker.location.address}
+                //onPress = {onCornClick}
+                  onPress={e => console.log(e.nativeEvent.id)}
+                  pinColor = {'turquoise'}
             >
-                 <Callout >
+                 <Callout>
                    <View style = {styles.call}>
                      <Text style = {styles.text}> {marker.name} </Text>
                    </View>
@@ -80,7 +86,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
            : console.log("no markers")
          }
 
-      </MapView.Animated>
+      </Animated>
       );
       }
 }

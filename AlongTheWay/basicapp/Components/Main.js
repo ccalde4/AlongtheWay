@@ -33,6 +33,7 @@ export default class Main extends Component {
                 limit:        10,
               },
              center:         false,
+             render:         false,
              region :        null,
              mapsType:       'standard',
              redClicked:     false , pizzaClicked: false , coffeeClicked: false  ,
@@ -169,9 +170,9 @@ export default class Main extends Component {
   async onFetchClicked(){
            foursquare.setParams(this.state.params);
            let data = await foursquare.search();
-           console.log(data);
+          // console.log(data);
            this.setState({items: data.response});
-
+          this.setState( (previousState) => ({render: !previousState.render}) );
        }
 
 
@@ -185,8 +186,11 @@ export default class Main extends Component {
        ||newState.burgerClicked!==this.state.burgerClicked
        ||newState.moreClicked!==this.state.moreClicked
        ||newState.center!==this.state.center
+       ||newState.render!==this.state.render
        ||newState.lat!==this.state.lat
-       ||newProps.radius!==this.props.radius)
+       ||newProps.radius!==this.props.radius
+
+       )
 
 
 
@@ -211,6 +215,7 @@ export default class Main extends Component {
                 markers = {this.state.items}
                 radius = {this.state.radius}
                 region = {this.state.region}
+                render = {this.state.render}
                 onRegionChange = {this.onRegionChange.bind(this)}
                 onCornClick = {this.onCornClicked.bind(this)}
                 center = {this.state.center}
