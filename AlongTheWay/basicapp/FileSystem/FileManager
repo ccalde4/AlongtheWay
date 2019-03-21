@@ -1,12 +1,12 @@
 import * as RNFS from 'react-native-fs';
 
-export default class File extends Component {
+export default class File {
 
 
 // require the module
 var RNFS = require('react-native-fs');
 
-  function create(file, content){
+  function createFile(file, content){
     var path = RNFS.DocumentDirectoryPath + file;
     RNFS.writeFile(path, content, 'utf8')
      .then((success) => {
@@ -18,7 +18,7 @@ var RNFS = require('react-native-fs');
 
   }
 
-  function delete (file){
+  function deleteFile (file){
 
     var path = RNFS.DocumentDirectoryPath + file;
 
@@ -34,4 +34,4 @@ var RNFS = require('react-native-fs');
   }
 
 
-  }
+ }
