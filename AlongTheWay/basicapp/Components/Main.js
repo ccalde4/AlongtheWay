@@ -4,8 +4,9 @@ import ControlBar from '../Components/ControlBar';
 import MapGui from '../Components/MapGui';
 import SearchBar from '../Components/SearchBar';
 import DecoySearch from '../Buttons/DecoySearch';
-import MapView, { AnimatedRegion, Animated } from 'react-native-maps';
-import Foursquare from '../APIs/Foursquare/Foursquare'
+import Foursquare from '../APIs/Foursquare/Foursquare';
+import Google from '../APIs/Google/Google';
+import Yelp from '../APIs/Yelp/Yelp';
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
@@ -13,51 +14,50 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
 
-var f;
+var foursquare;
+var google;
+var yelp;
 export default class Main extends Component {
 
 
-        constructor(props)
-       {
-          super(props)
+        constructor(props){
+          super(props);
 
            this.state = {
-
-             lat: null,
-             long: null,
-             radius: this.props.radius,
+             lat:            null,
+             long:           null,
+             radius:         this.props.radius,
              params: {
-                "ll": "30.414175,-91.186256",
-                "query": "donuts",
-                "limit": "10"
-
+                ll:           "30.414175,-91.186256",
+                query:        "donuts",
+                limit:        10,
               },
-             region :null,
-             mapsType: 'standard',
+             center:         false,
+             render:         false,
+             region :        null,
+             mapsType:       'standard',
              redClicked:     false , pizzaClicked: false , coffeeClicked: false  ,
              fetchClicked:   false , moreClicked:  false , burgerClicked: false  ,
              localClicked:   false , parksClicked: false , cornClicked:   false  ,
              burritoClicked: false ,
+             items:          [],
+             watchID:        null
+           }
 
-             items: [],
-
-             watchID: null
-            }
-
-              f = new Foursquare();
-
-              var filters = [this.state.pizzaClicked   , this.state.coffeeClicked,
-                             this.state.burgerClicked  , this.state.localClicked,
-                             this.state.parksClicked   , this.state.cornClicked,
-                             this.state.burritoClicked , this.state.moreClicked
-                            ]
-
-       }
+             foursquare = new Foursquare();
+             google = new Google();
+              google.setParams({
+                location: "30.414175,-91.186256",
+                type: 'restaurant',
+                Keyword: 'pizza',
+                radius: "1000"
+                               });
+        }
 
 
        onRegionChange(region){
          this.setState({region})
-          console.log(region)
+
        }
 
 
@@ -70,8 +70,8 @@ export default class Main extends Component {
                longitudeDelta: LONGITUDE_DELTA,
                 }
           })
-            //   if(this.state.mapsType ==='satellite'){ this.setState({ mapsType: 'standard'}) }
-           //  else{ this.setState({mapsType: 'satellite'}) }
+          this.setState( (previousState) => ({center: !previousState.center}) );
+
         }
 
 
@@ -81,11 +81,11 @@ export default class Main extends Component {
           this.setState({ localClicked: false});
           this.setState( (previousState) => ({pizzaClicked: !previousState.pizzaClicked}) );
           this.setState({params: {
-            "ll": "30.414175,-91.186256",
-            "query": "Pizza",
-            "limit": "10",
-             "radius": `${this.state.radius}`,
-              "intent":"browse"
+            ll: "30.414175,-91.186256",
+            query: "Pizza",
+            limit: 10,
+            radius: this.state.radius,
+            intent:"browse"
               }})
 
 
@@ -99,10 +99,10 @@ export default class Main extends Component {
         this.setState( (previousState) => ({coffeeClicked: !previousState.coffeeClicked}) );
 
           this.setState({params: {
-             "ll": "30.414175,-91.186256",
-             "query": "Coffee",
-             "limit": "50",
-              "radius": `${this.state.radius}`,
+             ll: `${this.state.lat},${this.state.long}`,
+             query: "Coffee",
+             limit: 50,
+             radius: this.state.radius,
 
               }})
 
@@ -120,11 +120,11 @@ export default class Main extends Component {
          this.setState({ pizzaClicked: false});
          this.setState({ localClicked: false});
          this.setState((previousState) => ( {burgerClicked: !previousState.burgerClicked} ));
-               this.setState({params: {
-               "ll": "30.414175,-91.186256",
-               "query": "Burgers",
-               "limit": "10",
-               "radius":`${this.state.radius}`
+         this.setState({params: {
+               ll: "30.414175,-91.186256",
+               query: "Burgers",
+               limit: 10,
+               radius:this.state.radius
 
                   }})
 
@@ -137,20 +137,21 @@ export default class Main extends Component {
          this.setState({ burgerClicked: false});
          this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
          this.setState({params: {
-                        "ll": "30.414175,-91.186256",
-                        "query": "Chicken",
-                        "limit": "10",
-                        "radius":`${this.state.radius}`
+                        ll: "30.414175,-91.186256",
+                        query: "Chicken",
+                        limit: 10,
+                        radius: this.state.radius
                            }})
 
           }
 
 
 
-         onParksClicked(){
-
-
-        // this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
+ async onParksClicked(){
+         this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
+         let test = await  google.search();
+         console.log(test);
+        // this.setState({items: test});
           }
 
 
@@ -166,28 +167,38 @@ export default class Main extends Component {
         }
 
 
-         onFetchClicked(){
-
-           f.setParams(this.state.params);
-
-           f.search()
-          .then( (venues) =>{ this.setState({items:venues.response});console.log(venues.response) } )
-
-            .catch(
-             function(err)
-             {
-              console.log(err);
-              Alert.alert("error fetching");
-              }
-                );
-
+  async onFetchClicked(){
+           foursquare.setParams(this.state.params);
+           let data = await foursquare.search();
+          // console.log(data);
+           this.setState({items: data.response});
+          this.setState( (previousState) => ({render: !previousState.render}) );
        }
 
 
+  shouldComponentUpdate(newProps,newState){
 
+   return (
+         newState.pizzaClicked!==this.state.pizzaClicked
+       ||newState.parksClicked!==this.state.parksClicked
+       ||newState.coffeeClicked!==this.state.coffeeClicked
+       ||newState.localClicked!==this.state.localClicked
+       ||newState.burgerClicked!==this.state.burgerClicked
+       ||newState.moreClicked!==this.state.moreClicked
+       ||newState.center!==this.state.center
+       ||newState.render!==this.state.render
+       ||newState.lat!==this.state.lat
+       ||newProps.radius!==this.props.radius
+
+       )
+
+
+
+  }
 
      render()
      {
+     console.log("I rendered!!!")
       return (
 
        <View style={styles.Gui}  >
@@ -204,8 +215,10 @@ export default class Main extends Component {
                 markers = {this.state.items}
                 radius = {this.state.radius}
                 region = {this.state.region}
+                render = {this.state.render}
                 onRegionChange = {this.onRegionChange.bind(this)}
-
+                onCornClick = {this.onCornClicked.bind(this)}
+                center = {this.state.center}
                />
 
            }
@@ -265,9 +278,6 @@ export default class Main extends Component {
 
 
 
-
-
-
 }
 
 
@@ -286,7 +296,6 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
 
    },
-
 
 });
 

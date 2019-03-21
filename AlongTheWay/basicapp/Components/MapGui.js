@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import { Text, View, StyleSheet, Dimensions} from 'react-native';
-import MapView, {Marker, AnimatedRegion} from 'react-native-maps';
-import Callout from 'react-native-maps';
+import { Text, View, StyleSheet, Dimensions,TouchableOpacity} from 'react-native';
+import MapView, {Marker,Circle, Animated,Callout} from 'react-native-maps';
 import mapstyle1 from '../MapStyles/mapstyle1';
 import mapstyle2 from '../MapStyles/mapstyle2';
 import mapstyle3 from '../MapStyles/mapstyle3';
-import FilterButton from '../Buttons/FilterButton';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -13,50 +11,105 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
-  const MapGui = ({mapsType,styling,lat,long,markers,region,radius,onRegionChange}) =>(
+  export default class MapGui extends Component {
 
-      <MapView.Animated
+   shouldComponentUpdate(newProps,newState){
+       if(this.props.center!==newProps.center){
+         return true;
+       }
+       if(this.props.radius!==newProps.radius){
+         return true;
+       }
+
+   if(this.props.render!==newProps.render){
+     return true;
+   }
+   return false;
+
+   }
+   render(){
+   console.log("I rendered!!! at MapGui")
+   return(
+      <Animated
                   ref = {(map)=>{this.map = map}}
-                  mapType = {mapsType}
+                  mapType = {this.props.mapsType}
                   provider = {'google'}
                   customMapStyle = {mapstyle1}
-                  style = {styling}
+                  style = {this.props.styling}
                   initialRegion={{
-                  latitude: lat,
-                  longitude: long,
+                  latitude: this.props.lat,
+                  longitude: this.props.long,
                   latitudeDelta: LATITUDE_DELTA,
                   longitudeDelta: LONGITUDE_DELTA,
                   }}
-                  region = {region}
-                  onRegionChangeComplete = {onRegionChange}
+                  region = {this.props.region}
+                  onRegionChangeComplete = {this.props.onRegionChange}
       >
 
       <Marker
-         coordinate = {{latitude: lat,longitude: long}}
-                        title = {'Current Location'}
+                 coordinate = {{latitude: this.props.lat,longitude: this.props.long}}
+                 title = {'Current Location'}
+                 pinColor = {'indigo'}
+
 
       />
 
-         <MapView.Circle
-           center = {{ latitude: lat, longitude: long }}
-           radius = {radius}
-           strokeColor = { '#1a66ff' }
-           fillColor = { 'rgba(230,238,255,0.5)' }
+       <Circle
+                 center = {{latitude: this.props.lat,
+                            longitude: this.props.long }}
+                 radius = {this.props.radius}
+                 strokeColor = { '#1a66ff' }
+                 fillColor = { 'rgba(230,238,255,0.5)' }
 
-          />
+       />
 
          {
-          markers.venues ? markers.venues.map(marker => (
+          this.props.markers.venues ? this.props.markers.venues.map(marker => {return(
            <Marker
-              key = {marker.id}
-              coordinate={ {latitude: marker.location.lat,longitude: marker.location.lng} }
-              title={marker.name}
-              description={marker.location.address}
-            />
-            ))
+                  key = {marker.id}
+                  coordinate={ {latitude: marker.location.lat,
+                                longitude: marker.location.lng} }
+                //title={marker.name}
+                //identifier = {marker.name}
+                //description={marker.location.address}
+                //onPress = {onCornClick}
+                  onPress={e => console.log(e.nativeEvent.id)}
+                  pinColor = {'turquoise'}
+            >
+                 <Callout>
+                   <View style = {styles.call}>
+                     <Text style = {styles.text}> {marker.name} </Text>
+                   </View>
+                  </Callout>
+            </Marker>
+           ) })
            : console.log("no markers")
          }
 
-      </MapView.Animated>
-  )
-export default MapGui;
+      </Animated>
+      );
+      }
+}
+
+  const styles = StyleSheet.create({
+    call:{
+    flex: 1,
+    flexDirection: 'row',
+    height: 80,
+    width: 100,
+    backgroundColor: 'lavender',
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center'
+
+
+    },
+    text:{
+    fontSize: 10,
+    paddingLeft:20
+
+    }
+
+
+
+  });

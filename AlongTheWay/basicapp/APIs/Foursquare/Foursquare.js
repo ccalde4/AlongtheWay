@@ -2,11 +2,12 @@ import request from '../lib/request';
 import querystring from 'querystring';
 import Config from './config/config';
 
-class Foursquare  {
+class Foursquare {
+
 
 constructor(){
 
-this.params ;
+this.params;
 
 }
 
@@ -25,21 +26,24 @@ this.params ;
    }
 
 
-   search(){
+    search(){
 
-    var config = Config.getConfig();
+    var config    = Config.getConfig();
     var urlString = config.apiUrl + "/venues/search?" +
                     querystring.stringify(this.getParams()) + '&' +
                     querystring.stringify(config.creds);
 
-      return request(urlString);
+     return request(urlString).catch((err)=>{console.log("search failed")});
 
    }
 
    getDetails(place_id){
-     var config = Config.getConfig();
-      var urlString = config.apiUrl + "/venues/" + place_id + '?' + querystring.stringify(config.creds);
-      return request(urlString);
+
+     var config    = Config.getConfig();
+     var urlString = config.apiUrl + "/venues/" + place_id + '?' + querystring.stringify(config.creds);
+
+      return request(urlString).catch((err)=>{console.log("search failed")});
+
    }
 
 

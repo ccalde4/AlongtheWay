@@ -1,9 +1,9 @@
-import request from '../../lib/request';
-import querystring from 'querystring';
+
+
 var config = {
   apiUrl        : 'https://maps.googleapis.com/maps/api/place',
   creds         : {
-   "key"           : 'AIzaSyCvfftvHMnURvTGkaiVyHQMdcYsGZsCVNs'
+   key           : 'AIzaSyCvfftvHMnURvTGkaiVyHQMdcYsGZsCVNs'
 
   }
 
@@ -11,18 +11,6 @@ var config = {
 
 const Config = {
 
-
-   getLocale: function(){
-
-   return config.creds.locale;
-
-   },
-
-   setLocale: function(locale){
-
-    config.creds.locale = locale;
-
-   },
 
    getConfig: function(){
 

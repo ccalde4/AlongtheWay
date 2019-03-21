@@ -57,7 +57,8 @@ val => this.setState({ radius: val })
 
 
 
-
+ //   if(this.state.mapsType ==='satellite'){ this.setState({ mapsType: 'standard'}) }
+           //  else{ this.setState({mapsType: 'satellite'}) }
 
 
 
@@ -76,3 +77,16 @@ val => this.setState({ radius: val })
                                            (error) => console.log(error.message),
                                                                       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
                                        ); */
+
+
+
+
+                                        //foursquare.search()
+                                                     // .then((venues) =>{this.setState({items:venues.response})})
+                                                    //  .catch(
+                                                    //    function(err)
+                                                      //     {
+                                                      //      console.log(err);
+                                                       //     Alert.alert("error fetching");
+                                                       //    }
+                                                      //   );
