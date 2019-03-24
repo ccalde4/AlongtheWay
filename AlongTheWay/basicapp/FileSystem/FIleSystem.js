@@ -33,5 +33,9 @@ var RNFS = require('react-native-fs');
 
   }
 
-
+function fileExists(path){
+    var filepath = RNFS.DocumentDirectoryPath + path;
+    return RNFS.exists(filepath)
+}
+}
 
