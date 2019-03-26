@@ -32,6 +32,7 @@ export default class Main extends Component {
                 query:        "donuts",
                 limit:        10,
               },
+             markerDataFetched: false,
              center:         false,
              render:         false,
              region :        null,
@@ -40,7 +41,7 @@ export default class Main extends Component {
              fetchClicked:   false , moreClicked:  false , burgerClicked: false  ,
              localClicked:   false , parksClicked: false , cornClicked:   false  ,
              burritoClicked: false ,
-             items:          [],
+
              itemDetails:    [],
              watchID:        null
            }
@@ -168,20 +169,23 @@ export default class Main extends Component {
           this.props.inOptions();
         }
 
-
+        onMarkerClicked(){
+        }
+        }
 
 //need to figure out a good way to do this elegantly
   async onFetchClicked(){
            foursquare.setParams(this.state.params);
            let data = await foursquare.search();
-           this.setState({items: data.response});
+           this.setState({(previousState) => ({markerDataFetched: !previousState.markerDataFetched}));
+
 
            let details = [];
            let yelpDeets = [];
 
-           for(let i = 0; i < this.state.items.venues.length; i++){
+           for(let i = 0; i < data.response.venues.length; i++){
            console.log(i);
-            details[i] = await foursquare.getVenueDetails((this.state.items.venues)[i].id);
+            details[i] = await foursquare.getVenueDetails((data.response.venues)[i].id);
 
             yelpDeets[i] = await yelp.phoneSearch(details[i].response.venue.contact.phone);
             console.log(details[i].response.venue.contact.phone);
@@ -189,7 +193,6 @@ export default class Main extends Component {
             console.log(yelpDeets[i]);
            }
            this.setState({itemDetails: details});
-
            this.setState( (previousState) => ({render: !previousState.render}) );
 
        }

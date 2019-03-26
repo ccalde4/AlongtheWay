@@ -37,13 +37,23 @@ this.params;
 
    }
 
-   getDetails(place_id){
+   getVenueDetails(place_id){
 
      var config    = Config.getConfig();
      var urlString = config.apiUrl + "/venues/" + place_id + '?' + querystring.stringify(config.creds);
 
       return request(urlString).catch((err)=>{console.log("search failed")});
 
+   }
+
+    async getDetails(data_arr){
+        let details = [];
+        for(let i = 0; i < data_arr.response.venues.length; i++){
+            console.log(i);
+            details[i] = await this.getVenueDetails((data_arr.response.venues)[i].id);
+            console.log(details[i].venue.name)
+             }
+             return details;
    }
 
 
