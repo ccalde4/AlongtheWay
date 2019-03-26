@@ -39,7 +39,7 @@ var { winHeight, winWidth } = Dimensions.get('window');
          <View style = {styles.Gui}   >
 
                            <View style = {styles.firstLine} >
-                            <Text style = {{fontSize: 20}} > Review your experience at: {"\n"} [insert place name here] </Text>
+                            <Text style = {{fontSize: 20}} > Review your experience at: {"\n"} {this.props.name} </Text>
                            </View>
 
                              <ScrollView  keyboardShouldPersistTaps = {"never"} style = {styles.commentBox}>

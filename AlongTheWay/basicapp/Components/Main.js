@@ -41,10 +41,12 @@ export default class Main extends Component {
              localClicked:   false , parksClicked: false , cornClicked:   false  ,
              burritoClicked: false ,
              items:          [],
+             itemDetails:    [],
              watchID:        null
            }
 
              foursquare = new Foursquare();
+             yelp = new Yelp();
              google = new Google();
               google.setParams({
                 location: "30.414175,-91.186256",
@@ -167,12 +169,29 @@ export default class Main extends Component {
         }
 
 
+
+//need to figure out a good way to do this elegantly
   async onFetchClicked(){
            foursquare.setParams(this.state.params);
            let data = await foursquare.search();
-          // console.log(data);
            this.setState({items: data.response});
-          this.setState( (previousState) => ({render: !previousState.render}) );
+
+           let details = [];
+           let yelpDeets = [];
+
+           for(let i = 0; i < this.state.items.venues.length; i++){
+           console.log(i);
+            details[i] = await foursquare.getVenueDetails((this.state.items.venues)[i].id);
+
+            yelpDeets[i] = await yelp.phoneSearch(details[i].response.venue.contact.phone);
+            console.log(details[i].response.venue.contact.phone);
+            console.log(details[i].response.venue.name);
+            console.log(yelpDeets[i]);
+           }
+           this.setState({itemDetails: details});
+
+           this.setState( (previousState) => ({render: !previousState.render}) );
+
        }
 
 
@@ -212,16 +231,18 @@ export default class Main extends Component {
                 styling = {styles.map}
                 lat = {this.state.lat}
                 long = {this.state.long}
-                markers = {this.state.items}
+                markers = {this.state.itemDetails}
                 radius = {this.state.radius}
                 region = {this.state.region}
                 render = {this.state.render}
                 onRegionChange = {this.onRegionChange.bind(this)}
                 onCornClick = {this.onCornClicked.bind(this)}
+                //onMarkerClick = {this.onMarkerClicked.bind(this)}
                 center = {this.state.center}
                />
 
            }
+
 
             {
                this.state.lat === null ? null :
