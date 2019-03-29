@@ -30,12 +30,26 @@ var RNFS = require('react-native-fs');
         .catch((err) => {
           console.log(err.message);
         });
-
   }
 
-function fileExists(path){
-    var filepath = RNFS.DocumentDirectoryPath + path;
-    return RNFS.exists(filepath)
-}
+    function fileExists(path){
+        var filepath = RNFS.DocumentDirectoryPath + path;
+        return RNFS.exists(filepath)
+    }
+
+    function fileRead((path)){
+        var filepath = RNFS.DocumentDirectoryPath + path;
+        return String s = readFile(filepath,utf8);
+    }
+
+    function fileWrite(path,content){
+        var filepath = RNFS.DocumentDirectoryPath + path;
+        writeFile(filepath,content)
+        console.log()
+
+
+    }
+
+
 }
 
