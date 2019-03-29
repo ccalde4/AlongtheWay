@@ -1,0 +1,65 @@
+var topPlaces;
+export default class MarkerSort{
+
+constructor(){
+    topPlaces = [];
+    topPlaces.length = 10;
+    this.unsorted = [];
+
+    }
+
+setItems(unsorted){
+
+    for(let i =0; i < unsorted.length-1; i++){
+        this.unsorted[i] = (unsorted.response.venue)[i].rating;
+    }
+
+
+    console.log(unsorted);
+    console.log(topPlaces.length);
+
+    for(let i = 0; topPlaces.length; i++) {
+        let temp = unsorted[i];
+        topPlaces.push(temp);
+    }
+
+  }
+
+
+
+
+quickSort(unsorted, left, right){
+    var len = this.unsorted.length,
+    pivot,
+    partitionIndex;
+
+    if(left < right){
+        pivot = right;
+        partitionIndex = partition(this.unsorted, pivot, left, right);
+
+        quickSort(this.unsorted, left, partitionIndex -1);
+        quickSort(this.unsorted, partition + 1, right);
+    }
+    return this.unsorted;
+}
+
+partition(unsorted, pivot, left, right){
+    var pivotValue = this.unsorted[pivot],
+    partitionIndex = left;
+
+    for(var i = left; i < right; i++){
+    if(this.unsorted[i] < pivotValue){
+        swap(this.unsorted, i, partitionIndex)
+        partitionIndex++;
+    }
+ }
+ swap(this.unsorted, right, partitionIndex);
+ return partitionIndex;
+ }
+
+swap(unsorted, i, j){
+    var temp = this.unsorted[i];
+    this.unsorted[i] = unsorted[j];
+    this.unsorted[j] = temp;
+ }
+}
