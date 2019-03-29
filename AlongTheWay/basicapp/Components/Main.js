@@ -277,11 +277,11 @@ export default class Main extends Component {
     //Getting current location
 
    async componentDidMount() {
-
-        if(await file.FileExists('position')){
-        let s = file.FileRead('position');
-        let s2 = s.split(" ");
-        this.setState({
+        let positionexists = await file.fileExists('position');
+        if(positionexists){
+            let s = await file.fileRead('position');
+            let s2 = s.split(" ");
+            this.setState({
                        lat: parseFloat(s2[0]),
                        long: parseFloat(s2[1]),
                      });
@@ -313,7 +313,7 @@ export default class Main extends Component {
      async componentWillUnmount(){
      navigator.geolocation.clearWatch(this.watchID);
      let s = "" + this.state.lat + " " + this.state.long;
-     let positionFilexists = await file.FileExists('position');
+     let positionFilexists = await file.fileExists('position');
       if(positionFilexists){
         file.createFile('position',s)
        }
