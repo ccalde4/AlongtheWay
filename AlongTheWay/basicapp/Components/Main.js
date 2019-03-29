@@ -7,6 +7,7 @@ import DecoySearch from '../Buttons/DecoySearch';
 import Foursquare from '../APIs/Foursquare/Foursquare';
 import Google from '../APIs/Google/Google';
 import Yelp from '../APIs/Yelp/Yelp';
+import File from '../FileSystem/FileSystem';
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
@@ -17,11 +18,13 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 var foursquare;
 var google;
 var yelp;
+var file;
 export default class Main extends Component {
 
 
         constructor(props){
           super(props);
+
 
            this.state = {
              lat:            null,
@@ -45,7 +48,7 @@ export default class Main extends Component {
              itemDetails:    [],
              watchID:        null
            }
-
+             file = new File();
              foursquare = new Foursquare();
              yelp = new Yelp();
              google = new Google();
@@ -272,7 +275,18 @@ export default class Main extends Component {
   }
 
     //Getting current location
-   componentDidMount() {
+
+   async componentDidMount() {
+
+        if(await file.FileExists('position')){
+        let s = file.FileRead('position');
+        let s2 = s.split(" ");
+        this.setState({
+                       lat: parseFloat(s2[0]),
+                       long: parseFloat(s2[1]),
+                     });
+        }
+        else{
 
          navigator.geolocation.getCurrentPosition( (position) =>
            {
@@ -292,11 +306,24 @@ export default class Main extends Component {
           { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
                                                  );
 
+         }
+   }
 
-               }
+
+     async componentWillUnmount(){
+     navigator.geolocation.clearWatch(this.watchID);
+     let s = "" + this.state.lat + " " + this.state.long;
+     let positionFilexists = await file.FileExists('position');
+      if(positionFilexists){
+        file.createFile('position',s)
+       }
+       else{
+       file.fileWrite('position',s);
+       }
 
 
-     componentWillUnmount(){ navigator.geolocation.clearWatch(this.watchID); }
+
+     }
 
 
 
