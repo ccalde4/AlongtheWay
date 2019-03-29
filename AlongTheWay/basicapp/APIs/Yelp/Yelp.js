@@ -21,7 +21,16 @@ class Yelp  {
 
    }
 
+phoneSearch(phoneNum){
+ var config = Config.getConfig();
+    var urlString = config.apiUrl + "/search/phone?phone=+1" + phoneNum ;
+    var headers =  {
+     headers:{
+                'Authorization': 'Bearer ' + config.creds.key}
+                }
+      return request(urlString,headers).catch((err)=>{console.log("search failed")});
 
+}
 
    search(){
 

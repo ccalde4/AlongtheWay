@@ -4,7 +4,9 @@ import MapView, {Marker,Circle, Animated,Callout} from 'react-native-maps';
 import mapstyle1 from '../MapStyles/mapstyle1';
 import mapstyle2 from '../MapStyles/mapstyle2';
 import mapstyle3 from '../MapStyles/mapstyle3';
+import MarkerPopup from '../Components/MarkerPopup';
 
+import Yelp from '../APIs/Yelp/Yelp';
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
@@ -12,6 +14,16 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
   export default class MapGui extends Component {
+    constructor(props){
+    super(props);
+    this.state = {
+    markerClicked: false,
+    }
+
+   // this.handlePress = this.handlePress.bind(this);
+    }
+
+
 
    shouldComponentUpdate(newProps,newState){
        if(this.props.center!==newProps.center){
@@ -27,8 +39,22 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
    return false;
 
    }
+   handlePress(pressedMarker){
+   this.setState((previousState) => ({markerClicked: !previousState.markerClicked}))
+   this.props.onMarkerClicked(pressedMarker);
+   <MarkerPopup location = {pressedMarker.response.venue.location}
+                                  name = {pressedMarker.response.venue.name}
+                                  id = {pressedMarker.response.venue.id}
+                                  contact = {pressedMarker.response.venue.contact}
+                                  rating = {pressedMarker.response.venue.rating}/>
+
+   }
+
+
    render(){
-   console.log("I rendered!!! at MapGui")
+   console.log("I rendered!!! at MapGui");
+
+
    return(
       <Animated
                   ref = {(map)=>{this.map = map}}
@@ -63,42 +89,53 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
        />
 
+
+
          {
-          this.props.markers.venues ? this.props.markers.venues.map(marker => {return(
+          this.props.markers ? this.props.markers.map(marker => {return(
            <Marker
-                  key = {marker.id}
-                  coordinate={ {latitude: marker.location.lat,
-                                longitude: marker.location.lng} }
-                //title={marker.name}
-                //identifier = {marker.name}
-                //description={marker.location.address}
-                //onPress = {onCornClick}
-                  onPress={e => console.log(e.nativeEvent.id)}
+                  key = {marker.response.venue.id}
+                  coordinate={ {latitude: marker.response.venue.location.lat,
+                                longitude: marker.response.venue.location.lng} }
+                title={marker.response.venue.name}
+                identifier = {marker.response.venue.id}
+                description={marker.response.venue.location.address}
+                //onPress = {() => {this.handlePress(marker)}}
+                //onPress = {this.handlePress}
+
                   pinColor = {'turquoise'}
             >
-                 <Callout>
-                   <View style = {styles.call}>
-                     <Text style = {styles.text}> {marker.name} </Text>
-                   </View>
-                  </Callout>
-            </Marker>
-           ) })
+
+                <Callout>
+                 <MarkerPopup location = {marker.response.venue.location}
+                               name = {marker.response.venue.name}
+                               id = {marker.response.venue.id}
+                               contact = {marker.response.venue.contact}
+                               rating = {marker.response.venue.rating}/>
+
+                </Callout>
+
+                </Marker>
+
+            )})
            : console.log("no markers")
          }
 
       </Animated>
       );
+
+
       }
 }
 
   const styles = StyleSheet.create({
     call:{
-    flex: 1,
-    flexDirection: 'row',
-    height: 80,
-    width: 100,
+
+    //flexDirection: 'row',
+    height: height,
+    width: width,
     backgroundColor: 'lavender',
-    borderRadius: 30,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center'
 

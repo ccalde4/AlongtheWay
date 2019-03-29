@@ -7,17 +7,18 @@
     "test": "jest"
   },
   "dependencies": {
+    "@mapbox/polyline": "^1.0.0",
     "querystring": "^0.2.0",
     "react": "16.6.3",
     "react-native": "0.58.4",
-    "react-native-elements": "^1.0.0",
+    "react-native-elements": "^1.1.0",
     "react-native-firebase": "^5.2.3",
     "react-native-foursquare-api": "0.0.4",
     "react-native-fs": "^2.13.3",
     "react-native-google-autocomplete": "^0.1.5",
     "react-native-maps": "^0.23.0",
     "react-native-star-rating": "^1.1.0",
-    "react-native-vector-icons": "^6.3.0"
+    "react-native-vector-icons": "^6.4.2"
   },
   "devDependencies": {
     "babel-core": "7.0.0-bridge.0",
