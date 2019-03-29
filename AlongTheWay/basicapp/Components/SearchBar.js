@@ -30,12 +30,27 @@ export default class App extends Component {
                1000
              );
          }
+
+          componentDidMount() {
+             //Get current location and set initial region to this
+             navigator.geolocation.getCurrentPosition(
+               position => {
+                 this.setState({
+                   latitude: position.coords.latitude,
+                   longitude: position.coords.longitude
+                 });
+               },
+               error => console.error(error),
+               { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
+             );
+           }
+
     async getRouteDirections(destinationPlaceId, destinationName) {
     const apiKey = 'AIzaSyCvfftvHMnURvTGkaiVyHQMdcYsGZsCVNs';
         try {
           const response = await fetch(
-            `https://maps.googleapis.com/maps/api/directions/json?origin=${
-              this.state.latitude
+            `https://maps.googleapis.com/maps/api/directions/json?origin=
+            ${this.state.latitude
             },${
               this.state.longitude
             }&destination=place_id:${destinationPlaceId}&key=${apiKey}`
@@ -114,6 +129,14 @@ export default class App extends Component {
                ref={map => {
                  this.map = map;
                }}
+               style={styles.map}
+                         region={{
+                           latitude: this.state.latitude,
+                           longitude: this.state.longitude,
+                           latitudeDelta: 0.015,
+                           longitudeDelta: 0.0121
+                         }}
+                         showsUserLocation={true}
 
              >
                <Polyline
@@ -162,7 +185,10 @@ const styles = StyleSheet.create({
       marginRight: 5,
       padding: 5,
       backgroundColor: "white"
-    }
+    },
+    map: {
+        ...StyleSheet.absoluteFillObject
+      }
 
 });
 
