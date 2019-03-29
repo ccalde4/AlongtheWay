@@ -32,7 +32,6 @@ export default class App extends Component {
          }
 
           componentDidMount() {
-             //Get current location and set initial region to this
              navigator.geolocation.getCurrentPosition(
                position => {
                  this.setState({
@@ -95,6 +94,7 @@ export default class App extends Component {
 
       render() {
          let marker = null;
+         let distanceButton = null;
 
          if (this.state.pointCoords.length > 1) {
            marker = (
@@ -102,6 +102,11 @@ export default class App extends Component {
                coordinate={this.state.pointCoords[this.state.pointCoords.length - 1]}
              />
            );
+
+           distanceButton = (
+           <View style = {styles.bottomButton}>
+               <Text style = {styles.bottomButtonText}> Distance Time </Text>
+           </View>)
          }
 
          const predictions = this.state.predictions.map(prediction => (
@@ -111,13 +116,13 @@ export default class App extends Component {
                  prediction.place_id,
                  prediction.description
                )
+
              }
              key={prediction.id}
            >
              <View>
                <Text style={styles.suggestions}>
                  {prediction.description}
-
                </Text>
              </View>
            </TouchableHighlight>
@@ -158,6 +163,8 @@ export default class App extends Component {
                }}
              />
              {predictions}
+             {distanceButton}
+
            </View>
          );
        }
@@ -169,6 +176,18 @@ export default class App extends Component {
 
 
 const styles = StyleSheet.create({
+
+    bottomButton: {
+        backgroundColor: "white",
+        marginTop: 475,
+        margin: 20,
+        padding: 15,
+        fontSize: 22,
+        paddingLeft: 30,
+        paddingRight: 30,
+        alignSelf: "center"
+    },
+
    suggestions: {
       backgroundColor: "white",
       padding: 5,
@@ -181,11 +200,15 @@ const styles = StyleSheet.create({
       height: 40,
       borderWidth: 0.5,
       marginTop: 50,
+      borderRadius: 10,
       marginLeft: 5,
       marginRight: 5,
       padding: 5,
       backgroundColor: "white"
     },
+    container: {
+        ...StyleSheet.absoluteFillObject
+      },
     map: {
         ...StyleSheet.absoluteFillObject
       }
