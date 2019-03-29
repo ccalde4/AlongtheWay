@@ -41,7 +41,7 @@ export default class Main extends Component {
              fetchClicked:   false , moreClicked:  false , burgerClicked: false  ,
              localClicked:   false , parksClicked: false , cornClicked:   false  ,
              burritoClicked: false ,
-
+             items:         [],
              itemDetails:    [],
              watchID:        null
            }
@@ -177,7 +177,7 @@ export default class Main extends Component {
   async onFetchClicked(){
            foursquare.setParams(this.state.params);
            let data = await foursquare.search();
-           this.setState({(previousState) => ({markerDataFetched: !previousState.markerDataFetched}));
+           this.setState({items: data.response});
 
 
            let details = [];
