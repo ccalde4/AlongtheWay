@@ -1,16 +1,18 @@
 import * as RNFS from 'react-native-fs';
 
 export default class File {
-
+constructor(){
+var RNFS = require('react-native-fs');
+}
 
 // require the module
-var RNFS = require('react-native-fs');
 
-  function createFile(file, content){
+
+  createFile(file, content){
     var path = RNFS.DocumentDirectoryPath + file;
     RNFS.writeFile(path, content, 'utf8')
      .then((success) => {
-       console.log('FILE WRITTEN!');
+       console.warn('FILE WRITTEN!');
       })
      .catch((err) => {
        console.log(err.message);
@@ -18,7 +20,7 @@ var RNFS = require('react-native-fs');
 
   }
 
-  function deleteFile (file){
+  deleteFile (file){
 
     var path = RNFS.DocumentDirectoryPath + file;
 
@@ -32,20 +34,28 @@ var RNFS = require('react-native-fs');
         });
   }
 
-    function fileExists(path){
+
+    fileExists(path){
+       var filepath = RNFS.DocumentDirectoryPath + path;
+       return RNFS.exists(filepath);
+     }
+
+    fileRead(path){
         var filepath = RNFS.DocumentDirectoryPath + path;
-        return RNFS.exists(filepath)
+        console.warn('Read File');
+        return RNFS.readFile(filepath,'utf8');
     }
 
-    function fileRead((path)){
+    fileWrite(path,content){
         var filepath = RNFS.DocumentDirectoryPath + path;
-        return String s = readFile(filepath,utf8);
-    }
+        RNFS.writeFile(filepath,content)
+            .then((success) => {
+               console.warn('FILE WRITTEN!');
+            })
+            .catch((err) => {
+            console.warn(err.message);
+            });
 
-    function fileWrite(path,content){
-        var filepath = RNFS.DocumentDirectoryPath + path;
-        writeFile(filepath,content)
-        console.log()
 
 
     }
