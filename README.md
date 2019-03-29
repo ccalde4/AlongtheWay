@@ -21,3 +21,5 @@ react-native-star-rating
 react-native-fs
 
 querystring
+
+@mapbox/polyline
