@@ -169,9 +169,7 @@ export default class Main extends Component {
           this.props.inOptions();
         }
 
-        onMarkerClicked(){
-        }
-        }
+
 
 //need to figure out a good way to do this elegantly
   async onFetchClicked(){
