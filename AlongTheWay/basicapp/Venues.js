@@ -2,28 +2,28 @@
 export default class Venues{
 
     constructor(){
-       this.venue ={
-               id : '',
-               name :'',
-               address1 : '',
-               address2 : '',
-               address3 : '',
-               city : '',
-               zip : '',
-               country : '',
-               state : '',
-               rating : '',
-               phone : '',
-               lat : '',
-               long : '',
-               displayPhone : '',
-               displayAddress : '',
-               categories : [],
-               reviews : '',
-               from : '',
+        this.venue ={
+                      id : '',
+                      name :'',
+                      location = {
+                               address1 : '',
+                               address2 : '',
+                               address3 : '',
+                               city : '',
+                               zip : '',
+                               country : '',
+                               state : '',
+                               displayAddress : '',
+                               }
+                      rating : '',
+                      phone : '',
+                      lat : '',
+                      long : '',
+                      displayPhone : '',
 
-
-       }
+                      categories : [],
+                      reviews : '',
+                      from : '',
 
     }
 
