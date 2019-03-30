@@ -9,6 +9,7 @@ import Google from '../APIs/Google/Google';
 import Yelp from '../APIs/Yelp/Yelp';
 import MarkerSort from '../Components/MarkerSort';
 const { width, height } = Dimensions.get('window');
+import File from '../FileSystem/FileSystem';
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
@@ -19,6 +20,7 @@ var foursquare;
 var google;
 var yelp;
 var markerSort;
+var file;
 export default class Main extends Component {
 
 
@@ -37,7 +39,7 @@ export default class Main extends Component {
              center:         false,
              render:         false,
              region :        null,
-             mapsType:       'standard',
+             mapsType:       this.props.mapsType,
              redClicked:     false , pizzaClicked: false , coffeeClicked: false  ,
              fetchClicked:   false , moreClicked:  false , burgerClicked: false  ,
              localClicked:   false , parksClicked: false , cornClicked:   false  ,
@@ -46,6 +48,7 @@ export default class Main extends Component {
              itemDetails:    [],
              watchID:        null
            }
+             file = new File();
              markerSort = new MarkerSort();
              foursquare = new Foursquare();
              yelp = new Yelp();
@@ -262,7 +265,17 @@ export default class Main extends Component {
   }
 
     //Getting current location
-   componentDidMount() {
+       async componentDidMount() {
+            let positionexists = await file.fileExists('position');
+            if(positionexists){
+                let s = await file.fileRead('position');
+                let s2 = s.split(" ");
+                this.setState({
+                           lat: parseFloat(s2[0]),
+                           long: parseFloat(s2[1]),
+                         });
+            }
+            else{
 
          navigator.geolocation.getCurrentPosition( (position) =>
            {
@@ -286,7 +299,16 @@ export default class Main extends Component {
                }
 
 
-     componentWillUnmount(){ navigator.geolocation.clearWatch(this.watchID); }
+     async componentWillUnmount(){
+          navigator.geolocation.clearWatch(this.watchID);
+          let s = "" + this.state.lat + " " + this.state.long;
+          let positionFilexists = await file.fileExists('position');
+           if(positionFilexists){
+             file.createFile('position',s)
+            }
+            else{
+            file.fileWrite('position',s);
+            }
 
 
 
