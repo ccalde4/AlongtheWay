@@ -90,3 +90,25 @@ val => this.setState({ radius: val })
                                                        //     Alert.alert("error fetching");
                                                        //    }
                                                       //   );
+
+
+
+                                                       let details = [];
+                                                                 let yelpDeets = [];
+
+                                                                 for(let i = 0; i < this.state.items.venues.length; i++){
+                                                                 //console.log(i);
+                                                                  details[i] = await foursquare.getVenueDetails((this.state.items.venues)[i].id);
+
+                                                                  yelpDeets[i] = await yelp.phoneSearch(details[i].response.venue.contact.phone);
+                                                                 // console.log(details[i].response.venue.contact.phone);
+                                                                 // console.log(details[i].response.venue.name);
+                                                                 // console.log(yelpDeets[i]);
+                                                                 }
+                                                                 this.setState({itemDetails: details});
+
+                                                                 //console.log(this.state.itemDetails);
+                                                                 markerSort.setItems(this.state.itemDetails);
+
+
+                                                                 this.setState( (previousState) => ({render: !previousState.render}) );

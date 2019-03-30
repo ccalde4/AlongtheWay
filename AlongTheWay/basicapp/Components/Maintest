@@ -154,7 +154,7 @@ export default class Main extends Component {
  async onParksClicked(){
          this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
          let test = await  google.search();
-        // console.log(test);
+         console.log(test);
         // this.setState({items: test});
           }
 
@@ -177,7 +177,24 @@ export default class Main extends Component {
            foursquare.setParams(this.state.params);
            let data = await foursquare.search();
            this.setState({items: data.response});
-            console.log(this.state.items);
+
+           let details = [];
+           let yelpDeets = [];
+
+           for(let i = 0; i < this.state.items.venues.length; i++){
+           //console.log(i);
+            details[i] = await foursquare.getVenueDetails((this.state.items.venues)[i].id);
+
+            yelpDeets[i] = await yelp.phoneSearch(details[i].response.venue.contact.phone);
+           // console.log(details[i].response.venue.contact.phone);
+           // console.log(details[i].response.venue.name);
+           // console.log(yelpDeets[i]);
+           }
+           this.setState({itemDetails: details});
+           console.log(this.state.itemDetails);
+           markerSort.setItems(this.state.itemDetails);
+
+           this.setState( (previousState) => ({render: !previousState.render}) );
 
 
 
@@ -208,7 +225,7 @@ export default class Main extends Component {
 
      render()
      {
-     //console.log("I rendered!!!")
+     console.log("I rendered!!!")
       return (
 
        <View style={styles.Gui}  >
