@@ -46,7 +46,7 @@ constructor(props){
               <Header
                 leftComponent={{ icon: 'menu', color: '#fff' }}
                 centerComponent={{ text: 'Options', style: { color: '#fff' } }}
-                rightComponent={<TouchableOpacity style = {styles.home} onPress = {this.props.inOptions}/> }
+                rightComponent={{ icon: 'home', color: '#fff', onPress: () => {this.props.inOptions(false)} }}
                />
 
 
@@ -119,7 +119,6 @@ const styles = StyleSheet.create({
     home:{
      width: 30,
      height: 30,
-     backgroundColor: 'pink'
     }
 
 });
