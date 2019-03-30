@@ -39,7 +39,7 @@ export default class Main extends Component {
              center:         false,
              render:         false,
              region :        null,
-             mapsType:       'standard',
+             mapsType:       this.props.mapsType,
              redClicked:     false , pizzaClicked: false , coffeeClicked: false  ,
              fetchClicked:   false , moreClicked:  false , burgerClicked: false  ,
              localClicked:   false , parksClicked: false , cornClicked:   false  ,
