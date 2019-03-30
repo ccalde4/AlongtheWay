@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, View, Slider, Text,TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ButtonGroup, Header, Button } from 'react-native-elements';
+import File from '../FileSystem/FileSystem';
 
-
-
+var file;
 export default class Options extends Component {
 
 
@@ -12,10 +12,13 @@ constructor(props){
     super(props);
 
     this.state = {
+
       index: 0,
       radius: this.props.radius ,
 
     }
+    file = new File();
+
    }
 
     updateIndex = (index) => {
@@ -91,7 +94,39 @@ constructor(props){
   }
 
 }
+/**
+async componentDidMount(){
+        let prefExists = await file.fileExists('prefs');
+        if(prefExists){
+            let s = await file.fileRead('prefs');
+            let s2 = s.split(" ");
+            this.setState({
+                       index: parseFloat(s2[0]),
+                       radius: parseFloat(s2[1]),
+                     });
+           },
 
+         }
+   }
+
+
+
+
+     async componentWillUnmount(){
+     let s = "" + index + " " + this.props.radius;
+     let prefExists = await file.fileExists('prefs');
+      if(prefExists){
+        file.createFile('prefs',s)
+       }
+       else{
+       file.fileWrite('prefs',s);
+       }
+
+
+
+     }
+
+**/
 
 const styles = StyleSheet.create({
 
