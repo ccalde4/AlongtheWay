@@ -4,26 +4,21 @@ import ControlBar from '../Components/ControlBar';
 import MapGui from '../Components/MapGui';
 import SearchBar from '../Components/SearchBar';
 import DecoySearch from '../Buttons/DecoySearch';
-
-import File from '../FileSystem/FileSystem';
-import MasterAPI from '../APIs/MasterAPI';
+import Foursquare from '../APIs/Foursquare/Foursquare';
+import Google from '../APIs/Google/Google';
+import Yelp from '../APIs/Yelp/Yelp';
 import MarkerSort from '../Components/MarkerSort';
-
 const { width, height } = Dimensions.get('window');
-import File from '../FileSystem/FileSystem';
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
-var masterAPI;
 
-
-
-;
+var foursquare;
+var google;
+var yelp;
 var markerSort;
-
-var file;
 export default class Main extends Component {
 
 
@@ -34,19 +29,15 @@ export default class Main extends Component {
              lat:            null,
              long:           null,
              radius:         this.props.radius,
-             params:{
-                                latitude: '',
-                                longitude:'',
-                                query:'',
-                                limit: 0,
-                                radius: this.props.radius,
-                                categories: '',
-                                            },
-             markerDataFetched: false,
+             params: {
+                ll:           "30.414175,-91.186256",
+                query:        "donuts",
+                limit:        10,
+              },
              center:         false,
              render:         false,
              region :        null,
-             mapsType:       this.props.mapsType,
+             mapsType:       'standard',
              redClicked:     false , pizzaClicked: false , coffeeClicked: false  ,
              fetchClicked:   false , moreClicked:  false , burgerClicked: false  ,
              localClicked:   false , parksClicked: false , cornClicked:   false  ,
@@ -55,9 +46,16 @@ export default class Main extends Component {
              itemDetails:    [],
              watchID:        null
            }
-             file = new File();
-
-            masterAPI = new MasterAPI();
+             markerSort = new MarkerSort();
+             foursquare = new Foursquare();
+             yelp = new Yelp();
+             google = new Google();
+              google.setParams({
+                location: "30.414175,-91.186256",
+                type: 'restaurant',
+                Keyword: 'pizza',
+                radius: "1000"
+                               });
         }
 
 
@@ -87,8 +85,7 @@ export default class Main extends Component {
           this.setState({ localClicked: false});
           this.setState( (previousState) => ({pizzaClicked: !previousState.pizzaClicked}) );
           this.setState({params: {
-             latitude:"30.414175",
-            longitude:"-91.186256",
+            ll: "30.414175,-91.186256",
             query: "Pizza",
             limit: 10,
             radius: this.state.radius,
@@ -106,8 +103,7 @@ export default class Main extends Component {
         this.setState( (previousState) => ({coffeeClicked: !previousState.coffeeClicked}) );
 
           this.setState({params: {
-             latitude:"30.414175",
-                        longitude:"-91.186256",
+             ll: `${this.state.lat},${this.state.long}`,
              query: "Coffee",
              limit: 50,
              radius: this.state.radius,
@@ -129,8 +125,7 @@ export default class Main extends Component {
          this.setState({ localClicked: false});
          this.setState((previousState) => ( {burgerClicked: !previousState.burgerClicked} ));
          this.setState({params: {
-                latitude:"30.414175",
-                           longitude:"-91.186256",
+               ll: "30.414175,-91.186256",
                query: "Burgers",
                limit: 10,
                radius:this.state.radius
@@ -146,8 +141,7 @@ export default class Main extends Component {
          this.setState({ burgerClicked: false});
          this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
          this.setState({params: {
-                        latitude:"30.414175",
-                                   longitude:"-91.186256",
+                        ll: "30.414175,-91.186256",
                         query: "Chicken",
                         limit: 10,
                         radius: this.state.radius
@@ -159,6 +153,8 @@ export default class Main extends Component {
 
  async onParksClicked(){
          this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
+         let test = await  google.search();
+         console.log(test);
         // this.setState({items: test});
           }
 
@@ -178,14 +174,33 @@ export default class Main extends Component {
 
 //need to figure out a good way to do this elegantly
   async onFetchClicked(){
-           masterAPI.setParams(this.state.params);
-                      let data = await masterAPI.search();
-                       this.setState({items: data });
-                      let details = await masterAPI.getDetails(data);
-                      this.setState({items: details });
-                      console.log(this.state.items);
-                      this.setState( (previousState) => ({render: !previousState.render}) );
+           foursquare.setParams(this.state.params);
+           let data = await foursquare.search();
+           this.setState({items: data.response});
+
+           let details = [];
+           let yelpDeets = [];
+
+           for(let i = 0; i < this.state.items.venues.length; i++){
+           //console.log(i);
+            details[i] = await foursquare.getVenueDetails((this.state.items.venues)[i].id);
+
+            yelpDeets[i] = await yelp.phoneSearch(details[i].response.venue.contact.phone);
+           // console.log(details[i].response.venue.contact.phone);
+           // console.log(details[i].response.venue.name);
+           // console.log(yelpDeets[i]);
+           }
+           this.setState({itemDetails: details});
+           console.log(this.state.itemDetails);
+           markerSort.setItems(this.state.itemDetails);
+
+           this.setState( (previousState) => ({render: !previousState.render}) );
+
+
+
        }
+
+
 
 
   shouldComponentUpdate(newProps,newState){
@@ -210,7 +225,7 @@ export default class Main extends Component {
 
      render()
      {
-     //console.log("I rendered!!!")
+     console.log("I rendered!!!")
       return (
 
        <View style={styles.Gui}  >
@@ -224,7 +239,7 @@ export default class Main extends Component {
                 styling = {styles.map}
                 lat = {this.state.lat}
                 long = {this.state.long}
-                markers = {this.state.items}
+                markers = {this.state.itemDetails}
                 radius = {this.state.radius}
                 region = {this.state.region}
                 render = {this.state.render}
@@ -264,17 +279,7 @@ export default class Main extends Component {
   }
 
     //Getting current location
-       async componentDidMount() {
-            let positionexists = await file.fileExists('position');
-            if(positionexists){
-                let s = await file.fileRead('position');
-                let s2 = s.split(" ");
-                this.setState({
-                           lat: parseFloat(s2[0]),
-                           long: parseFloat(s2[1]),
-                         });
-            }
-            else{
+   componentDidMount() {
 
          navigator.geolocation.getCurrentPosition( (position) =>
            {
@@ -298,16 +303,7 @@ export default class Main extends Component {
                }
 
 
-     async componentWillUnmount(){
-          navigator.geolocation.clearWatch(this.watchID);
-          let s = "" + this.state.lat + " " + this.state.long;
-          let positionFilexists = await file.fileExists('position');
-           if(positionFilexists){
-             file.createFile('position',s)
-            }
-            else{
-            file.fileWrite('position',s);
-            }
+     componentWillUnmount(){ navigator.geolocation.clearWatch(this.watchID); }
 
 
 
