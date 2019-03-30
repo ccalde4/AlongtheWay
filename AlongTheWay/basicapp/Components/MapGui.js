@@ -92,33 +92,33 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
          {
-          this.props.markers ? this.props.markers.map(marker => {return(
-           <Marker
-                  key = {marker.response.venue.id}
-                  coordinate={ {latitude: marker.response.venue.location.lat,
-                                longitude: marker.response.venue.location.lng} }
-                title={marker.response.venue.name}
-                identifier = {marker.response.venue.id}
-                description={marker.response.venue.location.address}
-                //onPress = {() => {this.handlePress(marker)}}
-                //onPress = {this.handlePress}
+           this.props.markers ? this.props.markers.map(marker => {return(
+                     <Marker
+                            key = {marker.places.id}
+                            coordinate={ {latitude: marker.places.location.latitude,
+                                          longitude: marker.places.location.longitude} }
+                          title={marker.places.name}
+                          identifier = {marker.places.id}
+                          description={marker.places.formatted_address}
+                          //onPress = {() => {this.handlePress(marker)}}
+                          //onPress = {this.handlePress}
 
-                  pinColor = {'turquoise'}
-            >
+                            pinColor = {'turquoise'}
+                      >
 
-                <Callout>
-                 <MarkerPopup location = {marker.response.venue.location}
-                               name = {marker.response.venue.name}
-                               id = {marker.response.venue.id}
-                               contact = {marker.response.venue.contact}
-                               rating = {marker.response.venue.rating}/>
+                          <Callout>
+                           <MarkerPopup location = {marker.places.location}
+                                         name = {marker.places.name}
+                                         id = {marker.places.id}
+                                         contact = {marker.places.phone}
+                                         rating = {marker.places.rating}/>
 
-                </Callout>
+                          </Callout>
 
-                </Marker>
+                          </Marker>
 
-            )})
-           : console.log("no markers")
+                      )})
+                     : console.log("no markers")
          }
 
       </Animated>

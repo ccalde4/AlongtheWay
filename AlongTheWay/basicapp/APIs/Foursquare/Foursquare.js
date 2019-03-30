@@ -1,13 +1,14 @@
 import request from '../lib/request';
 import querystring from 'querystring';
 import Config from './config/config';
-
+var details;
 class Foursquare {
 
 
 constructor(){
-
+details = [];
 this.params;
+
 
 }
 
@@ -26,11 +27,11 @@ this.params;
    }
 
 
-    search(){
+    search(obj){
 
     var config    = Config.getConfig();
     var urlString = config.apiUrl + "/venues/search?" +
-                    querystring.stringify(this.getParams()) + '&' +
+                    querystring.stringify(obj) + '&' +
                     querystring.stringify(config.creds);
 
      return request(urlString).catch((err)=>{console.log("search failed")});
@@ -42,22 +43,27 @@ this.params;
      var config    = Config.getConfig();
      var urlString = config.apiUrl + "/venues/" + place_id + '?' + querystring.stringify(config.creds);
 
-      return request(urlString).catch((err)=>{console.log("search failed")});
+      return request(urlString).catch((err)=>{console.log("venue detail search failed")});
 
    }
 
-    async getDetails(data_arr){
-        let details = [];
+    getDetails(data_arr){
+
         for(let i = 0; i < data_arr.response.venues.length; i++){
-            console.log(i);
-            details[i] = await this.getVenueDetails((data_arr.response.venues)[i].id);
-            console.log(details[i].venue.name)
+            //console.log(i);
+            details[i] =  this.getVenueDetails((data_arr.response.venues)[i].id);
+            console.log("getDetails reached");
              }
-             return details;
+
    }
+
+   getDeets(){
+   return details;
+   }
+
+
+
 
 
 }
-
-
 export default Foursquare;

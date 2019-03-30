@@ -4,20 +4,14 @@ import ControlBar from '../Components/ControlBar';
 import MapGui from '../Components/MapGui';
 import SearchBar from '../Components/SearchBar';
 import DecoySearch from '../Buttons/DecoySearch';
-import Foursquare from '../APIs/Foursquare/Foursquare';
-import Google from '../APIs/Google/Google';
-import Yelp from '../APIs/Yelp/Yelp';
 import File from '../FileSystem/FileSystem';
+import MasterAPI from '../APIs/MasterAPI';
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-
-
-var foursquare;
-var google;
-var yelp;
+var masterAPI;
 var file;
 export default class Main extends Component {
 
@@ -30,11 +24,14 @@ export default class Main extends Component {
              lat:            null,
              long:           null,
              radius:         this.props.radius,
-             params: {
-                ll:           "30.414175,-91.186256",
-                query:        "donuts",
-                limit:        10,
-              },
+             params:{
+                                latitude: '',
+                                longitude:'',
+                                query:'',
+                                limit: 0,
+                                radius: this.props.radius,
+                                categories: '',
+                                            },
              markerDataFetched: false,
              center:         false,
              render:         false,
@@ -49,15 +46,8 @@ export default class Main extends Component {
              watchID:        null
            }
              file = new File();
-             foursquare = new Foursquare();
-             yelp = new Yelp();
-             google = new Google();
-              google.setParams({
-                location: "30.414175,-91.186256",
-                type: 'restaurant',
-                Keyword: 'pizza',
-                radius: "1000"
-                               });
+
+            masterAPI = new MasterAPI();
         }
 
 
@@ -87,7 +77,8 @@ export default class Main extends Component {
           this.setState({ localClicked: false});
           this.setState( (previousState) => ({pizzaClicked: !previousState.pizzaClicked}) );
           this.setState({params: {
-            ll: "30.414175,-91.186256",
+             latitude:"30.414175",
+            longitude:"-91.186256",
             query: "Pizza",
             limit: 10,
             radius: this.state.radius,
@@ -105,7 +96,8 @@ export default class Main extends Component {
         this.setState( (previousState) => ({coffeeClicked: !previousState.coffeeClicked}) );
 
           this.setState({params: {
-             ll: `${this.state.lat},${this.state.long}`,
+             latitude:"30.414175",
+                        longitude:"-91.186256",
              query: "Coffee",
              limit: 50,
              radius: this.state.radius,
@@ -127,7 +119,8 @@ export default class Main extends Component {
          this.setState({ localClicked: false});
          this.setState((previousState) => ( {burgerClicked: !previousState.burgerClicked} ));
          this.setState({params: {
-               ll: "30.414175,-91.186256",
+                latitude:"30.414175",
+                           longitude:"-91.186256",
                query: "Burgers",
                limit: 10,
                radius:this.state.radius
@@ -143,7 +136,8 @@ export default class Main extends Component {
          this.setState({ burgerClicked: false});
          this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
          this.setState({params: {
-                        ll: "30.414175,-91.186256",
+                        latitude:"30.414175",
+                                   longitude:"-91.186256",
                         query: "Chicken",
                         limit: 10,
                         radius: this.state.radius
@@ -155,8 +149,7 @@ export default class Main extends Component {
 
  async onParksClicked(){
          this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
-         let test = await  google.search();
-         console.log(test);
+
         // this.setState({items: test});
           }
 
@@ -176,26 +169,13 @@ export default class Main extends Component {
 
 //need to figure out a good way to do this elegantly
   async onFetchClicked(){
-           foursquare.setParams(this.state.params);
-           let data = await foursquare.search();
-           this.setState({items: data.response});
-
-
-           let details = [];
-           let yelpDeets = [];
-
-           for(let i = 0; i < data.response.venues.length; i++){
-           console.log(i);
-            details[i] = await foursquare.getVenueDetails((data.response.venues)[i].id);
-
-            yelpDeets[i] = await yelp.phoneSearch(details[i].response.venue.contact.phone);
-            console.log(details[i].response.venue.contact.phone);
-            console.log(details[i].response.venue.name);
-            console.log(yelpDeets[i]);
-           }
-           this.setState({itemDetails: details});
-           this.setState( (previousState) => ({render: !previousState.render}) );
-
+           masterAPI.setParams(this.state.params);
+                      let data = await masterAPI.search();
+                       this.setState({items: data });
+                      let details = await masterAPI.getDetails(data);
+                      this.setState({items: details });
+                      console.log(this.state.items);
+                      this.setState( (previousState) => ({render: !previousState.render}) );
        }
 
 
@@ -235,7 +215,7 @@ export default class Main extends Component {
                 styling = {styles.map}
                 lat = {this.state.lat}
                 long = {this.state.long}
-                markers = {this.state.itemDetails}
+                markers = {this.state.items}
                 radius = {this.state.radius}
                 region = {this.state.region}
                 render = {this.state.render}

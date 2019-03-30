@@ -58,14 +58,14 @@ export default class MarkerPopup extends Component{
                    <Text style = {styles.ratingText}> Foursquare rating: {this.props.rating} {"\n"} </Text>
                  {
                   this.props.location.address == '' ? <Text> This location does not have an address on file </Text>:
-                        <Text style = {styles.locationText}>  {this.props.location.formattedAddress[0]} {"\n"}
-                        {this.props.location.formattedAddress[1]} {"\n"}
-                        {this.props.location.formattedAddress[2]} {"\n"}
+                        <Text style = {styles.locationText}>  {this.props.location.displayAddress[0]} {"\n"}
+                        {this.props.location.displayAddress[1]} {"\n"}
+                        {this.props.location.displayAddress[2]} {"\n"}
                          </Text>
                   }
 
 
-                         <Text style = {styles.locationText}> Phone: {this.props.contact.formattedPhone} {"\n"} </Text>
+                         <Text style = {styles.locationText}> Phone: {this.props.phone} {"\n"} </Text>
                 <TouchableHighlight onPress = {console.log("review was Clicked") } underlayColor="white">
                 <Text style = {styles.reviewText}> Write a review? </Text>
                 </TouchableHighlight>
