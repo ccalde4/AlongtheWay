@@ -1,11 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- * @lint-ignore-every XPLATJSCOPYRIGHT1
- */
+
 
 import React, {Component} from 'react';
 import { Text, View,StyleSheet} from 'react-native';
@@ -68,13 +61,16 @@ export default class App extends Component {
        .signInAnonymously()
        .then(credential => {
          if (credential) {
-           console.log('default app user ->', credential.user.toJSON());
+          // console.log('default app user ->', credential.user.toJSON());
          }
        });
+      /*  fetch("https://us-central1-fir-demo-6977a.cloudfunctions.net/helloWorld")
+              .then((response)=>{console.log(response)})
+              .catch((err)=>{console.log(err)}) */
 
      }
           //toggle for options page, passed to ControlBar through Main and called by a button
-        inOptions(){
+       inOptions(){
         this.setState( previousState => ( {inOptions: !previousState.inOptions} ) );
         }
 
@@ -99,24 +95,27 @@ export default class App extends Component {
 
          this.state.reviews.push(userReview);
           console.log(this.state.reviews);
-          this.onReview();
+         // this.onReview();
+         this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
          }
-      goTo(item){
-    console.log(item)
-      }
+       goTo(item){
+        console.log(item)
+       }
+       onMapChange(map){
+         this.setState({mapsType: map});
+       }
 
       render(){
-
-
 
                //returns Options page if true
            if(this.state.inOptions)
            {
-            return( <Options onRadiusChange = {(radius) => {this.onRadiusChange(radius)}}
-                             radius = {this.state.radius}
-                             inOptions = {this.inOptions.bind(this)} />)
+           return( <Options onRadiusChange = {(radius) => {this.onRadiusChange(radius)}}
+                            radius = {this.state.radius}
+                            onMapChange = {(map)=>{this.onMapChange(map)}}
+                            inOptions = {this.inOptions.bind(this)} />)
 
-           }
+          }
              //returns ReviewForm if true
           if(this.state.isReviewing)
           {
@@ -134,7 +133,8 @@ export default class App extends Component {
             return( <Main onSearch = {this.onSearch.bind(this)}
                           inOptions = {this.inOptions.bind(this)}
                           radius = {this.state.radius}
-                          onReview = {this.onReview.bind(this)}/> );
+                          mapsType = {this.state.mapsType}
+                          onReview = {this.onReview.bind(this)}/>);
 
 
 
