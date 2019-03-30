@@ -19,8 +19,15 @@ constructor(props){
    }
 
     updateIndex = (index) => {
-
+      console.log(this.state.index);
       this.setState({index});
+      if(index==0){
+      this.props.onMapChange('standard');
+      }
+      else{
+      this.props.onMapChange('satellite');
+      }
+
 
     }
 
