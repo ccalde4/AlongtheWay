@@ -7,7 +7,7 @@ import DecoySearch from '../Buttons/DecoySearch';
 import Foursquare from '../APIs/Foursquare/Foursquare';
 import Google from '../APIs/Google/Google';
 import Yelp from '../APIs/Yelp/Yelp';
-import File from '../FileSystem/FileSystem';
+import MarkerSort from '../Components/MarkerSort';
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
@@ -18,13 +18,12 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 var foursquare;
 var google;
 var yelp;
-var file;
+var markerSort;
 export default class Main extends Component {
 
 
         constructor(props){
           super(props);
-
 
            this.state = {
              lat:            null,
@@ -35,20 +34,19 @@ export default class Main extends Component {
                 query:        "donuts",
                 limit:        10,
               },
-             markerDataFetched: false,
              center:         false,
              render:         false,
              region :        null,
-             mapsType:       this.props.mapsType,
+             mapsType:       'standard',
              redClicked:     false , pizzaClicked: false , coffeeClicked: false  ,
              fetchClicked:   false , moreClicked:  false , burgerClicked: false  ,
              localClicked:   false , parksClicked: false , cornClicked:   false  ,
              burritoClicked: false ,
-             items:         [],
+             items:          [],
              itemDetails:    [],
              watchID:        null
            }
-             file = new File();
+             markerSort = new MarkerSort();
              foursquare = new Foursquare();
              yelp = new Yelp();
              google = new Google();
@@ -156,7 +154,7 @@ export default class Main extends Component {
  async onParksClicked(){
          this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
          let test = await  google.search();
-         console.log(test);
+        // console.log(test);
         // this.setState({items: test});
           }
 
@@ -180,23 +178,31 @@ export default class Main extends Component {
            let data = await foursquare.search();
            this.setState({items: data.response});
 
-
            let details = [];
            let yelpDeets = [];
 
-           for(let i = 0; i < data.response.venues.length; i++){
-           console.log(i);
-            details[i] = await foursquare.getVenueDetails((data.response.venues)[i].id);
+           for(let i = 0; i < this.state.items.venues.length; i++){
+           //console.log(i);
+            details[i] = await foursquare.getVenueDetails((this.state.items.venues)[i].id);
 
             yelpDeets[i] = await yelp.phoneSearch(details[i].response.venue.contact.phone);
-            console.log(details[i].response.venue.contact.phone);
-            console.log(details[i].response.venue.name);
-            console.log(yelpDeets[i]);
+           // console.log(details[i].response.venue.contact.phone);
+           // console.log(details[i].response.venue.name);
+           // console.log(yelpDeets[i]);
            }
            this.setState({itemDetails: details});
+
+           //console.log(this.state.itemDetails);
+           markerSort.setItems(this.state.itemDetails);
+           
+
            this.setState( (previousState) => ({render: !previousState.render}) );
 
+
+
        }
+
+
 
 
   shouldComponentUpdate(newProps,newState){
@@ -221,7 +227,7 @@ export default class Main extends Component {
 
      render()
      {
-     console.log("I rendered!!!")
+     //console.log("I rendered!!!")
       return (
 
        <View style={styles.Gui}  >
@@ -275,18 +281,7 @@ export default class Main extends Component {
   }
 
     //Getting current location
-
-   async componentDidMount() {
-        let positionexists = await file.fileExists('position');
-        if(positionexists){
-            let s = await file.fileRead('position');
-            let s2 = s.split(" ");
-            this.setState({
-                       lat: parseFloat(s2[0]),
-                       long: parseFloat(s2[1]),
-                     });
-        }
-        else{
+   componentDidMount() {
 
          navigator.geolocation.getCurrentPosition( (position) =>
            {
@@ -306,24 +301,11 @@ export default class Main extends Component {
           { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
                                                  );
 
-         }
-   }
+
+               }
 
 
-     async componentWillUnmount(){
-     navigator.geolocation.clearWatch(this.watchID);
-     let s = "" + this.state.lat + " " + this.state.long;
-     let positionFilexists = await file.fileExists('position');
-      if(positionFilexists){
-        file.createFile('position',s)
-       }
-       else{
-       file.fileWrite('position',s);
-       }
-
-
-
-     }
+     componentWillUnmount(){ navigator.geolocation.clearWatch(this.watchID); }
 
 
 
