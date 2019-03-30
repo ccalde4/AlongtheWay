@@ -94,7 +94,7 @@ constructor(props){
   }
 
 }
-
+/**
 async componentDidMount(){
         let prefExists = await file.fileExists('prefs');
         if(prefExists){
@@ -126,6 +126,7 @@ async componentDidMount(){
 
      }
 
+**/
 
 const styles = StyleSheet.create({
 
