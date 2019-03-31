@@ -180,10 +180,9 @@ export default class Main extends Component {
   async onFetchClicked(){
            masterAPI.setParams(this.state.params);
                       let data = await masterAPI.search();
-                       this.setState({items: data });
                       let details = await masterAPI.getDetails(data);
-                      this.setState({items: details });
-                      console.log(this.state.items);
+                      let uniformDetails = await masterAPI.makeUniform(details);
+                      this.setState({items: uniformDetails });
                       this.setState( (previousState) => ({render: !previousState.render}) );
        }
 
