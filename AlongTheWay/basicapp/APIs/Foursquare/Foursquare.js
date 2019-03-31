@@ -38,7 +38,7 @@ this.params;
 
    }
 
-   getVenueDetails(place_id){
+   getDetails(place_id){
 
      var config    = Config.getConfig();
      var urlString = config.apiUrl + "/venues/" + place_id + '?' + querystring.stringify(config.creds);
@@ -47,19 +47,7 @@ this.params;
 
    }
 
-    getDetails(data_arr){
 
-        for(let i = 0; i < data_arr.response.venues.length; i++){
-            //console.log(i);
-            details[i] =  this.getVenueDetails((data_arr.response.venues)[i].id);
-            console.log("getDetails reached");
-             }
-
-   }
-
-   getDeets(){
-   return details;
-   }
 
 
 
