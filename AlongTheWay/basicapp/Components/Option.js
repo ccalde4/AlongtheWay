@@ -93,9 +93,9 @@ constructor(props){
 
   }
 
-}
-/**
-async componentDidMount(){
+
+
+     async componentDidMount(){
         let prefExists = await file.fileExists('prefs');
         if(prefExists){
             let s = await file.fileRead('prefs');
@@ -104,16 +104,16 @@ async componentDidMount(){
                        index: parseFloat(s2[0]),
                        radius: parseFloat(s2[1]),
                      });
-           },
+           }
 
-         }
-   }
+      }
+
 
 
 
 
      async componentWillUnmount(){
-     let s = "" + index + " " + this.props.radius;
+     let s = "" + this.state.index + " " + this.props.radius;
      let prefExists = await file.fileExists('prefs');
       if(prefExists){
         file.createFile('prefs',s)
@@ -126,8 +126,8 @@ async componentDidMount(){
 
      }
 
-**/
 
+}
 const styles = StyleSheet.create({
 
   container: {
