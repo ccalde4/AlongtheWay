@@ -8,9 +8,10 @@ import {
   TouchableHighlight,
   TouchableOpacity
 } from "react-native";
-import MapView, { Polyline, Marker } from "react-native-maps";
+import MapView, { Polyline, Marker,Callout } from "react-native-maps";
 import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
+
 
 
 export default class App extends Component {
@@ -54,9 +55,20 @@ export default class App extends Component {
               this.state.longitude
             }&destination=place_id:${destinationPlaceId}&key=${apiKey}`
           );
+
+          let lat = null;
+          let long = null;
+
+          const Latlong = latlong =>(
+                    lat = this.state.latitude,
+                    long = this.state.longitude
+          );
+          console.log(Latlong);
+
           const json = await response.json();
           console.log(json);
           const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+          //const distanceTime = {json.routes[1].overview_polyline.points}
           const pointCoords = points.map(point => {
             return { latitude: point[0], longitude: point[1] };
           });
@@ -95,18 +107,42 @@ export default class App extends Component {
       render() {
          let marker = null;
          let distanceButton = null;
+         let MoreStops = null;
+         let location = null;
+         let time = null;
 
          if (this.state.pointCoords.length > 1) {
+           //Creates marker and has callout for info on marker
            marker = (
              <Marker
-               coordinate={this.state.pointCoords[this.state.pointCoords.length - 1]}
-             />
+               coordinate = {this.state.pointCoords[this.state.pointCoords.length - 1]}>
+               <MapView.Callout
+                    style = {styles.popup}
+                    >
+                      <View style = {styles.insideOfPopup}>
+                            <Text style = {styles.nameText} >
+                                {location}
+                            </Text>
+                     </View>
+             </MapView.Callout>
+             </Marker>
            );
 
-           distanceButton = (
-           <View style = {styles.bottomButton}>
-               <Text style = {styles.bottomButtonText}> Distance Time </Text>
-           </View>)
+          // distanceButton = (
+           //<View style = {styles.bottomButton}>
+             //  <Text style = {styles.bottomButtonText}> Distance Time </Text>
+           //</View>);
+
+            //Component to add more stops
+         MoreStops = (
+           <View style = {styles.stopButton}>
+                    <TouchableOpacity>
+
+                            <Text> Add Stop </Text>
+
+                    </TouchableOpacity>
+         </View>);
+
          }
 
          const predictions = this.state.predictions.map(prediction => (
@@ -114,8 +150,9 @@ export default class App extends Component {
              onPress={() =>
                this.getRouteDirections(
                  prediction.place_id,
-                 prediction.description
+                 location = prediction.description
                )
+
 
              }
              key={prediction.id}
@@ -149,6 +186,7 @@ export default class App extends Component {
                  strokeWidth={4}
                  strokeColor="red"
                />
+
                {marker}
              </MapView>
              <TextInput
@@ -164,6 +202,8 @@ export default class App extends Component {
              />
              {predictions}
              {distanceButton}
+             {MoreStops}
+
 
            </View>
          );
@@ -177,14 +217,28 @@ export default class App extends Component {
 
 const styles = StyleSheet.create({
 
+    stopButton: {
+            backgroundColor: "white",
+                    marginTop: 15,
+                    margin: 10,
+                    padding: 15,
+                    fontSize: 20,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    borderRadius: 15,
+                    textDecorationColor: "red"
+
+        },
+
     bottomButton: {
         backgroundColor: "white",
-        marginTop: 475,
+        marginTop: 50,
         margin: 20,
         padding: 15,
-        fontSize: 22,
+        fontSize: 30,
         paddingLeft: 30,
         paddingRight: 30,
+        borderRadius: 10,
         alignSelf: "center"
     },
 
@@ -211,7 +265,28 @@ const styles = StyleSheet.create({
       },
     map: {
         ...StyleSheet.absoluteFillObject
-      }
+      },
+    popup:{
+           flex: 0.75,
+           flexDirection: 'row',
+           backgroundColor: 'white',
+          // borderRadius: 30,
+         // height: winHeight,
+          //width: winWidth,
+           justifyContent: 'center',
+           alignItems: 'center'
+
+           },
+
+    insideOfPopup:{
+           flex: 0.8,
+
+           },
+    nameText:{
+                   color: 'black',
+                    fontSize: 24,
+                    fontWeight: 'bold',
+                    }
 
 });
 
