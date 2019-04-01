@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, View, Slider, Text,TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ButtonGroup, Header, Button } from 'react-native-elements';
+import { ButtonGroup, Header, Button, CheckBox } from 'react-native-elements';
 import File from '../../utils/FileSystem';
 
 var file;
@@ -47,9 +47,8 @@ constructor(props){
       <View style={styles.container}>
 
               <Header
-                leftComponent={{ icon: 'menu', color: '#fff' }}
+                leftComponent={{ icon: 'arrow-back', color: '#fff', onPress: () => {this.props.inOptions()} }}
                 centerComponent={{ text: 'Options', style: { color: '#fff' } }}
-                rightComponent={{ icon: 'home', color: '#fff', onPress: () => {this.props.inOptions()} }}
                />
 
 
@@ -86,6 +85,8 @@ constructor(props){
                   </Text>
 
                 </View>
+
+
 
       </View>
 
