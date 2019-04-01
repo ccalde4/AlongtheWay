@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-import FilterButton from '../Buttons/FilterButton';
+import FilterButton from './comps/FilterButton';
 
 
 export default class ControlBar extends Component {

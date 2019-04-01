@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet, Dimensions,TouchableOpacity} from 'react-native';
 import MapView, {Marker,Circle, Animated,Callout} from 'react-native-maps';
-import mapstyle1 from '../MapStyles/mapstyle1';
-import mapstyle2 from '../MapStyles/mapstyle2';
-import mapstyle3 from '../MapStyles/mapstyle3';
-import MarkerPopup from '../Components/MarkerPopup';
+import mapstyle1 from './styles/mapstyle1';
+import mapstyle2 from './styles/mapstyle2';
+import mapstyle3 from './styles/mapstyle3';
+import MarkerPopup from './comps/MarkerPopup';
 
-import Yelp from '../APIs/Yelp/Yelp';
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;

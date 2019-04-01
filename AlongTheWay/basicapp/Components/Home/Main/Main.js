@@ -1,28 +1,20 @@
 import React, {Component} from 'react';
 import { Text, View,StyleSheet,Keyboard, Dimensions,ActivityIndicator,PermissionsAndroid,Alert} from 'react-native';
-import ControlBar from '../Components/ControlBar';
-import MapGui from '../Components/MapGui';
-import SearchBar from '../Components/SearchBar';
-import DecoySearch from '../Buttons/DecoySearch';
-
-import File from '../FileSystem/FileSystem';
-import MasterAPI from '../APIs/MasterAPI';
-import MarkerSort from '../Components/MarkerSort';
+import ControlBar from './Controls/Controls';
+import MapGui from './Map/Map';
+import DecoySearch from './comps/DecoySearch';
+import File from '../../../utils/FileSystem';
+import MasterAPI from '../../../APIs/MasterAPI';
+import MarkerSort from '../../../utils/MarkerSort';
 
 const { width, height } = Dimensions.get('window');
-import File from '../FileSystem/FileSystem';
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
 var masterAPI;
-
-
-
-;
 var markerSort;
-
 var file;
 export default class Main extends Component {
 
@@ -35,10 +27,10 @@ export default class Main extends Component {
              long:           null,
              radius:         this.props.radius,
              params:{
-                                latitude: '',
-                                longitude:'',
-                                query:'',
-                                limit: 0,
+                                latitude: '30.414175',
+                                longitude:'-91.186256',
+                                query:'donuts',
+                                limit: 10,
                                 radius: this.props.radius,
                                 categories: '',
                                             },
@@ -66,6 +58,13 @@ export default class Main extends Component {
 
        }
 
+       changeQuery(query){
+       let x = this.state.params;
+       x.query = query;
+       this.setState( {params:x} );
+
+       }
+
 
         onRedClicked(){
           this.setState({
@@ -86,14 +85,8 @@ export default class Main extends Component {
           this.setState({ coffeeClicked: false});
           this.setState({ localClicked: false});
           this.setState( (previousState) => ({pizzaClicked: !previousState.pizzaClicked}) );
-          this.setState({params: {
-             latitude:"30.414175",
-            longitude:"-91.186256",
-            query: "Pizza",
-            limit: 10,
-            radius: this.state.radius,
-            intent:"browse"
-              }})
+
+            this.changeQuery("Pizza");
 
 
         }
@@ -105,14 +98,7 @@ export default class Main extends Component {
         this.setState({ localClicked: false});
         this.setState( (previousState) => ({coffeeClicked: !previousState.coffeeClicked}) );
 
-          this.setState({params: {
-             latitude:"30.414175",
-                        longitude:"-91.186256",
-             query: "Coffee",
-             limit: 50,
-             radius: this.state.radius,
-
-              }})
+         this.changeQuery("Coffee");
 
 
         }
@@ -128,14 +114,7 @@ export default class Main extends Component {
          this.setState({ pizzaClicked: false});
          this.setState({ localClicked: false});
          this.setState((previousState) => ( {burgerClicked: !previousState.burgerClicked} ));
-         this.setState({params: {
-                latitude:"30.414175",
-                           longitude:"-91.186256",
-               query: "Burgers",
-               limit: 10,
-               radius:this.state.radius
-
-                  }})
+         this.changeQuery("Burgers");
 
          }
 
@@ -145,21 +124,16 @@ export default class Main extends Component {
          this.setState({ pizzaClicked: false});
          this.setState({ burgerClicked: false});
          this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
-         this.setState({params: {
-                        latitude:"30.414175",
-                                   longitude:"-91.186256",
-                        query: "Chicken",
-                        limit: 10,
-                        radius: this.state.radius
-                           }})
+
+          this.changeQuery("Chicken");
 
           }
 
 
 
- async onParksClicked(){
+         onParksClicked(){
          this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
-        // this.setState({items: test});
+
           }
 
 
@@ -179,11 +153,10 @@ export default class Main extends Component {
 //need to figure out a good way to do this elegantly
   async onFetchClicked(){
            masterAPI.setParams(this.state.params);
-                      let data = await masterAPI.search();
-                      let details = await masterAPI.getDetails(data);
-                      let uniformDetails = await masterAPI.makeUniform(details);
-                      this.setState({items: uniformDetails });
-                      this.setState( (previousState) => ({render: !previousState.render}) );
+           let data = await masterAPI.search();
+
+          this.setState({items: data });
+          this.setState( (previousState) => ({center: !previousState.center}) );
        }
 
 
@@ -200,6 +173,7 @@ export default class Main extends Component {
        ||newState.render!==this.state.render
        ||newState.lat!==this.state.lat
        ||newProps.radius!==this.props.radius
+
 
        )
 

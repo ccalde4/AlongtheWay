@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, View, Slider, Text,TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ButtonGroup, Header, Button } from 'react-native-elements';
-import File from '../FileSystem/FileSystem';
+import File from '../../utils/FileSystem';
 
 var file;
 export default class Options extends Component {
@@ -14,7 +14,7 @@ constructor(props){
     this.state = {
 
       index: 0,
-      radius: this.props.radius ,
+      radius: 0 ,
 
     }
     file = new File();
@@ -36,8 +36,8 @@ constructor(props){
 
 
      updateRadius(radius){
-     this.setState({radius:radius})
-     this.props.onRadiusChange(radius)
+     this.setState({radius:radius});
+     this.props.onRadiusChange(this.state.radius);
      }
 
 
@@ -49,7 +49,7 @@ constructor(props){
               <Header
                 leftComponent={{ icon: 'menu', color: '#fff' }}
                 centerComponent={{ text: 'Options', style: { color: '#fff' } }}
-                rightComponent={{ icon: 'home', color: '#fff', onPress: () => {this.props.inOptions(false)} }}
+                rightComponent={{ icon: 'home', color: '#fff', onPress: () => {this.props.inOptions()} }}
                />
 
 
@@ -92,7 +92,9 @@ constructor(props){
     );
 
   }
+   // shouldComponentUpdate(newProps,newState){
 
+  //  }
 
 
      async componentDidMount(){
@@ -113,7 +115,7 @@ constructor(props){
 
 
      async componentWillUnmount(){
-     let s = "" + this.state.index + " " + this.props.radius;
+     let s = "" + this.state.index + " " + this.state.radius;
      let prefExists = await file.fileExists('prefs');
       if(prefExists){
         file.createFile('prefs',s)
@@ -121,7 +123,7 @@ constructor(props){
        else{
        file.fileWrite('prefs',s);
        }
-
+      // this.props.onRadiusChange(this.state.radius);
 
 
      }

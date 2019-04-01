@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet, Dimensions,TouchableOpacity, TouchableHighlight} from 'react-native';
 import MapView, {Marker, AnimatedRegion,Callout} from 'react-native-maps';
-import MapGui from '../Components/MapGui';
-import ReviewForm from '../Components/ReviewForm';
+// import MapGui from '../Components/MapGui';
+import ReviewForm from './ReviewForm';
 
 
 var { winHeight, winWidth} = Dimensions.get('window');

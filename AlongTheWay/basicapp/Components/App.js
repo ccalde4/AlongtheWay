@@ -1,16 +1,11 @@
-
-
 import React, {Component} from 'react';
-import { Text, View,StyleSheet} from 'react-native';
-import ControlBar from './basicapp/Components/ControlBar';
-import MapGui from './basicapp/Components/MapGui';
-import Main from './basicapp/Components/Main';
-import SearchBar from './basicapp/Components/SearchBar';
-import {Platform, PermissionsAndroid, Alert} from 'react-native';
-import Options from './basicapp/Components/Option'
-import ReviewForm from './basicapp/Components/ReviewForm';
+import {PermissionsAndroid, Alert} from 'react-native';
 import firebase from 'react-native-firebase';
-
+import Main from './Home/Main/Main';
+import SearchBar from './Home/SearchBar';
+import Options from './Home/Option';
+import ReviewForm from './Home/ReviewForm';
+import File from '../utils/FileSystem';
 
   //Function to gain access to user Location
 export async function request_location_runtime_permission() {
@@ -38,6 +33,7 @@ try {
 
 
 }
+ var file;
 
 export default class App extends Component {
 
@@ -49,6 +45,7 @@ export default class App extends Component {
 
      constructor(props){
      super(props);
+      file = new File();
      this.state = {
         isSearching : false,
         inOptions: false,
@@ -82,6 +79,8 @@ export default class App extends Component {
         //function for updating radius, passed to Option and called by slider
        onRadiusChange(radius){
         this.setState({radius: radius});
+
+       //this.setState( previousState => ( {radius: radius} ) );
         console.log(this.state.radius);
        }
 
@@ -139,6 +138,8 @@ export default class App extends Component {
 
 
       }
+
+
 
 
 }
