@@ -1,0 +1,36 @@
+/*const predictionsTwo = this.state.predictionsTwo.map(predictionTwo => (
+                    <TouchableHighlight
+                      onPress={() =>
+                        this.getRouteDirections(
+                          predictionTwo.place_id,
+                          predictionTwo.description
+                        )
+
+
+                      }
+                      key ={predictionTwo.id}
+                    >
+                      <View>
+                        <Text style={styles.suggestionsTwo}>
+                          {predictionTwo.description}
+                        </Text>
+                      </View>
+                    </TouchableHighlight>
+                  ));*/
+
+
+                  /*async onChangeDestinationtwo (destination) {
+
+                          var onChangeDestination = url +"/place/autocomplete/json?key="+key+"&input="+destination+"&location="
+                                                        +this.state.latitude+","+this.state.longitude+"&radius="+2000;
+
+                          try {
+                           const json = await request(onChangeDestination);
+                            this.setState({
+                              predictions: json.predictions
+                            });
+                            console.log(json);
+                          } catch (err) {
+                            console.error(err);
+                          }
+                              }*/
