@@ -14,7 +14,12 @@ constructor(props){
     this.state = {
 
       index: 0,
-      radius: 0 ,
+      radius: 0,
+      checked: false,
+      checked2: false,
+      checked3: false,
+      checked4: false,
+      checked5: false,
 
     }
     file = new File();
@@ -87,6 +92,45 @@ constructor(props){
                 </View>
 
 
+            <View style={styles.container}>
+            <CheckBox
+            title="Pizza"
+            checked={this.state.checked}
+            onPress={() => this.setState({ checked: !this.state.checked })}
+             />
+             </View>
+
+             <View style={styles.container}>
+             <CheckBox
+             title="Coffee"
+             checked={this.state.checked2}
+             onPress={() => this.setState({ checked2: !this.state.checked2 })}
+              />
+              </View>
+
+             <View style={styles.container}>
+             <CheckBox
+             title="Burgers"
+             checked={this.state.checked3}
+             onPress={() => this.setState({ checked3: !this.state.checked3 })}
+              />
+              </View>
+
+             <View style={styles.container}>
+             <CheckBox
+             title="Chicken"
+             checked={this.state.checked4}
+             onPress={() => this.setState({ checked4: !this.state.checked4 })}
+              />
+              </View>
+
+             <View style={styles.container}>
+             <CheckBox
+             title="Parks"
+             checked={this.state.checked5}
+             onPress={() => this.setState({ checked5: !this.state.checked5 })}
+              />
+              </View>
 
       </View>
 
@@ -103,9 +147,20 @@ constructor(props){
         if(prefExists){
             let s = await file.fileRead('prefs');
             let s2 = s.split(" ");
+            for(i = 2; i < 7; i++){
+            if(s2[i] == "true")
+                s2[i] = true;
+            else
+                s2[i] = false;
+            }
             this.setState({
                        index: parseFloat(s2[0]),
                        radius: parseFloat(s2[1]),
+                       checked: s2[2],
+                       checked2: s2[3],
+                       checked3: s2[4],
+                       checked4: s2[5],
+                       checked5: s2[6],
                      });
            }
 
@@ -116,7 +171,7 @@ constructor(props){
 
 
      async componentWillUnmount(){
-     let s = "" + this.state.index + " " + this.state.radius;
+     let s = "" + this.state.index + " " + this.state.radius + " " + this.state.checked + " " + this.state.checked2 + " " + this.state.checked3 + " " + this.state.checked4 + " " + this.state.checked5;
      let prefExists = await file.fileExists('prefs');
       if(prefExists){
         file.createFile('prefs',s)
@@ -134,7 +189,7 @@ constructor(props){
 const styles = StyleSheet.create({
 
   container: {
-    flex: 1,
+    flex: 0,
   },
 
   welcome: {
