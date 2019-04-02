@@ -3,7 +3,7 @@ import { Text, View,StyleSheet,Keyboard, Dimensions,ActivityIndicator,Permission
 import ControlBar from './Controls/Controls';
 import MapGui from './Map/Map';
 import DecoySearch from './comps/DecoySearch';
-
+import File from '../../../utils/FileSystem';
 import MasterAPI from '../../../APIs/MasterAPI';
 import MarkerSort from '../../../utils/MarkerSort';
 
@@ -12,10 +12,10 @@ const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-import files from "../../../utils/Files";
+
 var masterAPI;
 var markerSort;
-
+var file;
 export default class Main extends Component {
 
 
@@ -25,11 +25,12 @@ export default class Main extends Component {
            this.state = {
              lat:            null,
              long:           null,
+             radius:         this.props.radius,
              params:{
                                 latitude: '30.414175',
                                 longitude:'-91.186256',
                                 query:'donuts',
-                                limit: 30,
+                                limit: 10,
                                 radius: this.props.radius,
                                 categories: '',
                                             },
@@ -44,9 +45,9 @@ export default class Main extends Component {
              burritoClicked: false ,
              items:          [],
              itemDetails:    [],
-
+             watchID:        null
            }
-
+             file = new File();
 
             masterAPI = new MasterAPI();
         }
@@ -192,12 +193,12 @@ export default class Main extends Component {
               this.state.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> :
                <MapGui
 
-                mapsType ={this.props.mapsType}
+                mapsType ={this.state.mapsType}
                 styling = {styles.map}
                 lat = {this.state.lat}
                 long = {this.state.long}
                 markers = {this.state.items}
-                radius = {this.props.radius}
+                radius = {this.state.radius}
                 region = {this.state.region}
                 render = {this.state.render}
                 onRegionChange = {this.onRegionChange.bind(this)}
@@ -237,29 +238,45 @@ export default class Main extends Component {
 
     //Getting current location
        async componentDidMount() {
-
-            navigator.geolocation.getCurrentPosition( (position) =>{
-               this.setState({ lat: position.coords.latitude  ,  long: position.coords.longitude });
-               this.setState({ region:{
-                               latitude: position.coords.latitude,
-                               longitude: position.coords.longitude,
-                               latitudeDelta: LATITUDE_DELTA,
-                               longitudeDelta: LONGITUDE_DELTA
-                             }});
+            let positionexists = await file.fileExists('position');
+            if(positionexists){
+                let s = await file.fileRead('position');
+                let s2 = s.split(" ");
+                this.setState({
+                           lat: parseFloat(s2[0]),
+                           long: parseFloat(s2[1]),
+                         });
+            }
+            else{
+                navigator.geolocation.getCurrentPosition( (position) =>
+            {
+            this.setState({
+               lat: position.coords.latitude,
+               long: position.coords.longitude,
+             });
+             this.setState({ region:{
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            latitudeDelta: LATITUDE_DELTA,
+                            longitudeDelta: LONGITUDE_DELTA
+                          }});
            },
-              (error) => {console.log(error.message)},
-              { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+          (error) => console.log(error.message),
+          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
                                                  );
-
-    }
+               }
+               }
 
 
 
      async componentWillUnmount(){
-           files.lat = this.state.latitude;
-           files.long = this.state.longitude;
-
-
+          navigator.geolocation.clearWatch(this.watchID);
+          let s = "" + this.state.lat + " " + this.state.long;
+          let positionFilexists = await file.fileExists('position');
+           if(positionFilexists)
+             file.createFile('position',s);
+            else
+            file.fileWrite('position',s);
             }
 
 

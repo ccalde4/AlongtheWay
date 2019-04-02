@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
-import {PermissionsAndroid, Alert,View} from 'react-native';
+import {PermissionsAndroid, Alert} from 'react-native';
 import firebase from 'react-native-firebase';
 import Main from './Home/Main/Main';
 import SearchBar from './Home/SearchBar';
 import Options from './Home/Option';
 import ReviewForm from './Home/ReviewForm';
-
-import files from '../utils/Files';
-import Initialize from '../utils/Initialize';
+import File from '../utils/FileSystem';
 
   //Function to gain access to user Location
 export async function request_location_runtime_permission() {
@@ -35,7 +33,7 @@ try {
 
 
 }
-
+ var file;
 
 export default class App extends Component {
 
@@ -46,12 +44,9 @@ export default class App extends Component {
         }
 
      constructor(props){
-    console.log("IN APP");
      super(props);
-
-
+      file = new File();
      this.state = {
-        initialized : false,
         isSearching : false,
         inOptions: false,
         isReviewing: false,
@@ -59,7 +54,6 @@ export default class App extends Component {
         reviews: [],
         mapsType: 'standard'
      }
-
      firebase.auth()
        .signInAnonymously()
        .then(credential => {
@@ -84,10 +78,10 @@ export default class App extends Component {
 
         //function for updating radius, passed to Option and called by slider
        onRadiusChange(radius){
-       // files.radius = radius;
-        this.setState({radius});
+        this.setState({radius: radius});
 
-
+       //this.setState( previousState => ( {radius: radius} ) );
+        console.log(this.state.radius);
        }
 
          //toggle for review page, passed to ControlBar through Main and called by a button
@@ -108,22 +102,14 @@ export default class App extends Component {
        }
        onMapChange(map){
          this.setState({mapsType: map});
-
        }
-         sendBack(item){
-         console.log(item);
 
-         }
       render(){
 
-      if(!this.state.initialized){
-        return (<View/>);
-      }
-   // console.log("rending App")
                //returns Options page if true
            if(this.state.inOptions)
            {
-           return( <Options onRadiusChange = {this.onRadiusChange.bind(this)}
+           return( <Options onRadiusChange = {(radius) => {this.onRadiusChange(radius)}}
                             radius = {this.state.radius}
                             onMapChange = {(map)=>{this.onMapChange(map)}}
                             inOptions = {this.inOptions.bind(this)} />)
@@ -138,9 +124,7 @@ export default class App extends Component {
           if(this.state.isSearching)
           {
              return( <SearchBar onSearch = {this.onSearch.bind(this)}
-                                goTo = {this.goTo.bind(this)}
-                                sendBack = {this.sendBack.bind(this)}
-                                                                   /> );
+                                goTo = {this.goTo.bind(this)}    /> );
           }
 
 
@@ -156,27 +140,6 @@ export default class App extends Component {
       }
 
 
-         async componentWillMount(){
-           let l = await Initialize.start();
-           //console.log(l);
-           let testLoad =2000;
-           files.radius =testLoad;
-
-           let testLoad2 = 'standard';
-           files.mapsType = testLoad2;
-           files.index = 0;
-
-           this.setState({radius:files.radius});
-           this.setState({mapsType:files.mapsType})
-
-           this.setState({initialized:true});
-
-         }
-
-         componentWillUnMount(){
-         files.mapsType = this.state.mapsType;
-
-         }
 
 
 }

@@ -12,34 +12,21 @@ import MapView, { Polyline, Marker,Callout } from "react-native-maps";
 import _ from "lodash";
 import Button from 'react-native';
 import PolyLine from "@mapbox/polyline";
-import request from '../../APIs/_lib/request';
-import Config from '../../APIs/Google/config/config';
-import SearchBarInput from './comps/SearchBarInput';
-import MoreStops from './comps/MoreStop';
-import Predictions from './comps/Predictions';
-var dest = "";
-var key;
-var url;
-var stopCount;
-export default class SearchBar extends Component {
 
-       sendBack(){
-        this.props.sendBack(this.state.destination);
 
-       }
 
+export default class App extends Component {
         constructor(props){
         super(props);
         this.state ={
-         stopCount: 0,
          error: "",
          latitude: 0,
          longitude: 0,
          destination: "",
-         destinations: [],
+         destinationtwo: "",
          predictions: [],
          pointCoords: [],
-
+         predictionsTwo: [],
          lat: 0,
          long: 0
 
@@ -48,9 +35,10 @@ export default class SearchBar extends Component {
                this.onChangeDestination,
                1000
              );
-
-              key = Config.getConfig().creds.key;
-              url = Config.getConfig().url2;
+         this.onChangeDestinationtwoDebounced = _.debounce(
+                        this.onChangeDestinationtwo,
+                        1000
+                      );
          }
 
           componentDidMount() {
@@ -67,20 +55,26 @@ export default class SearchBar extends Component {
            }
 
     async getRouteDirections(destinationPlaceId, destinationName) {
-       var getRoute =  url +  "/directions/json?origin=" + this.state.latitude+","
-                                    +this.state.longitude+"&destination=place_id:"+destinationPlaceId+"&key="+key;
+    const apiKey = 'AIzaSyCvfftvHMnURvTGkaiVyHQMdcYsGZsCVNs';
         try {
+          const response = await fetch(
+            `https://maps.googleapis.com/maps/api/directions/json?origin=
+            ${this.state.latitude
+            },${
+              this.state.longitude
+            }&destination=place_id:${destinationPlaceId}&key=${apiKey}`
+          );
 
-          const json =  await request(getRoute);
+
+
+
+          const json = await response.json();
           console.log(json);
-
           const points = PolyLine.decode(json.routes[0].overview_polyline.points);
-
+          //const distanceTime = {json.routes[1].overview_polyline.points}
           const pointCoords = points.map(point => {
             return { latitude: point[0], longitude: point[1] };
           });
-
-
           this.setState({
             pointCoords,
             predictions: [],
@@ -88,7 +82,7 @@ export default class SearchBar extends Component {
 
           });
           Keyboard.dismiss();
-         // this.map.fitToCoordinates(pointCoords);
+          this.map.fitToCoordinates(pointCoords);
         } catch (error) {
           console.error(error);
         }
@@ -96,94 +90,202 @@ export default class SearchBar extends Component {
 
 
     async onChangeDestination(destination) {
-
-
-        var onChangeDestination = url +"/place/autocomplete/json?key="+key+"&input="+destination+"&location="
-                                      +this.state.latitude+","+this.state.longitude+"&radius="+2000;
-
-
-
-
+    const apiKey = 'AIzaSyCvfftvHMnURvTGkaiVyHQMdcYsGZsCVNs';
+        const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=
+        ${apiKey}
+        &input=${destination}&location=${this.state.latitude},${
+          this.state.longitude
+        }&radius=2000`;
+        console.log(apiUrl);
         try {
-         const json = await request(onChangeDestination);
+          const result = await fetch(apiUrl);
+          const json = await result.json();
           this.setState({
             predictions: json.predictions
           });
-        //  console.log(json);
+          console.log(json);
         } catch (err) {
           console.error(err);
         }
       }
 
 
-          incrStopCount(){
-          let l = this.state.stopCount+1;
-          this.setState({stopCount:l,predictions:[]});
-         // this.predictionClick();
-          }
-
-          predictionClick(place_id,description){
-
-           this.getRouteDirections(
-                           place_id,
-                           description
-                         );
-
-              this.incrStopCount();
-
-          }
-
-          onChangeText(text){
-           this.dest = text;
-           console.log(this.dest);
-            this.onChangeDestinationDebounced(text);
-            this.setState({ destination:text });
-
-          }
+      async onChangeDestinationtwo (destinationtwo) {
+          const apiKey = 'AIzaSyCvfftvHMnURvTGkaiVyHQMdcYsGZsCVNs';
+              const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=
+              ${apiKey}
+              &input=${destinationtwo}&location=${this.state.lat},${
+                this.state.long
+              }&radius=2000`;
+              console.log(apiUrl);
+              try {
+                const resultTwo = await fetch(apiUrl);
+                const jsonTwo = await resultTwo.json();
+                this.setState({
+                  predictionsTwo: jsonTwo.predictions
+                });
+                console.log(jsonTwo);
+              } catch (err) {
+                console.error(err);
+              }
+            }
 
 
-         render(){
-            return(
-              <View style = {styles.container}>
-              <View style = {styles.map}/>
-               <SearchBarInput value = {this.test}
-                               onChangeText = {this.onChangeText.bind(this)}
-                               onSubmitEditing = {()=>{}}
-                                                                           />
-              {this.state.stopCount>0 ?
+    render() {
+         let marker = null;
+         let distanceButton = null;
+         let MoreStops = null;
+         let location = null;
+         let time = null;
+         let SearchBarInput = null
 
-               <SearchBarInput value = {this.test}
-                                             onChangeText = {this.onChangeText.bind(this)}
-                                             onSubmitEditing = {()=>{}}
-                                                                                         />
+         if (this.state.pointCoords.length > 1) {
+           //Creates marker and has callout for info on marker
+           marker = (
+             <Marker
+               coordinate = {this.state.pointCoords[this.state.pointCoords.length - 1]}>
+               <MapView.Callout
+                    style = {styles.popup}
+
+                    >
+                      <View style = {styles.insideOfPopup}>
+                            <Text style = {styles.nameText} >
+
+                                Hello
+
+                            </Text>
+                     </View>
+             </MapView.Callout>
+             </Marker>
+           );
+
+          // distanceButton = (
+           //<View style = {styles.bottomButton}>
+             //  <Text style = {styles.bottomButtonText}> Distance Time </Text>
+           //</View>);
+
+           SearchBarInput = (
+                            <View>
+                              <TextInput
+                                   placeholder="Enter destination..."
+                                   style={styles.Stops}
+                                   value={this.state.destinationtwo}
+                                   clearButtonMode="always"
+                                   onChangeText={destinationtwo => {
+                                   console.log(destinationtwo);
+                                   this.setState({ destinationtwo });
+                                   this.onChangeDestinationtwoDebounced(destinationtwo);
+                                                  }}
+                              />
 
 
-              :null}
-              {!this.state.predictions == [] ? this.state.predictions.map(prediction => {
+                            </View>
+                               );
 
-                   return(
-                    <Predictions
-                              onClick = {this.predictionClick.bind(this)}
-                              key = {prediction.id}
-                                    {...prediction}
-                                                                    />
-                           )
-                         }
-                        )
+            //Component to add more stops
+         MoreStops = (
 
-
-
-              :null}
-              {this.state.stopCount==1 ? <MoreStops text = {"Add Stop"}     />: null}
-              {this.state.stopCount==2 ? <MoreStops text = {"Remove Stop"} /> : null}
-              </View>
-            )
-
-
-
+                    <TouchableOpacity style = {styles.stopButton}
+                    onPress = {() => {SearchBarInput}  }
+                    >
+                          <Text>  Add Stop </Text>
+                    </TouchableOpacity>
+         );
 
          }
 
+         const predictions = this.state.predictions.map(prediction => (
+           <TouchableHighlight
+             onPress={() =>
+               this.getRouteDirections(
+                 prediction.place_id,
+                 prediction.description
+               )
+
+
+             }
+             key={prediction.id}
+           >
+             <View>
+               <Text style={styles.suggestions}>
+                 {prediction.description}
+               </Text>
+             </View>
+           </TouchableHighlight>
+         ));
+
+
+
+         const predictionsTwo = this.state.predictionsTwo.map(predictionTwo => (
+                    <TouchableHighlight
+                      onPress={() =>
+                        this.getRouteDirections(
+                          predictionTwo.place_id,
+                          predictionTwo.description
+                        )
+
+
+                      }
+                      key ={predictionTwo.id}
+                    >
+                      <View>
+                        <Text style={styles.suggestionsTwo}>
+                          {predictionTwo.description}
+                        </Text>
+                      </View>
+                    </TouchableHighlight>
+                  ));
+
+
+
+         return (
+           <View style={styles.container}>
+             <MapView
+               ref={map => {
+                 this.map = map;
+               }}
+               style={styles.map}
+                         region={{
+                           latitude: this.state.latitude,
+                           longitude: this.state.longitude,
+                           latitudeDelta: 0.015,
+                           longitudeDelta: 0.0121
+                         }}
+                         showsUserLocation={true}
+
+             >
+               <Polyline
+                 coordinates={this.state.pointCoords}
+                 strokeWidth={4}
+                 strokeColor="red"
+               />
+
+               {marker}
+             </MapView>
+
+             <TextInput
+               placeholder="Enter destination..."
+               style={styles.destinationInput}
+               value={this.state.destination}
+               clearButtonMode="always"
+               onChangeText={destination => {
+                 console.log(destination);
+                 this.setState({ destination });
+                 this.onChangeDestinationDebounced(destination);
+               }}
+
+             />
+             {SearchBarInput}
+
+             {predictions}
+             {predictionsTwo}
+             {distanceButton}
+             {MoreStops}
+
+
+           </View>
+         );
+       }
      }
 
 

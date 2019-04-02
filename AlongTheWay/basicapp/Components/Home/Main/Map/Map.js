@@ -5,6 +5,7 @@ import mapstyle1 from './styles/mapstyle1';
 import mapstyle2 from './styles/mapstyle2';
 import mapstyle3 from './styles/mapstyle3';
 import MarkerPopup from './comps/MarkerPopup';
+
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
@@ -50,8 +51,8 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
    render(){
-   //console.log("I rendered!!! at MapGui");
-   //console.log(this.props.radius);
+   console.log("I rendered!!! at MapGui");
+
 
    return(
       <Animated
