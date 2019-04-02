@@ -12,7 +12,7 @@ var RNFS = require('react-native-fs');
     var path = RNFS.DocumentDirectoryPath + file;
     RNFS.writeFile(path, content, 'utf8')
      .then((success) => {
-       console.log('FILE WRITTEN!');
+      // console.log('FILE WRITTEN!');
       })
      .catch((err) => {
        console.log(err.message);
@@ -50,7 +50,7 @@ var RNFS = require('react-native-fs');
         var filepath = RNFS.DocumentDirectoryPath + path;
         RNFS.writeFile(filepath,content)
             .then((success) => {
-               console.log('FILE WRITTEN!');
+            //   console.log('FILE WRITTEN!');
             })
             .catch((err) => {
             console.log(err.message);
