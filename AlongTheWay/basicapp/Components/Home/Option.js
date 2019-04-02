@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, View, Slider, Text,TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ButtonGroup, Header, Button } from 'react-native-elements';
+import { ButtonGroup, Header, Button, Checkbox } from 'react-native-elements';
 import files from '../../utils/Files';
 
 export default class Options extends Component {
