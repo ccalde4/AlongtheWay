@@ -205,7 +205,7 @@ constructor(props){
          if(prefExists){
             let s = await file.fileRead('prefs');
             let s2 = s.split(" ");
-                   for(i = 0; i < 5; i++){
+                   for(i = 0; i < s2.length; i++){
                    if(s2[i] == "true")
                        s2[i] = true;
                    else
