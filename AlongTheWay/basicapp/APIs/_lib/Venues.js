@@ -23,7 +23,7 @@ export default class Venues{
                     phone : '',
                     },
               categories : [],
-               reviews : '',
+               reviews : null,
                from : '',
 
 
@@ -70,7 +70,7 @@ export default class Venues{
                          },
                          rating : obj.rating,
                        categories : obj.categories,
-                       //reviews = ,
+                       reviews : obj.reviews,
                        from : 'yelp',
                        }
 
@@ -99,7 +99,7 @@ export default class Venues{
                             },
                            rating : obj.response.venue.rating,
                            categories : obj.categories,
-                           //reviews = ,
+                           reviews : obj.reviews,
                            from : 'foursquare',
                            }
 
