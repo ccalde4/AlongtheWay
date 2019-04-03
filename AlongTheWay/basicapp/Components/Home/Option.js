@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, View, Slider, Text,TouchableOpacity} from 'react-native';
+import {Platform, StyleSheet, View, Slider, Text,TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ButtonGroup, Header, Button, CheckBox } from 'react-native-elements';
 import files from '../../utils/Files';
@@ -21,6 +21,11 @@ constructor(props){
       checked3: false,
       checked4: false,
       checked5: false,
+      checked6: false,
+      checked7: false,
+      checked8: false,
+      checked9: false,
+      checked10: false,
 
     }
 
@@ -55,6 +60,8 @@ constructor(props){
                 centerComponent={{ text: 'Options', style: { color: '#fff' } }}
                />
 
+<ScrollView>
+<View style={{height:780}}>
 
 
           <View style = {styles.group}>
@@ -87,13 +94,13 @@ constructor(props){
                   <Text style={styles.welcome}>
                     {this.state.radius}
                   </Text>
-
                 </View>
+
 
 
                             <View style={styles.container}>
                             <CheckBox
-                            title="Pizza"
+                            title="Food"
                             checked={this.state.checked}
                             onPress={() => this.setState({ checked: !this.state.checked })}
                              />
@@ -101,7 +108,7 @@ constructor(props){
 
                               <View style={styles.container}>
                              <CheckBox
-                             title="Coffee"
+                             title="LandMarks"
                              checked={this.state.checked2}
                              onPress={() => this.setState({ checked2: !this.state.checked2 })}
                               />
@@ -109,7 +116,7 @@ constructor(props){
 
                               <View style={styles.container}>
                              <CheckBox
-                             title="Burgers"
+                             title="Local"
                              checked={this.state.checked3}
                              onPress={() => this.setState({ checked3: !this.state.checked3 })}
                               />
@@ -117,7 +124,7 @@ constructor(props){
 
                               <View style={styles.container}>
                              <CheckBox
-                             title="Chicken"
+                             title="Shops"
                              checked={this.state.checked4}
                              onPress={() => this.setState({ checked4: !this.state.checked4 })}
                               />
@@ -125,15 +132,64 @@ constructor(props){
 
                               <View style={styles.container}>
                              <CheckBox
-                             title="Parks"
+                             title="Outdoors"
                              checked={this.state.checked5}
                              onPress={() => this.setState({ checked5: !this.state.checked5 })}
                               />
                               </View>
 
+                              <View style={styles.container}>
+                             <CheckBox
+                             title="Nightlife"
+                             checked={this.state.checked6}
+                             onPress={() => this.setState({ checked6: !this.state.checked6 })}
+                              />
+                              </View>
 
+                                <View style={styles.container}>
+                               <CheckBox
+                               title="Gas"
+                               checked={this.state.checked7}
+                               onPress={() => this.setState({ checked7: !this.state.checked7 })}
+                                />
+                                </View>
+
+
+                               <View style={styles.container}>
+                              <CheckBox
+                              title="Rest"
+                              checked={this.state.checked8}
+                              onPress={() => this.setState({ checked8: !this.state.checked8 })}
+                               />
+                               </View>
+
+
+                               <View style={styles.container}>
+                              <CheckBox
+                              title="Arts"
+                              checked={this.state.checked9}
+                              onPress={() => this.setState({ checked9: !this.state.checked9 })}
+                               />
+                               </View>
+
+
+
+                               <View style={styles.container}>
+                              <CheckBox
+                              title="Medical"
+                              checked={this.state.checked10}
+                              onPress={() => this.setState({ checked10: !this.state.checked10 })}
+                               />
+                               </View>
+
+
+
+</View>
+ </ScrollView>
 
       </View>
+
+
 
     );
 
@@ -161,13 +217,19 @@ constructor(props){
                               checked3: s2[2],
                               checked4: s2[3],
                               checked5: s2[4],
+                              checked6: s2[5],
+                              checked7: s2[6],
+                              checked8: s2[7],
+                              checked9: s2[8],
+                              checked10: s2[9],
                     });
             }
      }
 
      async componentWillUnmount(){
 
-        let s = "" +this.state.checked + " " + this.state.checked2 + " " + this.state.checked3 + " " + this.state.checked4 + " " + this.state.checked5;
+        let s = "" +this.state.checked + " " + this.state.checked2 + " " + this.state.checked3 + " " + this.state.checked4 + " " + this.state.checked5
+        + " " + this.state.checked6 + " " + this.state.checked7 + " " + this.state.checked8 + " " + this.state.checked9 + " " + this.state.checked10;
         let prefExists = await file.fileExists('prefs');
         if(prefExists){
            file.createFile('prefs',s);
