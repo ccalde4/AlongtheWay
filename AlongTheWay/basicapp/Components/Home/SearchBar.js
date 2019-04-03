@@ -97,9 +97,7 @@ export default class SearchBar extends Component {
 
           });
 
-          sendBack(){
-                this.props.sendBack{this.state.pointCoords};
-          }
+
           Keyboard.dismiss();
          // this.map.fitToCoordinates(pointCoords);
         } catch (error) {
@@ -130,9 +128,6 @@ export default class SearchBar extends Component {
 
                 });
 
-                sendBack(){
-                      this.props.sendBack{this.state.pointCoords};
-                }
                 Keyboard.dismiss();
                // this.map.fitToCoordinates(pointCoords);
               } catch (error) {
@@ -279,6 +274,7 @@ export default class SearchBar extends Component {
                              />
 
                              {marker}
+                             {polyLine2}
                            </MapView>
 
 
@@ -287,15 +283,9 @@ export default class SearchBar extends Component {
                                onChangeText = {this.onChangeText.bind(this)}
                                onSubmitEditing = {()=>{}}
                                                                            />
-              {this.state.stopCount>0 ?
-
-               <SearchBarInput value = {this.test}
-                                             onChangeText = {this.onChangeTextTwo.bind(this)}
-                                             onSubmitEditing = {()=>{}}
-                                                                                         />
-                       {polyLine2}
-
-              :null}
+              {this.state.stopCount>0 ? <SearchBarInput value = {this.test} onChangeText = {this.onChangeTextTwo.bind(this)} onSubmitEditing = {()=>{}}
+               />
+                       :null}
               {!this.state.predictions == [] ? this.state.predictions.map(prediction => {
 
                    return(
@@ -307,9 +297,6 @@ export default class SearchBar extends Component {
                            )
                          }
                         )
-
-
-wd
               :null}
               {this.state.stopCount==1 ? <MoreStops text = {"Add Stop"}     />: null}
               {this.state.stopCount==2 ? <MoreStops text = {"Remove Stop"} /> : null}
@@ -319,7 +306,7 @@ wd
                     style = {styles.GO}
                             onPress = {this.props.onSearch}
                     >
-                          <Text> GO </View>
+                          <Text> Go </Text>
                     </TouchableHighlight>
               </View>
 
