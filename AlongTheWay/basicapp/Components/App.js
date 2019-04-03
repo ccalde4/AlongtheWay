@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {PermissionsAndroid, Alert} from 'react-native';
+import {PermissionsAndroid, Alert,View} from 'react-native';
 import firebase from 'react-native-firebase';
 import Main from './Home/Main/Main';
 import SearchBar from './Home/SearchBar';
 import Options from './Home/Option';
 import ReviewForm from './Home/ReviewForm';
-import File from '../utils/FileSystem';
+import Save from  '../utils/AutoSave';
+import files from '../utils/Files';
+import Initialize from '../utils/Initialize';
 
   //Function to gain access to user Location
 export async function request_location_runtime_permission() {
@@ -33,27 +35,46 @@ try {
 
 
 }
- var file;
+
 
 export default class App extends Component {
 
          async componentDidMount() {
+          //window.addEventListener('beforeunload', this.componentCleanup);
+          await request_location_runtime_permission();
+           navigator.geolocation.getCurrentPosition(
+                         position => {
+                           this.setState({
+                             latitude: position.coords.latitude,
+                             longitude: position.coords.longitude
+                           });
+                         },
+                         error => console.error(error),
+                         { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
+                       );
 
-          await request_location_runtime_permission()
 
         }
 
      constructor(props){
+    console.log("IN APP");
      super(props);
-      file = new File();
+
+
      this.state = {
+        initialized : false,
         isSearching : false,
         inOptions: false,
         isReviewing: false,
+        latitude: null,
+        longitude: null,
         radius: 1000,
+        polyline: null,
         reviews: [],
-        mapsType: 'standard'
+        mapsType: 'standard',
+        close: false
      }
+
      firebase.auth()
        .signInAnonymously()
        .then(credential => {
@@ -66,6 +87,7 @@ export default class App extends Component {
               .catch((err)=>{console.log(err)}) */
 
      }
+
           //toggle for options page, passed to ControlBar through Main and called by a button
        inOptions(){
         this.setState( previousState => ( {inOptions: !previousState.inOptions} ) );
@@ -78,10 +100,10 @@ export default class App extends Component {
 
         //function for updating radius, passed to Option and called by slider
        onRadiusChange(radius){
-        this.setState({radius: radius});
+       // files.radius = radius;
+        this.setState({radius});
 
-       //this.setState( previousState => ( {radius: radius} ) );
-        console.log(this.state.radius);
+
        }
 
          //toggle for review page, passed to ControlBar through Main and called by a button
@@ -102,14 +124,35 @@ export default class App extends Component {
        }
        onMapChange(map){
          this.setState({mapsType: map});
+
        }
+         sendBack(item){
+         console.log(item);
 
+         }
+         addPoly(pol){
+         this.setState({polyline:pol});
+        // console.log(this.state.polyline);
+         }
+
+         fakeClose(){
+          // this.forceUpdate();
+         console.log("hi there");
+          //this.setState({close:true});
+         }
       render(){
-
+      console.log(this.state.latitude);
+       if(this.state.latitude==null){
+        return (<View/>);
+       }
+      if(!this.state.initialized){
+        return (<View/>);
+      }
+    console.log("rending App")
                //returns Options page if true
            if(this.state.inOptions)
            {
-           return( <Options onRadiusChange = {(radius) => {this.onRadiusChange(radius)}}
+           return( <Options onRadiusChange = {this.onRadiusChange.bind(this)}
                             radius = {this.state.radius}
                             onMapChange = {(map)=>{this.onMapChange(map)}}
                             inOptions = {this.inOptions.bind(this)} />)
@@ -124,15 +167,24 @@ export default class App extends Component {
           if(this.state.isSearching)
           {
              return( <SearchBar onSearch = {this.onSearch.bind(this)}
-                                goTo = {this.goTo.bind(this)}    /> );
+                                goTo = {this.goTo.bind(this)}
+                                lat = {this.state.latitude}
+                                long = {this.state.longitude}
+                                polyline = {this.addPoly.bind(this)}
+                                sendBack = {this.sendBack.bind(this)}
+                                                                   /> );
           }
 
 
               // returns Main if nothing else is toggled(default view)
             return( <Main onSearch = {this.onSearch.bind(this)}
                           inOptions = {this.inOptions.bind(this)}
+                          lat = {this.state.latitude}
+                          long = {this.state.longitude}
                           radius = {this.state.radius}
+                          polyline ={this.state.polyline}
                           mapsType = {this.state.mapsType}
+                          close = {this.fakeClose.bind(this)}
                           onReview = {this.onReview.bind(this)}/>);
 
 
@@ -140,6 +192,27 @@ export default class App extends Component {
       }
 
 
+         async componentWillMount(){
+         //window.addEventListener('beforeunload', this.componentCleanup);
+           let l = await Initialize.start();
+
+               console.log("in app"+files.radius);
+           let testLoad2 = 'standard';
+           files.mapsType = testLoad2;
+           files.index = 0;
+
+           this.setState({radius:files.radius});
+           this.setState({mapsType:files.mapsType});
+           this.setState({initialized:true});
+
+         }
+
+        async componentWillUnMount(){
+             await Save.save();
+      //  window.removeEventListener('beforeunload', this.componentCleanup);
+         files.mapsType = this.state.mapsType;
+         //Save.save();
+         }
 
 
 }

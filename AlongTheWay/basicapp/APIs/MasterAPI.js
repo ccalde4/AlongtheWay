@@ -158,6 +158,7 @@ class MasterAPI {
         var uniform = []
         for(let i = 0; i < obj.length; i++){
             uniform[i] = venues.makeUniformVenue(this.cloneObject(obj[i]));
+
         }
         if(uniform !== null){
         return uniform;

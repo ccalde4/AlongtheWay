@@ -3,7 +3,7 @@ import { Text, View,StyleSheet,Keyboard, Dimensions,ActivityIndicator,Permission
 import ControlBar from './Controls/Controls';
 import MapGui from './Map/Map';
 import DecoySearch from './comps/DecoySearch';
-import File from '../../../utils/FileSystem';
+
 import MasterAPI from '../../../APIs/MasterAPI';
 import MarkerSort from '../../../utils/MarkerSort';
 import MarkerPopup from './Map/comps/MarkerPopup';
@@ -14,10 +14,10 @@ const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-
+import files from "../../../utils/Files";
 var masterAPI;
 var markerSort;
-var file;
+
 export default class Main extends Component {
 
 
@@ -27,12 +27,11 @@ export default class Main extends Component {
            this.state = {
              lat:            null,
              long:           null,
-             radius:         this.props.radius,
              params:{
                                 latitude: '30.414175',
                                 longitude:'-91.186256',
                                 query:'donuts',
-                                limit: 10,
+                                limit: 30,
                                 radius: this.props.radius,
                                 categories: '',
                                             },
@@ -48,10 +47,10 @@ export default class Main extends Component {
              burritoClicked: false ,
              items:          [],
              reviews: [],
-             watchID:        null
+             watchID:        null,
               markerIndex: 0,
            }
-             file = new File();
+
 
             masterAPI = new MasterAPI();
         }
@@ -73,8 +72,8 @@ export default class Main extends Component {
         onRedClicked(){
           this.setState({
             region: {
-               latitude: this.state.lat,
-               longitude: this.state.long,
+               latitude: this.props.lat,
+               longitude: this.props.long,
                latitudeDelta: LATITUDE_DELTA,
                longitudeDelta: LONGITUDE_DELTA,
                 }
@@ -137,7 +136,7 @@ export default class Main extends Component {
 
          onParksClicked(){
          this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
-
+         this.props.close();
           }
 
 
@@ -194,10 +193,12 @@ export default class Main extends Component {
        ||newState.moreClicked!==this.state.moreClicked
        ||newState.center!==this.state.center
        ||newState.render!==this.state.render
-       ||newState.lat!==this.state.lat
+       ||newProps.lat!==this.props.lat
        ||newProps.radius!==this.props.radius
+
        ||newState.markerClicked!==this.state.markerClicked
        ||newState.isReviewing !== this.state.isReviewing
+||newProps.polyline!==this.props.polyline
 
 
        )
@@ -209,21 +210,22 @@ export default class Main extends Component {
      render()
      {
      //console.log("I rendered!!!")
+      console.log("Main2");
       return (
 
        <View style={styles.Gui}  >
 
 
            {
-              this.state.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> :
+              this.props.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> :
                <MapGui
-
-                mapsType ={this.state.mapsType}
+                polyline = {this.props.polyline}
+                mapsType ={this.props.mapsType}
                 styling = {styles.map}
-                lat = {this.state.lat}
-                long = {this.state.long}
+                lat = {this.props.lat}
+                long = {this.props.long}
                 markers = {this.state.items}
-                radius = {this.state.radius}
+                radius = {this.props.radius}
                 region = {this.state.region}
                 render = {this.state.render}
                 onRegionChange = {this.onRegionChange.bind(this)}
@@ -236,11 +238,11 @@ export default class Main extends Component {
 
 
             {
-               this.state.lat === null ? null :
+               this.props.lat === null ? null :
               <DecoySearch onSearch = {this.props.onSearch}/>
              }
            {
-              this.state.lat === null ? null :
+              this.props.lat === null ? null :
                <ControlBar
 
                 red = {this.state.redClicked}           onRedClick = {this.onRedClicked.bind(this)}
@@ -275,48 +277,51 @@ export default class Main extends Component {
        </View>
       );
   }
-
+      setLatLong(position){
+       this.setState({
+         lat: position.coords.latitude  ,  long: position.coords.longitude
+       });
+       this.setState({ region:{
+                                      latitude: position.coords.latitude,
+                                      longitude: position.coords.longitude,
+                                      latitudeDelta: LATITUDE_DELTA,
+                                      longitudeDelta: LONGITUDE_DELTA
+                                    }});
+      }
     //Getting current location
-       async componentDidMount() {
-            let positionexists = await file.fileExists('position');
-            if(positionexists){
-                let s = await file.fileRead('position');
-                let s2 = s.split(" ");
-                this.setState({
-                           lat: parseFloat(s2[0]),
-                           long: parseFloat(s2[1]),
-                         });
-            }
-            else{
-                navigator.geolocation.getCurrentPosition( (position) =>
-            {
-            this.setState({
-               lat: position.coords.latitude,
-               long: position.coords.longitude,
-             });
-             this.setState({ region:{
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude,
-                            latitudeDelta: LATITUDE_DELTA,
-                            longitudeDelta: LONGITUDE_DELTA
-                          }});
+        componentDidMount() {
+
+        this.setState({ region:{
+                                              latitude: this.props.latitude,
+                                              longitude: this.props.longitude,
+                                              latitudeDelta: LATITUDE_DELTA,
+                                              longitudeDelta: LONGITUDE_DELTA
+                                            }});
+
+         /* console.log("Main1");
+            navigator.geolocation.getCurrentPosition( (position) =>{
+             console.log("Mainnav");
+               this.setState({ lat: position.coords.latitude  ,  long: position.coords.longitude });
+               this.setState({ region:{
+                               latitude: position.coords.latitude,
+                               longitude: position.coords.longitude,
+                               latitudeDelta: LATITUDE_DELTA,
+                               longitudeDelta: LONGITUDE_DELTA
+                             }});
            },
-          (error) => console.log(error.message),
-          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-                                                 );
-               }
-               }
+              (error) => {console.log(error.message)},
+              { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000 },
+                                                 );*/
+
+    }
 
 
 
      async componentWillUnmount(){
-          navigator.geolocation.clearWatch(this.watchID);
-          let s = "" + this.state.lat + " " + this.state.long;
-          let positionFilexists = await file.fileExists('position');
-           if(positionFilexists)
-             file.createFile('position',s);
-            else
-            file.fileWrite('position',s);
+           files.lat = this.state.lat;
+           files.long = this.state.long;
+
+
             }
 
 

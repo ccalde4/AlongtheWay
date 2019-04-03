@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, View, Slider, Text,TouchableOpacity} from 'react-native';
+import {Platform, StyleSheet, View, Slider, Text,TouchableOpacity, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ButtonGroup, Header, Button } from 'react-native-elements';
+import { ButtonGroup, Header, Button, CheckBox } from 'react-native-elements';
+import files from '../../utils/Files';
 import File from '../../utils/FileSystem';
 
 var file;
@@ -15,21 +16,29 @@ constructor(props){
 
       index: 0,
       radius: 0 ,
+      checked: false,
+      checked2: false,
+      checked3: false,
+      checked4: false,
+      checked5: false,
+      checked6: false,
+      checked7: false,
+      checked8: false,
+      checked9: false,
+      checked10: false,
 
     }
+
     file = new File();
+
 
    }
 
     updateIndex = (index) => {
-      console.log(this.state.index);
-      this.setState({index});
-      if(index==0){
-      this.props.onMapChange('standard');
-      }
-      else{
-      this.props.onMapChange('satellite');
-      }
+
+         this.setState({index});
+
+
 
 
     }
@@ -37,7 +46,7 @@ constructor(props){
 
      updateRadius(radius){
      this.setState({radius:radius});
-     this.props.onRadiusChange(this.state.radius);
+     //this.props.onRadiusChange(radius);
      }
 
 
@@ -47,11 +56,12 @@ constructor(props){
       <View style={styles.container}>
 
               <Header
-                leftComponent={{ icon: 'menu', color: '#fff' }}
+                leftComponent={{ icon: 'arrow-back', color: '#fff', onPress: () => {this.props.inOptions()} }}
                 centerComponent={{ text: 'Options', style: { color: '#fff' } }}
-                rightComponent={{ icon: 'home', color: '#fff', onPress: () => {this.props.inOptions()} }}
                />
 
+<ScrollView>
+<View style={{height:780}}>
 
 
           <View style = {styles.group}>
@@ -84,48 +94,161 @@ constructor(props){
                   <Text style={styles.welcome}>
                     {this.state.radius}
                   </Text>
-
                 </View>
 
+
+
+                            <View style={styles.container}>
+                            <CheckBox
+                            title="Food"
+                            checked={this.state.checked}
+                            onPress={() => this.setState({ checked: !this.state.checked })}
+                             />
+                             </View>
+
+                              <View style={styles.container}>
+                             <CheckBox
+                             title="LandMarks"
+                             checked={this.state.checked2}
+                             onPress={() => this.setState({ checked2: !this.state.checked2 })}
+                              />
+                              </View>
+
+                              <View style={styles.container}>
+                             <CheckBox
+                             title="Local"
+                             checked={this.state.checked3}
+                             onPress={() => this.setState({ checked3: !this.state.checked3 })}
+                              />
+                              </View>
+
+                              <View style={styles.container}>
+                             <CheckBox
+                             title="Shops"
+                             checked={this.state.checked4}
+                             onPress={() => this.setState({ checked4: !this.state.checked4 })}
+                              />
+                              </View>
+
+                              <View style={styles.container}>
+                             <CheckBox
+                             title="Outdoors"
+                             checked={this.state.checked5}
+                             onPress={() => this.setState({ checked5: !this.state.checked5 })}
+                              />
+                              </View>
+
+                              <View style={styles.container}>
+                             <CheckBox
+                             title="Nightlife"
+                             checked={this.state.checked6}
+                             onPress={() => this.setState({ checked6: !this.state.checked6 })}
+                              />
+                              </View>
+
+                                <View style={styles.container}>
+                               <CheckBox
+                               title="Gas"
+                               checked={this.state.checked7}
+                               onPress={() => this.setState({ checked7: !this.state.checked7 })}
+                                />
+                                </View>
+
+
+                               <View style={styles.container}>
+                              <CheckBox
+                              title="Rest"
+                              checked={this.state.checked8}
+                              onPress={() => this.setState({ checked8: !this.state.checked8 })}
+                               />
+                               </View>
+
+
+                               <View style={styles.container}>
+                              <CheckBox
+                              title="Arts"
+                              checked={this.state.checked9}
+                              onPress={() => this.setState({ checked9: !this.state.checked9 })}
+                               />
+                               </View>
+
+
+
+                               <View style={styles.container}>
+                              <CheckBox
+                              title="Medical"
+                              checked={this.state.checked10}
+                              onPress={() => this.setState({ checked10: !this.state.checked10 })}
+                               />
+                               </View>
+
+
+
+</View>
+ </ScrollView>
+
       </View>
+
+
 
     );
 
   }
-   // shouldComponentUpdate(newProps,newState){
-
-  //  }
 
 
-     async componentDidMount(){
+
+     async componentWillMount(){
+       this.setState({radius:this.props.radius});
+       this.setState({index:files.index});
         let prefExists = await file.fileExists('prefs');
-        if(prefExists){
+
+         if(prefExists){
             let s = await file.fileRead('prefs');
             let s2 = s.split(" ");
-            this.setState({
-                       index: parseFloat(s2[0]),
-                       radius: parseFloat(s2[1]),
-                     });
-           }
-
-      }
-
-
-
-
+                   for(i = 0; i < s2.length; i++){
+                   if(s2[i] == "true")
+                       s2[i] = true;
+                   else
+                       s2[i] = false;
+                   }
+                   this.setState({
+                              checked: s2[0],
+                              checked2: s2[1],
+                              checked3: s2[2],
+                              checked4: s2[3],
+                              checked5: s2[4],
+                              checked6: s2[5],
+                              checked7: s2[6],
+                              checked8: s2[7],
+                              checked9: s2[8],
+                              checked10: s2[9],
+                    });
+            }
+     }
 
      async componentWillUnmount(){
-     let s = "" + this.state.index + " " + this.state.radius;
-     let prefExists = await file.fileExists('prefs');
-      if(prefExists){
-        file.createFile('prefs',s)
-       }
-       else{
-       file.fileWrite('prefs',s);
-       }
-      // this.props.onRadiusChange(this.state.radius);
+
+        let s = "" +this.state.checked + " " + this.state.checked2 + " " + this.state.checked3 + " " + this.state.checked4 + " " + this.state.checked5
+        + " " + this.state.checked6 + " " + this.state.checked7 + " " + this.state.checked8 + " " + this.state.checked9 + " " + this.state.checked10;
+        let prefExists = await file.fileExists('prefs');
+        if(prefExists){
+           file.createFile('prefs',s);
+        }
+        else{
+           file.fileWrite('prefs',s);
+        }
 
 
+
+      this.props.onRadiusChange(this.state.radius);
+
+      if(this.state.index==0){
+            this.props.onMapChange('standard');
+            }
+            else{
+            this.props.onMapChange('satellite');
+            }
+          files.index = this.state.index;
      }
 
 
@@ -133,7 +256,7 @@ constructor(props){
 const styles = StyleSheet.create({
 
   container: {
-    flex: 1,
+    flex: 0,
   },
 
   welcome: {
