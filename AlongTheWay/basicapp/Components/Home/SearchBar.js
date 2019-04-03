@@ -114,14 +114,14 @@ export default class SearchBar extends Component {
 
                 const points = PolyLine.decode(json.routes[0].overview_polyline.points);
 
-                const pointCoords = points.map(point => {
+                const returnCoords = points.map(point => {
                   return { latitude: point[0], longitude: point[1] };
                 });
 
 
 
                 this.setState({
-                  pointCoords,
+                  returnCoords : returnCoords,
                   predictions: [],
                   destination: destinationName
 
@@ -237,14 +237,24 @@ export default class SearchBar extends Component {
                                   );
 
                        polyLine2 = (
+                                     ref={map => {
+                                                                   this.map = map;
+                                                                 }}
+                                                                 style={styles.map}
+                                                                           region={{
+                                                                             latitude: this.state.lat,
+                                                                             longitude: this.state.long,
+                                                                             latitudeDelta: 0.015,
+                                                                             longitudeDelta: 0.0121
+                                                                           }}
+                                                                           showsUserLocation={true}
 
-                       <Polyline
-                                   coordinates={this.state.pointCoords}
-                                   strokeWidth={4}
-                                   strokeColor="blue"
-                                                    />
-
-
+                                                               >
+                                                                 <Polyline
+                                                                   coordinates={this.state.returnCoords}
+                                                                   strokeWidth={4}
+                                                                   strokeColor="red"
+                                                                 />
                        );
 
 
