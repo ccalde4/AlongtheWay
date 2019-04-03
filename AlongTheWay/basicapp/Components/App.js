@@ -5,7 +5,7 @@ import Main from './Home/Main/Main';
 import SearchBar from './Home/SearchBar';
 import Options from './Home/Option';
 import ReviewForm from './Home/ReviewForm';
-import Shutdown from  './utils/Shutdown';
+//import Shutdown from  './utils/Shutdown';
 import files from '../utils/Files';
 import Initialize from '../utils/Initialize';
 
@@ -161,7 +161,7 @@ export default class App extends Component {
            //console.log(l);
         //   let testLoad =2000;
           // files.radius =testLoad;
-               console.log("in app"+files.radius);
+           console.log("in app"+files.radius);
            let testLoad2 = 'standard';
            files.mapsType = testLoad2;
            files.index = 0;
