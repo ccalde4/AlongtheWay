@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, View, Slider, Text,TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ButtonGroup, Header, Button } from 'react-native-elements';
+import { ButtonGroup, Header, Button, Checkbox } from 'react-native-elements';
 import files from '../../utils/Files';
 
 export default class Options extends Component {
@@ -14,6 +14,11 @@ constructor(props){
 
       index: 0,
       radius: 0 ,
+      	      checked: false,
+            checked2: false,
+            checked3: false,
+            checked4: false,
+            checked5: false,
 
     }
 
@@ -42,9 +47,8 @@ constructor(props){
       <View style={styles.container}>
 
               <Header
-                leftComponent={{ icon: 'menu', color: '#fff' }}
+                leftComponent={{ icon: 'arrow-back', color: '#fff', onPress: () => {this.props.inOptions()} }}
                 centerComponent={{ text: 'Options', style: { color: '#fff' } }}
-                rightComponent={{ icon: 'home', color: '#fff', onPress: () => {this.props.inOptions()} }}
                />
 
 
@@ -81,6 +85,49 @@ constructor(props){
                   </Text>
 
                 </View>
+
+
+                            <View style={styles.container}>
+                            <CheckBox
+                            title="Pizza"
+                            checked={this.state.checked}
+                            onPress={() => this.setState({ checked: !this.state.checked })}
+                             />
+                             </View>
+
+                              <View style={styles.container}>
+                             <CheckBox
+                             title="Coffee"
+                             checked={this.state.checked2}
+                             onPress={() => this.setState({ checked2: !this.state.checked2 })}
+                              />
+                              </View>
+
+                              <View style={styles.container}>
+                             <CheckBox
+                             title="Burgers"
+                             checked={this.state.checked3}
+                             onPress={() => this.setState({ checked3: !this.state.checked3 })}
+                              />
+                              </View>
+
+                              <View style={styles.container}>
+                             <CheckBox
+                             title="Chicken"
+                             checked={this.state.checked4}
+                             onPress={() => this.setState({ checked4: !this.state.checked4 })}
+                              />
+                              </View>
+
+                              <View style={styles.container}>
+                             <CheckBox
+                             title="Parks"
+                             checked={this.state.checked5}
+                             onPress={() => this.setState({ checked5: !this.state.checked5 })}
+                              />
+                              </View>
+
+
 
       </View>
 
