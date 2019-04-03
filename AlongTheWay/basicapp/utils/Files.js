@@ -4,7 +4,7 @@
 //ADD anything you want to be saved to memory and reloaded from memory ONLY HERE appending to this when running
 //    is NOT ALLOWED!!
 const files = {
-    radius     :     100,
+    radius     :     1000,
     index      :     0,
     mapsType   :    'standard',
     lat        :     null,

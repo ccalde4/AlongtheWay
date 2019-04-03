@@ -176,7 +176,14 @@ export default class SearchBar extends Component {
               :null}
               {this.state.stopCount==1 ? <MoreStops text = {"Add Stop"}     />: null}
               {this.state.stopCount==2 ? <MoreStops text = {"Remove Stop"} /> : null}
-              </View>
+
+                                  <TouchableHighlight
+                                  style = {styles.GO}
+                                          onPress = {this.props.onSearch}
+                                  >
+                                        <Text> GO </Text>
+                                  </TouchableHighlight>
+                   </View>
             )
 
 
@@ -189,7 +196,11 @@ export default class SearchBar extends Component {
 
 
 const styles = StyleSheet.create({
+   Go:{
+   width: 50,
+   height: 50
 
+   },
     stopButton: {
             backgroundColor: "white",
                     marginTop: 15,

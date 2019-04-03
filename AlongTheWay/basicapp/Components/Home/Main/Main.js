@@ -132,7 +132,7 @@ export default class Main extends Component {
 
          onParksClicked(){
          this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
-
+         this.props.close();
           }
 
 
@@ -183,6 +183,7 @@ export default class Main extends Component {
      render()
      {
      //console.log("I rendered!!!")
+      console.log("Main2");
       return (
 
        <View style={styles.Gui}  >
@@ -234,11 +235,22 @@ export default class Main extends Component {
        </View>
       );
   }
-
+      setLatLong(position){
+       this.setState({
+         lat: position.coords.latitude  ,  long: position.coords.longitude
+       });
+       this.setState({ region:{
+                                      latitude: position.coords.latitude,
+                                      longitude: position.coords.longitude,
+                                      latitudeDelta: LATITUDE_DELTA,
+                                      longitudeDelta: LONGITUDE_DELTA
+                                    }});
+      }
     //Getting current location
-       async componentDidMount() {
-
+        componentDidMount() {
+          console.log("Main1");
             navigator.geolocation.getCurrentPosition( (position) =>{
+             console.log("Mainnav");
                this.setState({ lat: position.coords.latitude  ,  long: position.coords.longitude });
                this.setState({ region:{
                                latitude: position.coords.latitude,
@@ -248,7 +260,7 @@ export default class Main extends Component {
                              }});
            },
               (error) => {console.log(error.message)},
-              { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+              { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000 },
                                                  );
 
     }
@@ -256,8 +268,8 @@ export default class Main extends Component {
 
 
      async componentWillUnmount(){
-           files.lat = this.state.latitude;
-           files.long = this.state.longitude;
+           files.lat = this.state.lat;
+           files.long = this.state.long;
 
 
             }

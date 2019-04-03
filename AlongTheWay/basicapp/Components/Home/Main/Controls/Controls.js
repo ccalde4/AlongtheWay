@@ -25,33 +25,35 @@ export default class ControlBar extends Component {
          {/* // First five buttons displayed by default  */}
      <View style = {styles.row}>
 
-       <FilterButton label = 'Re Center'
-                     color = 'crimson'
-                     clicked = {this.props.onRedClick}   />
+                     <FilterButton label = 'Re Center'
+                                   color = 'crimson'
+                                   clicked = {this.props.onRedClick}   />
 
-       <FilterButton label = 'Pizza'
-                     color = 'darksalmon'
-                     clicked = {this.props.onPizzaClick}
-                     isPressed = {this.props.pizza}      />
+                     <FilterButton label = 'Pizza'
+                                   color = 'darksalmon'
+                                   clicked = {this.props.onPizzaClick}
+                                   isPressed = {this.props.pizza}      />
 
-       <FilterButton label = 'Coffee'
-                     color = 'darkkhaki'
-                     clicked = {this.props.onCoffeeClick}
-                     isPressed = {this.props.coffee}     />
+                     <FilterButton label = 'Coffee'
+                                   color = 'darkkhaki'
+                                   clicked = {this.props.onCoffeeClick}
+                                   isPressed = {this.props.coffee}     />
 
-       <FilterButton label = 'Fetch Data'
-                     color = 'darkolivegreen'
-                     clicked = {this.props.onFetchClick}
-                     isPressed = {this.props.fetch}      />
+                     <FilterButton label = 'Fetch Data'
+                                   color = 'darkolivegreen'
+                                   clicked = {this.props.onFetchClick}
+                                   isPressed = {this.props.fetch}      />
 
-       <FilterButton label = ' More '
-                     color = 'teal'
-                     clicked = {this.onMoreClicked.bind(this)}
-                     isPressed = {this.props.more}       />
+                     <FilterButton label = ' More '
+                                   color = 'teal'
+                                   clicked = {this.onMoreClicked.bind(this)}
+                                   isPressed = {this.props.more}       />
 
 
 
-       </View>
+                     </View>
+
+
 
            {/* //Conditional rendering of buttons to be displayed if More is clicked  */}
         {this.state.isMoreClicked ?

@@ -17,8 +17,14 @@ const App = {
   return true;
   }
   else{
-    file.createFile("MainFile","");
-    return false;
+  let x = JSON.stringify(files);
+    await file.createFile("MainFile",x);
+    let z = await file.fileRead("MainFile");
+
+        let y = await JSON.parse(z);
+
+         Object.assign(files,y);
+   return true;
   }
 
  }

@@ -5,7 +5,7 @@ import Main from './Home/Main/Main';
 import SearchBar from './Home/SearchBar';
 import Options from './Home/Option';
 import ReviewForm from './Home/ReviewForm';
-//import Shutdown from  './utils/Shutdown';
+import Save from  '../utils/AutoSave';
 import files from '../utils/Files';
 import Initialize from '../utils/Initialize';
 
@@ -40,7 +40,7 @@ try {
 export default class App extends Component {
 
          async componentDidMount() {
-
+          //window.addEventListener('beforeunload', this.componentCleanup);
           await request_location_runtime_permission()
 
         }
@@ -57,7 +57,8 @@ export default class App extends Component {
         isReviewing: false,
         radius: 1000,
         reviews: [],
-        mapsType: 'standard'
+        mapsType: 'standard',
+        close: false
      }
 
      firebase.auth()
@@ -72,6 +73,7 @@ export default class App extends Component {
               .catch((err)=>{console.log(err)}) */
 
      }
+
           //toggle for options page, passed to ControlBar through Main and called by a button
        inOptions(){
         this.setState( previousState => ( {inOptions: !previousState.inOptions} ) );
@@ -114,6 +116,13 @@ export default class App extends Component {
          console.log(item);
 
          }
+
+
+         fakeClose(){
+          // this.forceUpdate();
+         console.log("hi there");
+          //this.setState({close:true});
+         }
       render(){
 
       if(!this.state.initialized){
@@ -149,6 +158,7 @@ export default class App extends Component {
                           inOptions = {this.inOptions.bind(this)}
                           radius = {this.state.radius}
                           mapsType = {this.state.mapsType}
+                          close = {this.fakeClose.bind(this)}
                           onReview = {this.onReview.bind(this)}/>);
 
 
@@ -157,24 +167,25 @@ export default class App extends Component {
 
 
          async componentWillMount(){
+         //window.addEventListener('beforeunload', this.componentCleanup);
            let l = await Initialize.start();
-           //console.log(l);
-        //   let testLoad =2000;
-          // files.radius =testLoad;
-           console.log("in app"+files.radius);
+
+               console.log("in app"+files.radius);
            let testLoad2 = 'standard';
            files.mapsType = testLoad2;
            files.index = 0;
 
            this.setState({radius:files.radius});
-           this.setState({mapsType:files.mapsType})
+           this.setState({mapsType:files.mapsType});
            this.setState({initialized:true});
 
          }
 
-         componentWillUnMount(){
+        async componentWillUnMount(){
+             await Save.save();
+      //  window.removeEventListener('beforeunload', this.componentCleanup);
          files.mapsType = this.state.mapsType;
-
+         //Save.save();
          }
 
 
