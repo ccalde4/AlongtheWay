@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { Text,TextInput, View,ScrollView, StyleSheet,Keyboard, Dimensions, TouchableOpacity,TouchableWithoutFeedback,KeyboardAvoidingView} from 'react-native';
 import StarRating from 'react-native-star-rating';
 var { winHeight, winWidth } = Dimensions.get('window');
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { ButtonGroup, Header, Button } from 'react-native-elements';
 
   export default class ReviewForm extends Component{
 
@@ -34,13 +36,13 @@ var { winHeight, winWidth } = Dimensions.get('window');
 
          }
     render() {
-    {winHeight, winWidth} ;
+
         return (
          <View style = {styles.Gui}   >
 
-                           <View style = {styles.firstLine} >
-                            <Text style = {{fontSize: 20}} > Review your experience at: {"\n"} {this.props.name} </Text>
-                           </View>
+                           {/*<View style = {styles.firstLine} >
+                            <Text style = {{fontSize: 20}} > Review your experience at: {"\n"} {this.props.marker.name} </Text>
+                           </View>*/}
 
                              <ScrollView  keyboardShouldPersistTaps = {"never"} style = {styles.commentBox}>
                                   <KeyboardAvoidingView  behavior = "padding" enabled>
@@ -56,7 +58,7 @@ var { winHeight, winWidth } = Dimensions.get('window');
                              </ScrollView>
 
                          <View style = {styles.stars}>
-                            <Text style = {styles.starText} > Rate your experience: </Text>
+
                               <StarRating
                                          disabled={false}
                                          maxStars={5}
@@ -89,25 +91,27 @@ var { winHeight, winWidth } = Dimensions.get('window');
     const styles = StyleSheet.create({
 
           Gui: {
-            flexDirection: 'column',
-            flex: 1,
-            flexWrap: 'wrap',
             backgroundColor: 'white',
+
+           // height: winHeight,
+           // width: winWidth,
+
+
+
             },
 
           firstLine: {
-            flex: 0.5,
-            flexShrink: 2,
+
             top: 10,
             bottom: 20,
             height: 70,
-            alignContent: 'flex-start',
-            overflow: 'scroll',
+            //alignContent: 'flex-start',
+           // overflow: 'scroll',
             },
 
           commentBox: {
             top: 10,
-            flex: 2.5,
+            //flex: 2.5,
             height: 150,
             width: winWidth,
             overflow: 'scroll',
@@ -115,57 +119,58 @@ var { winHeight, winWidth } = Dimensions.get('window');
             },
          textIn: {
             top: 10,
-            flex:2.5,
+            //flex:2.5,
             borderColor: 'black',
             borderWidth: 1.5,
             width: winWidth,
-            height:150,
+            //height:150,
             paddingLeft: 10,
             overflow: 'scroll',
             },
 
          stars: {
-            flex: 1.5,
-            width: 300,
-            height: 60,
+           // flex: 1.5,
+            width: 100,
+            height: 30,
             alignSelf: 'center',
-            overflow: 'hidden',
+            //overflow: 'hidden',
             },
 
 
         enter: {
-             height: 60,
+             height: 20,
              bottom:20,
              backgroundColor: 'limegreen',
-             width: winWidth,
+
+            // width: winWidth,
             },
 
         starText: {
-            fontSize: 24,
+            fontSize: 18,
             color: 'black',
             fontWeight: 'bold',
             textAlign: 'center',
-            lineHeight: 60,
+            lineHeight: 30,
             textAlignVertical: 'center',
             },
 
         submitText: {
-            fontSize: 24,
+            fontSize: 18,
             color: 'white',
             fontWeight: 'bold',
             textAlign: 'center',
-            lineHeight: 60,
+            lineHeight: 30,
             textAlignVertical: 'center',
             },
 
          textBox: {
-            flex:1,
+            //flex:1,
             height: 70,
             width: winWidth,
              backgroundColor: 'gray',
              borderColor: 'black',
              borderWidth: 10,
-             top: 110,
+            // top: 110,
             },
 
          button2: {

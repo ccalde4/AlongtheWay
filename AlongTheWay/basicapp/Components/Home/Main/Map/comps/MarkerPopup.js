@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet, Dimensions,TouchableOpacity, TouchableHighlight} from 'react-native';
 import MapView, {Marker, AnimatedRegion,Callout} from 'react-native-maps';
-// import MapGui from '../Components/MapGui';
-import ReviewForm from './ReviewForm';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { ButtonGroup, Header, Button } from 'react-native-elements';
 
 
 var { winHeight, winWidth} = Dimensions.get('window');
@@ -20,7 +20,9 @@ export default class MarkerPopup extends Component{
 
 
           }
-
+/*handleReviewPress(){
+this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
+}
   addReview(userReview){
 
          this.state.reviews.push(userReview);
@@ -29,55 +31,59 @@ export default class MarkerPopup extends Component{
          }
     onReviewClick(){
      this.setState( (previousState) => ({reviewClicked: !previousState.reviewClicked}) );
-     //this.onReview();
+     this.props.onReview();
               }
- /* onReview(){
+  onReview(){
          this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
          }*/
 
 
 
           render(){
-          if(this.state.reviewClicked){
-          console.log("reviewClicked");
-          return (<View style = {styles.reviewPage}>
-                    <ReviewForm
-                            name = {this.props.name}
-                            addReview = {(userReview) => {this.addReview(userReview)}}/>
-
-                            </View>);
-
-          }
-          else{
-          console.log("here");
           return(
 
           <View style = {styles.popup}>
+
+           <Header
+                          leftComponent={{ icon: 'menu', color: '#fff' }}
+                          centerComponent={{ text: this.props.marker.name , style: { color: '#fff' } }}
+                          rightComponent={<TouchableOpacity style = {styles.home} onPress = {this.props.inMarker}/> }
+                         />
+
             <View style = {styles.insideOfPopup}>
-                  <Text style = {styles.nameText}> {this.props.name}  </Text>
-                   <Text style = {styles.ratingText}> Yelp rating: {this.props.rating} {"\n"} </Text>
+           { this.props.marker.name !== null ?
+                  <Text style = {styles.nameText}> {this.props.marker.name}  </Text> :
+                  <Text> This location does not have a name on file </Text>
+                }
+                   <Text style = {styles.ratingText}> rating: {this.props.marker.rating} {"\n"} </Text>
                  {
-                  this.props.location.address == '' ? <Text> This location does not have an address on file </Text>:
-                        <Text style = {styles.locationText}>  {this.props.location.displayAddress[0]} {"\n"}
-                        {this.props.location.displayAddress[1]} {"\n"}
-                        {this.props.location.displayAddress[2]} {"\n"}
+                  this.props.marker.location.address == '' ? <Text> This location does not have an address on file </Text>:
+                        <Text style = {styles.locationText}>  {this.props.marker.location.displayAddress[0]} {"\n"}
+                        {this.props.marker.location.displayAddress[1]} {"\n"}
+                        {this.props.marker.location.displayAddress[2]} {"\n"}
                          </Text>
                   }
 
 
-                         <Text style = {styles.locationText}> Phone: {this.props.contact.displayPhone} {"\n"} </Text>
-                <TouchableHighlight onPress = {console.log("review was Clicked") } underlayColor="white">
-                <Text style = {styles.reviewText}> Write a review? </Text>
-                </TouchableHighlight>
-
-
-
+                         <Text style = {styles.locationText}> Phone: {this.props.marker.contact.displayPhone} {"\n"} </Text>
             </View>
+               {/* <TouchableOpacity onPress = {console.log("review was Clicked") } underlayColor="white">
+                <View style={styles.reviewButton}>
+                <Text style = {styles.reviewText}> Write a review? </Text>
+                </View>
+                </TouchableOpacity>*/}
 
-           </View>
 
+
+
+
+
+           <Button title = {"Write a review?"}
+                    onPress = {this.props.onReview}
+                    />
+</View>
           );
-          }
+
 
 
 }
@@ -86,25 +92,26 @@ export default class MarkerPopup extends Component{
 const styles = StyleSheet.create({
   reviewPage:{
   flex: 1,
-  height: 400,
-  width: 200,
+  //height: winHeight,
+  //width: winWidth,
   },
   popup:{
-     flex: 0.75,
-     flexDirection: 'row',
+     //flex: 1,
+     //flexDirection: 'row',
      backgroundColor: 'white',
     // borderRadius: 30,
     height: winHeight,
-    width: winWidth,
-     justifyContent: 'center',
-     alignItems: 'center'
+   width: winWidth,
+     //justifyContent: 'center',
+     //alignItems: 'center'
 
      },
      insideOfPopup:{
-     flex: 0.8,
+     //flex: 1,
 
      },
       nameText:{
+      textAlign: 'center',
         color: 'black',
          fontSize: 24,
          fontWeight: 'bold',
@@ -124,6 +131,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     },
+    reviewButton:{
+    marginBottom: 30,
+
+        alignItems: 'center',
+
+    },
 
     reviewText:{
     color: 'blue',
@@ -131,6 +144,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     },
-
+     home:{
+         width: 30,
+         height: 30,
+         backgroundColor: 'pink'
+        },
 
 });

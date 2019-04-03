@@ -6,6 +6,8 @@ import DecoySearch from './comps/DecoySearch';
 import File from '../../../utils/FileSystem';
 import MasterAPI from '../../../APIs/MasterAPI';
 import MarkerSort from '../../../utils/MarkerSort';
+import MarkerPopup from './Map/comps/MarkerPopup';
+import ReviewForm from './Map/comps/ReviewForm';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -34,7 +36,8 @@ export default class Main extends Component {
                                 radius: this.props.radius,
                                 categories: '',
                                             },
-             markerDataFetched: false,
+             isReviewing: false,
+             markerClicked: false,
              center:         false,
              render:         false,
              region :        null,
@@ -44,8 +47,9 @@ export default class Main extends Component {
              localClicked:   false , parksClicked: false , cornClicked:   false  ,
              burritoClicked: false ,
              items:          [],
-             itemDetails:    [],
+             reviews: [],
              watchID:        null
+              markerIndex: 0,
            }
              file = new File();
 
@@ -148,6 +152,25 @@ export default class Main extends Component {
           this.props.inOptions();
         }
 
+        onMarkerClicked(index){
+        this.setState({markerIndex: index});
+       this.setState( (previousState) => ({markerClicked: !previousState.markerClicked} ) );
+
+        }
+        onReview(){
+         this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
+        }
+
+
+
+                 //function for adding reviews to reviews array, passed to ReviewForm and called by enter button
+         addReview(userReview){
+        this.state.reviews.push(userReview);
+        console.log(this.state.reviews);
+        this.onReview();
+                 }
+
+
 
 
 //need to figure out a good way to do this elegantly
@@ -173,6 +196,8 @@ export default class Main extends Component {
        ||newState.render!==this.state.render
        ||newState.lat!==this.state.lat
        ||newProps.radius!==this.props.radius
+       ||newState.markerClicked!==this.state.markerClicked
+       ||newState.isReviewing !== this.state.isReviewing
 
 
        )
@@ -203,7 +228,7 @@ export default class Main extends Component {
                 render = {this.state.render}
                 onRegionChange = {this.onRegionChange.bind(this)}
                 onCornClick = {this.onCornClicked.bind(this)}
-                //onMarkerClick = {this.onMarkerClicked.bind(this)}
+                onMarkerClick = {this.onMarkerClicked.bind(this)}
                 center = {this.state.center}
                />
 
@@ -231,6 +256,21 @@ export default class Main extends Component {
 
                />
             }
+            {
+               this.state.markerClicked === false ? null :
+                       <MarkerPopup marker = {this.state.items[this.state.markerIndex]}
+                                    inMarker = {this.onMarkerClicked.bind(this)}
+                                    onReview = {this.onReview.bind(this)}
+                                    />
+
+                }
+                {
+                this.state.isReviewing === false? null:
+
+                <ReviewForm addReview = {(userReview) => {this.addReview(userReview)}}
+                            marker = {this.state.items[this.state.markerIndex]}
+                             inMarker = {this.onMarkerClicked.bind(this)}/>
+                 }
 
        </View>
       );
@@ -283,12 +323,12 @@ export default class Main extends Component {
 }
 const styles = StyleSheet.create({
   Gui: {
-  flexDirection: 'column',
-  padding: 10,
+  //flexDirection: 'column',
+  //padding: 10,
   flex:1,
   backgroundColor: "gray",
-  justifyContent: "space-around",
-  alignItems: "center",
+  //justifyContent: "space-around",
+  //alignItems: "center",
   },
 
   map: {

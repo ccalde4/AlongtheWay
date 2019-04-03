@@ -4,7 +4,7 @@ import MapView, {Marker,Circle, Animated,Callout} from 'react-native-maps';
 import mapstyle1 from './styles/mapstyle1';
 import mapstyle2 from './styles/mapstyle2';
 import mapstyle3 from './styles/mapstyle3';
-import MarkerPopup from './comps/MarkerPopup';
+
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -38,16 +38,13 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
    return false;
 
    }
-   handlePress(pressedMarker){
-   this.setState((previousState) => ({markerClicked: !previousState.markerClicked}))
-   this.props.onMarkerClicked(pressedMarker);
-   <MarkerPopup location = {pressedMarker.response.venue.location}
-                                  name = {pressedMarker.response.venue.name}
-                                  id = {pressedMarker.response.venue.id}
-                                  contact = {pressedMarker.response.venue.contact}
-                                  rating = {pressedMarker.response.venue.rating}/>
+  handlePress(index){
+     //console.log(index);
+     this.props.onMarkerClick(index);
+    // this.setState((previousState) => ({markerClicked: !previousState.markerClicked}))
 
-   }
+
+     }
 
 
    render(){
@@ -91,34 +88,27 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
          {
-            this.props.markers ? this.props.markers.map(marker => {return(
-                      <Marker
-                             key = {marker.id}
-                             coordinate={ {latitude: marker.location.lat,
-                                           longitude: marker.location.long} }
-                           title={marker.name}
-                           identifier = {marker.id}
-                           description={marker.location.address1}
-                           //onPress = {() => {this.handlePress(marker)}}
-                           //onPress = {this.handlePress}
+                   this.props.markers ? this.props.markers.map((marker,index) => {return(
+                    <Marker
+                           key = {marker.id}
+                           coordinate={ {latitude: marker.location.lat,
+                                         longitude: marker.location.long} }
+                         title={marker.name}
+                         identifier = {marker.id}
+                         description={marker.location.address1}
+                         //onPress = {() => {this.handlePress(marker)}}
+                         //onPress = {this.handlePress}
 
-                             pinColor = {'turquoise'}
-                       >
+                           pinColor = {'turquoise'}
+                     >
 
-                           <Callout>
-                            <MarkerPopup location = {marker.location}
-                                          name = {marker.name}
-                                          id = {marker.id}
-                                          contact = {marker.contact}
-                                          rating = {marker.rating}/>
+                         <Callout onPress = {() => {this.handlePress(index)}}/>
 
-                           </Callout>
+                         </Marker>
 
-                           </Marker>
-
-                       )})
-                      : console.log("no markers")
-         }
+                     )})
+                    : console.log("no markers")
+                  }
 
       </Animated>
       );
