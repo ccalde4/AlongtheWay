@@ -6,8 +6,6 @@ import DecoySearch from './comps/DecoySearch';
 
 import MasterAPI from '../../../APIs/MasterAPI';
 import MarkerSort from '../../../utils/MarkerSort';
-import MarkerPopup from './Map/comps/MarkerPopup';
-import ReviewForm from './Map/comps/ReviewForm';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -30,29 +28,29 @@ export default class Main extends Component {
              params:{
                                 latitude: '30.414175',
                                 longitude:'-91.186256',
-                                query:'donuts',
+                                query:'',
                                 limit: 30,
                                 radius: this.props.radius,
                                 categories: '',
                                             },
-             isReviewing: false,
-             markerClicked: false,
+             markerDataFetched: false,
              center:         false,
              render:         false,
              region :        null,
              mapsType:       this.props.mapsType,
-             redClicked:     false , pizzaClicked: false , coffeeClicked: false  ,
-             fetchClicked:   false , moreClicked:  false , burgerClicked: false  ,
-             localClicked:   false , parksClicked: false , cornClicked:   false  ,
-             burritoClicked: false ,
+             redClicked:     false , foodClicked: false , landmarksClicked: false  ,
+             fetchClicked:   false , moreClicked:  false , localClicked: false  ,
+             shopClicked:   false , outdoorsClicked: false , nightlifeClicked: false,
+             gasClicked: false, restCLicked: false, artsClicked: false,
+             medicalClicked: false, cornClicked:   false  , burritoClicked: false ,
              items:          [],
-             reviews: [],
-             watchID:        null,
-              markerIndex: 0,
+             itemDetails:    [],
+
            }
 
 
             masterAPI = new MasterAPI();
+            markerSort = new MarkerSort();
         }
 
 
@@ -72,8 +70,8 @@ export default class Main extends Component {
         onRedClicked(){
           this.setState({
             region: {
-               latitude: this.props.lat,
-               longitude: this.props.long,
+               latitude: this.state.lat,
+               longitude: this.state.long,
                latitudeDelta: LATITUDE_DELTA,
                longitudeDelta: LONGITUDE_DELTA,
                 }
@@ -83,25 +81,27 @@ export default class Main extends Component {
         }
 
 
-        onPizzaClicked(){
-          this.setState({ burgerClicked: false});
-          this.setState({ coffeeClicked: false});
-          this.setState({ localClicked: false});
-          this.setState( (previousState) => ({pizzaClicked: !previousState.pizzaClicked}) );
+        onFoodClicked(){
 
-            this.changeQuery("Pizza");
+        console.log("this is food when clicked");
+          this.setState({ localClicked: false});
+          this.setState({ landmarksClicked: false});
+          this.setState({ shopClicked: false});
+          this.setState( (previousState) => ({foodClicked: !previousState.foodClicked}) );
+
+            this.changeQuery("Food");
 
 
         }
 
 
-        onCoffeeClicked(){
-        this.setState({ burgerClicked: false});
-        this.setState({ pizzaClicked: false});
+        onLandmarksClicked(){
         this.setState({ localClicked: false});
-        this.setState( (previousState) => ({coffeeClicked: !previousState.coffeeClicked}) );
+        this.setState({ foodClicked: false});
+        this.setState({ shopClicked: false});
+        this.setState( (previousState) => ({landmarksClicked: !previousState.landmarksClicked}) );
 
-         this.changeQuery("Coffee");
+         this.changeQuery("Landmarks");
 
 
         }
@@ -112,32 +112,56 @@ export default class Main extends Component {
         }
 
 
-        onBurgerClicked(){
-         this.setState({ coffeeClicked: false});
-         this.setState({ pizzaClicked: false});
-         this.setState({ localClicked: false});
-         this.setState((previousState) => ( {burgerClicked: !previousState.burgerClicked} ));
-         this.changeQuery("Burgers");
+        onLocalClicked(){
+         this.setState({ landmarksClicked: false});
+         this.setState({ foodClicked: false});
+         this.setState({ shopClicked: false});
+         this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
+         this.changeQuery("Local");
 
          }
 
 
-         onLocalClicked(){
-         this.setState({ coffeeClicked: false});
-         this.setState({ pizzaClicked: false});
-         this.setState({ burgerClicked: false});
-         this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
+         onShopClicked(){
+         this.setState({ landmarksClicked: false});
+         this.setState({ foodClicked: false});
+         this.setState({ localClicked: false});
+         this.setState((previousState) => ( {shopClicked: !previousState.shopClicked} ));
 
-          this.changeQuery("Chicken");
+          this.changeQuery("Shop");
 
           }
 
 
 
-         onParksClicked(){
-         this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
-         this.props.close();
+         onOutdoorsClicked(){
+         this.setState((previousState) => ( {outdoorsClicked: !previousState.outdoorsClicked} ));
+
           }
+
+         onNightlifeClicked(){
+         this.setState((previousState) => ( {nightlifeClicked: !previousState.nightlifeClicked} ));
+
+         }
+         onGasClicked(){
+         this.setState((previousState) => ( {gasClicked: !previousState.gasClicked} ));
+
+         }
+
+         onRestClicked(){
+         this.setState((previousState) => ( {restClicked: !previousState.restClicked} ));
+
+         }
+
+         onArtsClicked(){
+         this.setState((previousState) => ( {artsClicked: !previousState.artsClicked} ));
+
+         }
+
+         onMedicalClicked(){
+         this.setState((previousState) => ( {medicalClicked: !previousState.medicalClicked} ));
+
+         }
 
 
         onCornClicked(){
@@ -151,54 +175,38 @@ export default class Main extends Component {
           this.props.inOptions();
         }
 
-        onMarkerClicked(index){
-        this.setState({markerIndex: index});
-       this.setState( (previousState) => ({markerClicked: !previousState.markerClicked} ) );
-
-        }
-        onReview(){
-         this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
-        }
-
-
-
-                 //function for adding reviews to reviews array, passed to ReviewForm and called by enter button
-         addReview(userReview){
-        this.state.reviews.push(userReview);
-        console.log(this.state.reviews);
-        this.onReview();
-                 }
-
-
 
 
 //need to figure out a good way to do this elegantly
   async onFetchClicked(){
+
+
            masterAPI.setParams(this.state.params);
            let data = await masterAPI.search();
 
           this.setState({items: data });
           this.setState( (previousState) => ({center: !previousState.center}) );
+           let m = new MarkerSort('rating',10)
+         // let m = this.markerSort.sort(this.state.items);
+        //   m.setItems(data);
+           let x = m.sort(data);
+           console.log(x);
        }
 
 
   shouldComponentUpdate(newProps,newState){
 
    return (
-         newState.pizzaClicked!==this.state.pizzaClicked
-       ||newState.parksClicked!==this.state.parksClicked
-       ||newState.coffeeClicked!==this.state.coffeeClicked
+         newState.foodClicked!==this.state.foodClicked
+       ||newState.shopClicked!==this.state.shopClicked
+       ||newState.landmarksClicked!==this.state.landmarksClicked
+       ||newState.outdoorsClicked!==this.state.outdoorsClicked
        ||newState.localClicked!==this.state.localClicked
-       ||newState.burgerClicked!==this.state.burgerClicked
        ||newState.moreClicked!==this.state.moreClicked
        ||newState.center!==this.state.center
        ||newState.render!==this.state.render
-       ||newProps.lat!==this.props.lat
+       ||newState.lat!==this.state.lat
        ||newProps.radius!==this.props.radius
-
-       ||newState.markerClicked!==this.state.markerClicked
-       ||newState.isReviewing !== this.state.isReviewing
-||newProps.polyline!==this.props.polyline
 
 
        )
@@ -210,27 +218,26 @@ export default class Main extends Component {
      render()
      {
      //console.log("I rendered!!!")
-      console.log("Main2");
       return (
 
        <View style={styles.Gui}  >
 
 
            {
-              this.props.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> :
+              this.state.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> :
                <MapGui
-                polyline = {this.props.polyline}
+
                 mapsType ={this.props.mapsType}
                 styling = {styles.map}
-                lat = {this.props.lat}
-                long = {this.props.long}
+                lat = {this.state.lat}
+                long = {this.state.long}
                 markers = {this.state.items}
                 radius = {this.props.radius}
                 region = {this.state.region}
                 render = {this.state.render}
                 onRegionChange = {this.onRegionChange.bind(this)}
                 onCornClick = {this.onCornClicked.bind(this)}
-                onMarkerClick = {this.onMarkerClicked.bind(this)}
+                //onMarkerClick = {this.onMarkerClicked.bind(this)}
                 center = {this.state.center}
                />
 
@@ -238,69 +245,40 @@ export default class Main extends Component {
 
 
             {
-               this.props.lat === null ? null :
+               this.state.lat === null ? null :
               <DecoySearch onSearch = {this.props.onSearch}/>
              }
            {
-              this.props.lat === null ? null :
+              this.state.lat === null ? null :
                <ControlBar
 
                 red = {this.state.redClicked}           onRedClick = {this.onRedClicked.bind(this)}
-                pizza = {this.state.pizzaClicked}       onPizzaClick = {this.onPizzaClicked.bind(this)}
-                coffee = {this.state.coffeeClicked}     onCoffeeClick = {this.onCoffeeClicked.bind(this)}
+                food = {this.state.foodClicked}       onFoodClick = {this.onFoodClicked.bind(this)}
+                landmarks = {this.state.landmarksClicked}     onLandmarksClick = {this.onLandmarksClicked.bind(this)}
                 fetch = {this.state.fetchClicked}       onFetchClick = {this.onFetchClicked.bind(this)}
                 more = {this.state.moreClicked}         onMoreClick = {this.onMoreClicked.bind(this)}
-                burger = {this.state.burgerClicked}     onBurgerClick = {this.onBurgerClicked.bind(this)}
-                local = {this.state.localClicked}       onLocalClick = {this.onLocalClicked.bind(this)}
-                parks = {this.state.parksClicked}       onParksClick = {this.onParksClicked.bind(this)}
+                local = {this.state.localClicked}     onLocalClick = {this.onLocalClicked.bind(this)}
+                shop = {this.state.shopClicked}       onShopClick = {this.onShopClicked.bind(this)}
+                outdoors = {this.state.outdoorsClicked}       onOutdoorsClick = {this.onOutdoorsClicked.bind(this)}
+                nightlife= {this.state.nightlifeClicked}       onNightlifeClick = {this.onNightlifeClicked.bind(this)}
+                gas = {this.state.gasClicked}       onGasClick = {this.onGasClicked.bind(this)}
+                rest = {this.state.restClicked}       onRestClick = {this.onRestClicked.bind(this)}
+                arts = {this.state.artsClicked}       onArtsClick = {this.onArtsClicked.bind(this)}
+                medical = {this.state.medicalClicked}       onMedicalClick = {this.onMedicalClicked.bind(this)}
                 corn = {this.state.cornClicked}         onCornClick = {this.onCornClicked.bind(this)}
                 burrito = {this.state.burritoClicked}   onBurritoClick = {this.onBurritoClicked.bind(this)}
 
                />
             }
-            {
-               this.state.markerClicked === false ? null :
-                       <MarkerPopup marker = {this.state.items[this.state.markerIndex]}
-                                    inMarker = {this.onMarkerClicked.bind(this)}
-                                    onReview = {this.onReview.bind(this)}
-                                    />
-
-                }
-                {
-                this.state.isReviewing === false? null:
-
-                <ReviewForm addReview = {(userReview) => {this.addReview(userReview)}}
-                            marker = {this.state.items[this.state.markerIndex]}
-                             inMarker = {this.onMarkerClicked.bind(this)}/>
-                 }
 
        </View>
       );
   }
-      setLatLong(position){
-       this.setState({
-         lat: position.coords.latitude  ,  long: position.coords.longitude
-       });
-       this.setState({ region:{
-                                      latitude: position.coords.latitude,
-                                      longitude: position.coords.longitude,
-                                      latitudeDelta: LATITUDE_DELTA,
-                                      longitudeDelta: LONGITUDE_DELTA
-                                    }});
-      }
+
     //Getting current location
-        componentDidMount() {
+       async componentDidMount() {
 
-        this.setState({ region:{
-                                              latitude: this.props.latitude,
-                                              longitude: this.props.longitude,
-                                              latitudeDelta: LATITUDE_DELTA,
-                                              longitudeDelta: LONGITUDE_DELTA
-                                            }});
-
-         /* console.log("Main1");
             navigator.geolocation.getCurrentPosition( (position) =>{
-             console.log("Mainnav");
                this.setState({ lat: position.coords.latitude  ,  long: position.coords.longitude });
                this.setState({ region:{
                                latitude: position.coords.latitude,
@@ -310,16 +288,16 @@ export default class Main extends Component {
                              }});
            },
               (error) => {console.log(error.message)},
-              { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000 },
-                                                 );*/
+              { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+                                                 );
 
     }
 
 
 
      async componentWillUnmount(){
-           files.lat = this.state.lat;
-           files.long = this.state.long;
+           files.lat = this.state.latitude;
+           files.long = this.state.longitude;
 
 
             }
@@ -328,12 +306,12 @@ export default class Main extends Component {
 }
 const styles = StyleSheet.create({
   Gui: {
-  //flexDirection: 'column',
-  //padding: 10,
+  flexDirection: 'column',
+  padding: 10,
   flex:1,
   backgroundColor: "gray",
-  //justifyContent: "space-around",
-  //alignItems: "center",
+  justifyContent: "space-around",
+  alignItems: "center",
   },
 
   map: {
