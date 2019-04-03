@@ -251,7 +251,11 @@ export default class SearchBar extends Component {
                                   }
 
             return(
+
+
+
               <View style = {styles.container}>
+
 
                            <MapView
                              ref={map => {
@@ -301,14 +305,14 @@ export default class SearchBar extends Component {
               {this.state.stopCount==1 ? <MoreStops text = {"Add Stop"}     />: null}
               {this.state.stopCount==2 ? <MoreStops text = {"Remove Stop"} /> : null}
 
-              <View>
+
                     <TouchableHighlight
                     style = {styles.GO}
                             onPress = {this.props.onSearch}
                     >
-                          <Text> Go </Text>
+                          <Text style={{fontSize: 30}}> Go </Text>
                     </TouchableHighlight>
-              </View>
+
 
               </View>
             )
@@ -331,11 +335,16 @@ const styles = StyleSheet.create({
             marginTop: 150,
             margin: 15,
             padding: 15,
-            fontSize: 20,
+            fontSize: 100,
             paddingLeft: 30,
             paddingRight: 30,
             borderRadius: 15,
             alignSelf: "center"
+    },
+
+    go: {
+    fontSize: 50
+
     },
 
 
