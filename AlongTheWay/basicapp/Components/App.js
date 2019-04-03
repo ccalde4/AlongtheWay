@@ -41,7 +41,18 @@ export default class App extends Component {
 
          async componentDidMount() {
           //window.addEventListener('beforeunload', this.componentCleanup);
-          await request_location_runtime_permission()
+          await request_location_runtime_permission();
+           navigator.geolocation.getCurrentPosition(
+                         position => {
+                           this.setState({
+                             latitude: position.coords.latitude,
+                             longitude: position.coords.longitude
+                           });
+                         },
+                         error => console.error(error),
+                         { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
+                       );
+
 
         }
 
@@ -55,7 +66,10 @@ export default class App extends Component {
         isSearching : false,
         inOptions: false,
         isReviewing: false,
+        latitude: null,
+        longitude: null,
         radius: 1000,
+        polyline: null,
         reviews: [],
         mapsType: 'standard',
         close: false
@@ -116,7 +130,10 @@ export default class App extends Component {
          console.log(item);
 
          }
-
+         addPoly(pol){
+         this.setState({polyline:pol});
+        // console.log(this.state.polyline);
+         }
 
          fakeClose(){
           // this.forceUpdate();
@@ -124,7 +141,10 @@ export default class App extends Component {
           //this.setState({close:true});
          }
       render(){
-
+      console.log(this.state.latitude);
+       if(this.state.latitude==null){
+        return (<View/>);
+       }
       if(!this.state.initialized){
         return (<View/>);
       }
@@ -148,6 +168,9 @@ export default class App extends Component {
           {
              return( <SearchBar onSearch = {this.onSearch.bind(this)}
                                 goTo = {this.goTo.bind(this)}
+                                lat = {this.state.latitude}
+                                long = {this.state.longitude}
+                                polyline = {this.addPoly.bind(this)}
                                 sendBack = {this.sendBack.bind(this)}
                                                                    /> );
           }
@@ -156,7 +179,10 @@ export default class App extends Component {
               // returns Main if nothing else is toggled(default view)
             return( <Main onSearch = {this.onSearch.bind(this)}
                           inOptions = {this.inOptions.bind(this)}
+                          lat = {this.state.latitude}
+                          long = {this.state.longitude}
                           radius = {this.state.radius}
+                          polyline ={this.state.polyline}
                           mapsType = {this.state.mapsType}
                           close = {this.fakeClose.bind(this)}
                           onReview = {this.onReview.bind(this)}/>);

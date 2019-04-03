@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet, Dimensions,TouchableOpacity} from 'react-native';
-import MapView, {Marker,Circle, Animated,Callout} from 'react-native-maps';
+import MapView, {Marker,Circle, Animated,Callout,Polyline} from 'react-native-maps';
 import mapstyle1 from './styles/mapstyle1';
 import mapstyle2 from './styles/mapstyle2';
 import mapstyle3 from './styles/mapstyle3';
@@ -30,6 +30,9 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
        if(this.props.radius!==newProps.radius){
          return true;
        }
+       if(this.props.polyline!==newProps.polyline){
+         return true;
+       }
 
    if(this.props.render!==newProps.render){
      return true;
@@ -47,11 +50,13 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
                                   rating = {pressedMarker.response.venue.rating}/>
 
    }
-
+   fitMap(){
+   this.map.fitToCoordinates(this.props.polyline);
+   }
 
    render(){
-   //console.log("I rendered!!! at MapGui");
-   //console.log(this.props.radius);
+   console.log("I rendered!!! at MapGui");
+   console.log(this.props.polyline);
 
    return(
       <Animated
@@ -77,7 +82,13 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
       />
-
+       { this.props.polyline ?<Polyline
+                         coordinates={this.props.polyline}
+                         strokeWidth={4}
+                         strokeColor="red"
+                       />
+                       : null
+       }
        <Circle
                  center = {{latitude: this.props.lat,
                             longitude: this.props.long }}

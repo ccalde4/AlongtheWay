@@ -68,8 +68,8 @@ export default class Main extends Component {
         onRedClicked(){
           this.setState({
             region: {
-               latitude: this.state.lat,
-               longitude: this.state.long,
+               latitude: this.props.lat,
+               longitude: this.props.long,
                latitudeDelta: LATITUDE_DELTA,
                longitudeDelta: LONGITUDE_DELTA,
                 }
@@ -170,9 +170,9 @@ export default class Main extends Component {
        ||newState.moreClicked!==this.state.moreClicked
        ||newState.center!==this.state.center
        ||newState.render!==this.state.render
-       ||newState.lat!==this.state.lat
+       ||newProps.lat!==this.props.lat
        ||newProps.radius!==this.props.radius
-
+       ||newProps.polyline!==this.props.polyline
 
        )
 
@@ -190,13 +190,13 @@ export default class Main extends Component {
 
 
            {
-              this.state.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> :
+              this.props.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> :
                <MapGui
-
+                polyline = {this.props.polyline}
                 mapsType ={this.props.mapsType}
                 styling = {styles.map}
-                lat = {this.state.lat}
-                long = {this.state.long}
+                lat = {this.props.lat}
+                long = {this.props.long}
                 markers = {this.state.items}
                 radius = {this.props.radius}
                 region = {this.state.region}
@@ -211,11 +211,11 @@ export default class Main extends Component {
 
 
             {
-               this.state.lat === null ? null :
+               this.props.lat === null ? null :
               <DecoySearch onSearch = {this.props.onSearch}/>
              }
            {
-              this.state.lat === null ? null :
+              this.props.lat === null ? null :
                <ControlBar
 
                 red = {this.state.redClicked}           onRedClick = {this.onRedClicked.bind(this)}
@@ -248,7 +248,15 @@ export default class Main extends Component {
       }
     //Getting current location
         componentDidMount() {
-          console.log("Main1");
+
+        this.setState({ region:{
+                                              latitude: this.props.latitude,
+                                              longitude: this.props.longitude,
+                                              latitudeDelta: LATITUDE_DELTA,
+                                              longitudeDelta: LONGITUDE_DELTA
+                                            }});
+
+         /* console.log("Main1");
             navigator.geolocation.getCurrentPosition( (position) =>{
              console.log("Mainnav");
                this.setState({ lat: position.coords.latitude  ,  long: position.coords.longitude });
@@ -261,7 +269,7 @@ export default class Main extends Component {
            },
               (error) => {console.log(error.message)},
               { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000 },
-                                                 );
+                                                 );*/
 
     }
 

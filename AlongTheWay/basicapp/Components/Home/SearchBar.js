@@ -54,32 +54,28 @@ export default class SearchBar extends Component {
          }
 
           componentDidMount() {
-             navigator.geolocation.getCurrentPosition(
-               position => {
-                 this.setState({
-                   latitude: position.coords.latitude,
-                   longitude: position.coords.longitude
-                 });
-               },
-               error => console.error(error),
-               { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
-             );
+
+           //  this.setState({
+               //                 latitude: this.props.latitude,
+               //                 longitude: this.props.longitude
+              //                });
            }
 
     async getRouteDirections(destinationPlaceId, destinationName) {
-       var getRoute =  url +  "/directions/json?origin=" + this.state.latitude+","
-                                    +this.state.longitude+"&destination=place_id:"+destinationPlaceId+"&key="+key;
+       var getRoute =  url +  "/directions/json?origin=" + this.props.latitude+","
+                                    +this.props.longitude+"&destination=place_id:"+destinationPlaceId+"&key="+key;
         try {
 
           const json =  await request(getRoute);
-          console.log(json);
+        //  console.log(json);
 
           const points = PolyLine.decode(json.routes[0].overview_polyline.points);
 
           const pointCoords = points.map(point => {
             return { latitude: point[0], longitude: point[1] };
           });
-
+              console.log(pointCoords);
+              this.props.polyline(pointCoords);
 
           this.setState({
             pointCoords,
@@ -99,7 +95,7 @@ export default class SearchBar extends Component {
 
 
         var onChangeDestination = url +"/place/autocomplete/json?key="+key+"&input="+destination+"&location="
-                                      +this.state.latitude+","+this.state.longitude+"&radius="+2000;
+                                      +this.props.latitude+","+this.props.longitude+"&radius="+2000;
 
 
 
