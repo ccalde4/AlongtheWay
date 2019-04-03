@@ -40,10 +40,14 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
    return false;
 
    }
-  handlePress(index){
-     //console.log(index);
-     this.props.onMarkerClick(index);
-    // this.setState((previousState) => ({markerClicked: !previousState.markerClicked}))
+   handlePress(pressedMarker){
+   this.setState((previousState) => ({markerClicked: !previousState.markerClicked}))
+   this.props.onMarkerClicked(pressedMarker);
+   <MarkerPopup location = {pressedMarker.response.venue.location}
+                                  name = {pressedMarker.response.venue.name}
+                                  id = {pressedMarker.response.venue.id}
+                                  contact = {pressedMarker.response.venue.contact}
+                                  rating = {pressedMarker.response.venue.rating}/>
 
    }
    fitMap(){
@@ -78,6 +82,19 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
       />
+       {this.props.polyline?
+
+
+        <Marker
+                        coordinate = {this.props.polyline[this.props.polyline.length-1]}
+                        title = {'Destination'}
+                        pinColor = {'blue'}
+
+
+             />
+
+
+       :null}
        { this.props.polyline ?<Polyline
                          coordinates={this.props.polyline}
                          strokeWidth={4}
@@ -97,27 +114,34 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
          {
-                   this.props.markers ? this.props.markers.map((marker,index) => {return(
-                    <Marker
-                           key = {marker.id}
-                           coordinate={ {latitude: marker.location.lat,
-                                         longitude: marker.location.long} }
-                         title={marker.name}
-                         identifier = {marker.id}
-                         description={marker.location.address1}
-                         //onPress = {() => {this.handlePress(marker)}}
-                         //onPress = {this.handlePress}
+            this.props.markers ? this.props.markers.map(marker => {return(
+                      <Marker
+                             key = {marker.id}
+                             coordinate={ {latitude: marker.location.lat,
+                                           longitude: marker.location.long} }
+                           title={marker.name}
+                           identifier = {marker.id}
+                           description={marker.location.address1}
+                           //onPress = {() => {this.handlePress(marker)}}
+                           //onPress = {this.handlePress}
 
-                           pinColor = {'turquoise'}
-                     >
+                             pinColor = {'turquoise'}
+                       >
 
-                         <Callout onPress = {() => {this.handlePress(index)}}/>
+                           <Callout>
+                            <MarkerPopup location = {marker.location}
+                                          name = {marker.name}
+                                          id = {marker.id}
+                                          contact = {marker.contact}
+                                          rating = {marker.rating}/>
 
-                         </Marker>
+                           </Callout>
 
-                     )})
-                    : console.log("no markers")
-                  }
+                           </Marker>
+
+                       )})
+                      : console.log("no markers")
+         }
 
       </Animated>
       );

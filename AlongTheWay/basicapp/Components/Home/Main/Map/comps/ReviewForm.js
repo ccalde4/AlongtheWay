@@ -2,9 +2,6 @@ import React, {Component} from 'react';
 import { Text,TextInput, View,ScrollView, StyleSheet,Keyboard, Dimensions, TouchableOpacity,TouchableWithoutFeedback,KeyboardAvoidingView} from 'react-native';
 import StarRating from 'react-native-star-rating';
 var { winHeight, winWidth } = Dimensions.get('window');
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { ButtonGroup, Header, Button } from 'react-native-elements';
-
 
   export default class ReviewForm extends Component{
 
@@ -37,18 +34,13 @@ import { ButtonGroup, Header, Button } from 'react-native-elements';
 
          }
     render() {
-
+    {winHeight, winWidth} ;
         return (
          <View style = {styles.Gui}   >
-         <Header
-                                   leftComponent={{ icon: 'menu', color: '#fff' }}
-                                   centerComponent={{ text: this.props.marker.name , style: { color: '#fff' } }}
-                                   rightComponent={<TouchableOpacity style = {styles.home} onPress = {this.props.onReview}/> }
-                                  />
 
-                           {/*<View style = {styles.firstLine} >
-                            <Text style = {{fontSize: 20}} > Review your experience at: {"\n"} {this.props.marker.name} </Text>
-                           </View>*/}
+                           <View style = {styles.firstLine} >
+                            <Text style = {{fontSize: 20}} > Review your experience at: {"\n"} {this.props.name} </Text>
+                           </View>
 
                              <ScrollView  keyboardShouldPersistTaps = {"never"} style = {styles.commentBox}>
                                   <KeyboardAvoidingView  behavior = "padding" enabled>
@@ -64,7 +56,7 @@ import { ButtonGroup, Header, Button } from 'react-native-elements';
                              </ScrollView>
 
                          <View style = {styles.stars}>
-
+                            <Text style = {styles.starText} > Rate your experience: </Text>
                               <StarRating
                                          disabled={false}
                                          maxStars={5}
@@ -88,7 +80,6 @@ import { ButtonGroup, Header, Button } from 'react-native-elements';
                   </View>
 
 
-
               );
 
               }
@@ -98,22 +89,20 @@ import { ButtonGroup, Header, Button } from 'react-native-elements';
     const styles = StyleSheet.create({
 
           Gui: {
-
-
-           flex:1,
-    backgroundColor: 'white',
-            height: winHeight,
-            width: winWidth,
-
+            flexDirection: 'column',
+            flex: 1,
+            flexWrap: 'wrap',
+            backgroundColor: 'white',
             },
 
           firstLine: {
-
+            flex: 0.5,
+            flexShrink: 2,
             top: 10,
             bottom: 20,
             height: 70,
             alignContent: 'flex-start',
-           overflow: 'scroll',
+            overflow: 'scroll',
             },
 
           commentBox: {
@@ -137,36 +126,35 @@ import { ButtonGroup, Header, Button } from 'react-native-elements';
 
          stars: {
             flex: 1.5,
-            width: 200,
-            height: 30,
+            width: 300,
+            height: 60,
             alignSelf: 'center',
             overflow: 'hidden',
             },
 
 
         enter: {
-             height: 20,
-             bottom:30,
+             height: 60,
+             bottom:20,
              backgroundColor: 'limegreen',
-
              width: winWidth,
             },
 
         starText: {
-            fontSize: 18,
+            fontSize: 24,
             color: 'black',
             fontWeight: 'bold',
             textAlign: 'center',
-            lineHeight: 30,
+            lineHeight: 60,
             textAlignVertical: 'center',
             },
 
         submitText: {
-            fontSize: 18,
+            fontSize: 24,
             color: 'white',
             fontWeight: 'bold',
             textAlign: 'center',
-            lineHeight: 30,
+            lineHeight: 60,
             textAlignVertical: 'center',
             },
 
@@ -177,13 +165,9 @@ import { ButtonGroup, Header, Button } from 'react-native-elements';
              backgroundColor: 'gray',
              borderColor: 'black',
              borderWidth: 10,
-            top: 110,
+             top: 110,
             },
-        home:{
-         width: 30,
-         height: 30,
-         backgroundColor: 'pink'
-        },
+
          button2: {
                 height: 30,
                 width: 30,

@@ -28,7 +28,7 @@ export default class Main extends Component {
              params:{
                                 latitude: '30.414175',
                                 longitude:'-91.186256',
-                                query:'',
+                                query:'donuts',
                                 limit: 30,
                                 radius: this.props.radius,
                                 categories: '',
@@ -38,11 +38,10 @@ export default class Main extends Component {
              render:         false,
              region :        null,
              mapsType:       this.props.mapsType,
-             redClicked:     false , foodClicked: false , landmarksClicked: false  ,
-             fetchClicked:   false , moreClicked:  false , localClicked: false  ,
-             shopClicked:   false , outdoorsClicked: false , nightlifeClicked: false,
-             gasClicked: false, restCLicked: false, artsClicked: false,
-             medicalClicked: false, cornClicked:   false  , burritoClicked: false ,
+             redClicked:     false , pizzaClicked: false , coffeeClicked: false  ,
+             fetchClicked:   false , moreClicked:  false , burgerClicked: false  ,
+             localClicked:   false , parksClicked: false , cornClicked:   false  ,
+             burritoClicked: false ,
              items:          [],
              itemDetails:    [],
 
@@ -50,7 +49,6 @@ export default class Main extends Component {
 
 
             masterAPI = new MasterAPI();
-            markerSort = new MarkerSort();
         }
 
 
@@ -70,8 +68,8 @@ export default class Main extends Component {
         onRedClicked(){
           this.setState({
             region: {
-               latitude: this.state.lat,
-               longitude: this.state.long,
+               latitude: this.props.lat,
+               longitude: this.props.long,
                latitudeDelta: LATITUDE_DELTA,
                longitudeDelta: LONGITUDE_DELTA,
                 }
@@ -81,27 +79,25 @@ export default class Main extends Component {
         }
 
 
-        onFoodClicked(){
-
-        console.log("this is food when clicked");
+        onPizzaClicked(){
+          this.setState({ burgerClicked: false});
+          this.setState({ coffeeClicked: false});
           this.setState({ localClicked: false});
-          this.setState({ landmarksClicked: false});
-          this.setState({ shopClicked: false});
-          this.setState( (previousState) => ({foodClicked: !previousState.foodClicked}) );
+          this.setState( (previousState) => ({pizzaClicked: !previousState.pizzaClicked}) );
 
-            this.changeQuery("Food");
+            this.changeQuery("Pizza");
 
 
         }
 
 
-        onLandmarksClicked(){
+        onCoffeeClicked(){
+        this.setState({ burgerClicked: false});
+        this.setState({ pizzaClicked: false});
         this.setState({ localClicked: false});
-        this.setState({ foodClicked: false});
-        this.setState({ shopClicked: false});
-        this.setState( (previousState) => ({landmarksClicked: !previousState.landmarksClicked}) );
+        this.setState( (previousState) => ({coffeeClicked: !previousState.coffeeClicked}) );
 
-         this.changeQuery("Landmarks");
+         this.changeQuery("Coffee");
 
 
         }
@@ -112,56 +108,32 @@ export default class Main extends Component {
         }
 
 
-        onLocalClicked(){
-         this.setState({ landmarksClicked: false});
-         this.setState({ foodClicked: false});
-         this.setState({ shopClicked: false});
-         this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
-         this.changeQuery("Local");
-
-         }
-
-
-         onShopClicked(){
-         this.setState({ landmarksClicked: false});
-         this.setState({ foodClicked: false});
+        onBurgerClicked(){
+         this.setState({ coffeeClicked: false});
+         this.setState({ pizzaClicked: false});
          this.setState({ localClicked: false});
-         this.setState((previousState) => ( {shopClicked: !previousState.shopClicked} ));
+         this.setState((previousState) => ( {burgerClicked: !previousState.burgerClicked} ));
+         this.changeQuery("Burgers");
 
-          this.changeQuery("Shop");
+         }
+
+
+         onLocalClicked(){
+         this.setState({ coffeeClicked: false});
+         this.setState({ pizzaClicked: false});
+         this.setState({ burgerClicked: false});
+         this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
+
+          this.changeQuery("Chicken");
 
           }
 
 
 
-         onOutdoorsClicked(){
-         this.setState((previousState) => ( {outdoorsClicked: !previousState.outdoorsClicked} ));
-
+         onParksClicked(){
+         this.setState((previousState) => ( {parksClicked: !previousState.parksClicked} ));
+         this.props.close();
           }
-
-         onNightlifeClicked(){
-         this.setState((previousState) => ( {nightlifeClicked: !previousState.nightlifeClicked} ));
-
-         }
-         onGasClicked(){
-         this.setState((previousState) => ( {gasClicked: !previousState.gasClicked} ));
-
-         }
-
-         onRestClicked(){
-         this.setState((previousState) => ( {restClicked: !previousState.restClicked} ));
-
-         }
-
-         onArtsClicked(){
-         this.setState((previousState) => ( {artsClicked: !previousState.artsClicked} ));
-
-         }
-
-         onMedicalClicked(){
-         this.setState((previousState) => ( {medicalClicked: !previousState.medicalClicked} ));
-
-         }
 
 
         onCornClicked(){
@@ -179,37 +151,28 @@ export default class Main extends Component {
 
 //need to figure out a good way to do this elegantly
   async onFetchClicked(){
-
-
            masterAPI.setParams(this.state.params);
            let data = await masterAPI.search();
-
+          let m = new MarkerSort("rating",20);
           this.setState({items: data });
-
-           let m = new MarkerSort('rating',10)
-         // let m = this.markerSort.sort(this.state.items);
-        //   m.setItems(data);
-           let x = m.sort(data);
-           console.log(x);
-             this.setState({items: x });
-              this.setState( (previousState) => ({center: !previousState.center}) );
+          this.setState( (previousState) => ({center: !previousState.center}) );
        }
 
 
   shouldComponentUpdate(newProps,newState){
 
    return (
-         newState.foodClicked!==this.state.foodClicked
-       ||newState.shopClicked!==this.state.shopClicked
-       ||newState.landmarksClicked!==this.state.landmarksClicked
-       ||newState.outdoorsClicked!==this.state.outdoorsClicked
+         newState.pizzaClicked!==this.state.pizzaClicked
+       ||newState.parksClicked!==this.state.parksClicked
+       ||newState.coffeeClicked!==this.state.coffeeClicked
        ||newState.localClicked!==this.state.localClicked
+       ||newState.burgerClicked!==this.state.burgerClicked
        ||newState.moreClicked!==this.state.moreClicked
        ||newState.center!==this.state.center
        ||newState.render!==this.state.render
-       ||newState.lat!==this.state.lat
+       ||newProps.lat!==this.props.lat
        ||newProps.radius!==this.props.radius
-
+       ||newProps.polyline!==this.props.polyline
 
        )
 
@@ -220,19 +183,20 @@ export default class Main extends Component {
      render()
      {
      //console.log("I rendered!!!")
+      console.log("Main2");
       return (
 
        <View style={styles.Gui}  >
 
 
            {
-              this.state.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> :
+              this.props.lat === null ? <ActivityIndicator size = 'large' color ='lightblue'/> :
                <MapGui
-               polyline = {this.props.polyline}
+                polyline = {this.props.polyline}
                 mapsType ={this.props.mapsType}
                 styling = {styles.map}
-                lat = {this.state.lat}
-                long = {this.state.long}
+                lat = {this.props.lat}
+                long = {this.props.long}
                 markers = {this.state.items}
                 radius = {this.props.radius}
                 region = {this.state.region}
@@ -247,26 +211,21 @@ export default class Main extends Component {
 
 
             {
-               this.state.lat === null ? null :
+               this.props.lat === null ? null :
               <DecoySearch onSearch = {this.props.onSearch}/>
              }
            {
-              this.state.lat === null ? null :
+              this.props.lat === null ? null :
                <ControlBar
 
                 red = {this.state.redClicked}           onRedClick = {this.onRedClicked.bind(this)}
-                food = {this.state.foodClicked}       onFoodClick = {this.onFoodClicked.bind(this)}
-                landmarks = {this.state.landmarksClicked}     onLandmarksClick = {this.onLandmarksClicked.bind(this)}
+                pizza = {this.state.pizzaClicked}       onPizzaClick = {this.onPizzaClicked.bind(this)}
+                coffee = {this.state.coffeeClicked}     onCoffeeClick = {this.onCoffeeClicked.bind(this)}
                 fetch = {this.state.fetchClicked}       onFetchClick = {this.onFetchClicked.bind(this)}
                 more = {this.state.moreClicked}         onMoreClick = {this.onMoreClicked.bind(this)}
-                local = {this.state.localClicked}     onLocalClick = {this.onLocalClicked.bind(this)}
-                shop = {this.state.shopClicked}       onShopClick = {this.onShopClicked.bind(this)}
-                outdoors = {this.state.outdoorsClicked}       onOutdoorsClick = {this.onOutdoorsClicked.bind(this)}
-                nightlife= {this.state.nightlifeClicked}       onNightlifeClick = {this.onNightlifeClicked.bind(this)}
-                gas = {this.state.gasClicked}       onGasClick = {this.onGasClicked.bind(this)}
-                rest = {this.state.restClicked}       onRestClick = {this.onRestClicked.bind(this)}
-                arts = {this.state.artsClicked}       onArtsClick = {this.onArtsClicked.bind(this)}
-                medical = {this.state.medicalClicked}       onMedicalClick = {this.onMedicalClicked.bind(this)}
+                burger = {this.state.burgerClicked}     onBurgerClick = {this.onBurgerClicked.bind(this)}
+                local = {this.state.localClicked}       onLocalClick = {this.onLocalClicked.bind(this)}
+                parks = {this.state.parksClicked}       onParksClick = {this.onParksClicked.bind(this)}
                 corn = {this.state.cornClicked}         onCornClick = {this.onCornClicked.bind(this)}
                 burrito = {this.state.burritoClicked}   onBurritoClick = {this.onBurritoClicked.bind(this)}
 
@@ -276,11 +235,30 @@ export default class Main extends Component {
        </View>
       );
   }
-
+     /* setLatLong(position){
+       this.setState({
+         lat: position.coords.latitude  ,  long: position.coords.longitude
+       });
+       this.setState({ region:{
+                                      latitude: position.coords.latitude,
+                                      longitude: position.coords.longitude,
+                                      latitudeDelta: LATITUDE_DELTA,
+                                      longitudeDelta: LONGITUDE_DELTA
+                                    }});
+      }*/
     //Getting current location
-       async componentDidMount() {
+        componentDidMount() {
 
+        this.setState({ region:{
+                                              latitude: this.props.lat,
+                                              longitude: this.props.long,
+                                              latitudeDelta: LATITUDE_DELTA,
+                                              longitudeDelta: LONGITUDE_DELTA
+                                            }});
+
+         /* console.log("Main1");
             navigator.geolocation.getCurrentPosition( (position) =>{
+             console.log("Mainnav");
                this.setState({ lat: position.coords.latitude  ,  long: position.coords.longitude });
                this.setState({ region:{
                                latitude: position.coords.latitude,
@@ -290,16 +268,16 @@ export default class Main extends Component {
                              }});
            },
               (error) => {console.log(error.message)},
-              { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-                                                 );
+              { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000 },
+                                                 );*/
 
     }
 
 
 
      async componentWillUnmount(){
-           files.lat = this.state.latitude;
-           files.long = this.state.longitude;
+           files.lat = this.state.lat;
+           files.long = this.state.long;
 
 
             }

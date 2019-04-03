@@ -1,0 +1,7 @@
+ { this.props.polyline ?<Polyline
+                         coordinates={this.props.polyline}
+                         strokeWidth={4}
+                         strokeColor="red"
+                       />
+                       : null
+       }

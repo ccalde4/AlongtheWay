@@ -70,6 +70,7 @@ export default class App extends Component {
         longitude: null,
         radius: 1000,
         polyline: null,
+        desc: "",
         reviews: [],
         mapsType: 'standard',
         close: false
@@ -96,6 +97,10 @@ export default class App extends Component {
          //toggle for searching page, passed to DecoySearch through Main and called touchableOpacity
        onSearch(){
        this.setState( previousState => ( {isSearching: !previousState.isSearching} ) );
+       }
+       onDesc(des){
+       this.setState({desc:des});
+
        }
 
         //function for updating radius, passed to Option and called by slider
@@ -172,6 +177,7 @@ export default class App extends Component {
                                 long = {this.state.longitude}
                                 polyline = {this.addPoly.bind(this)}
                                 sendBack = {this.sendBack.bind(this)}
+                                desc = {this.onDesc.bind(this)}
                                                                    /> );
           }
 
@@ -184,6 +190,7 @@ export default class App extends Component {
                           radius = {this.state.radius}
                           polyline ={this.state.polyline}
                           mapsType = {this.state.mapsType}
+                          desc = {this.state.desc}
                           close = {this.fakeClose.bind(this)}
                           onReview = {this.onReview.bind(this)}/>);
 

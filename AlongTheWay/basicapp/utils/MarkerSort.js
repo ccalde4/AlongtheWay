@@ -9,9 +9,8 @@ export default class MarkerSort{
 constructor(s,b){
     topPlaces = [];
     unsorted = [];
-    sortBy = 'rating';
-    byTop = 10;
-
+    sortBy = s;
+    byTop = b;
 
 
 
@@ -36,43 +35,38 @@ constructor(s,b){
 
 
 quickSort(unsorted, left, right){
-    if(unsorted.length > 1){
-        index = this.partition(unsorted, left, right); //index returned from partition
-        if(left < index - 1){
-            this.quickSort(unsorted, left, index -1); //recursion
-        }
-        if(index < right){
-            this.quickSort(unsorted, index, right); //recursion
-        }
-    }
+
+
+    if(left >= right)return;
+    let pivot = (unsorted[Math.floor((left + right) / 2)][sortBy]);
+    let index = this.partition(unsorted, left, right, pivot);
+    this.quickSort(unsorted, left, index -1);
+    this.quickSort(unsorted, index, right);
 
     return unsorted;
+
 }
 
-partition(unsorted, left, right){
-    pivot = (unsorted[Math.floor((right + left) / 2)]).rating;
+partition(unsorted, left, right, pivot){
     while(left <= right){
-        while(unsorted[left].rating < pivot){
+
+        while(unsorted[left][sortBy] < pivot){
             left++;
         }
-        while(unsorted[right].rating  > pivot){
+
+        while(unsorted[right][sortBy] > pivot){
             right--;
         }
-        if(left <= right ){
-            this.swap(unsorted, left, right); //swapping two elements
+        if(left <= right){
+
+            [unsorted[left], unsorted[right]] = [unsorted[right], unsorted[left]];
+
             left++;
             right--;
         }
+      }
+      return left;
     }
-    return left;
- }
-
-swap(unsorted, leftIndex, rightIndex) {
-    let temp = unsorted[leftIndex];
-    unsorted[leftIndex] = unsorted[rightIndex];
-    unsorted[rightIndex] = temp;
- }
-
 
 
     getTop(){
