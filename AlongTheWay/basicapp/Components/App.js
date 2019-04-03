@@ -140,6 +140,7 @@ export default class App extends Component {
              return( <SearchBar onSearch = {this.onSearch.bind(this)}
                                 goTo = {this.goTo.bind(this)}
                                 sendBack = {this.sendBack.bind(this)}
+
                                                                    /> );
           }
 

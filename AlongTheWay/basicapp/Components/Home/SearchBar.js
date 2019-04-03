@@ -39,6 +39,8 @@ export default class SearchBar extends Component {
          destinations: [],
          predictions: [],
          pointCoords: [],
+         returnPoints: [],
+
 
          lat: 0,
          long: 0
@@ -48,6 +50,10 @@ export default class SearchBar extends Component {
                this.onChangeDestination,
                1000
              );
+         this.onChangeDestinationDebouncedTwo = _.debounce(
+                        this.onChangeDestinationTwo,
+                        1000
+                      );
 
               key = Config.getConfig().creds.key;
               url = Config.getConfig().url2;
@@ -81,18 +87,58 @@ export default class SearchBar extends Component {
           });
 
 
+
           this.setState({
             pointCoords,
             predictions: [],
-            destination: destinationName
+            destination: destinationName,
+            lat: pointCoords[pointCoords.length -1][0],
+            long: pointCoords[pointCoords.length -1 ][1]
 
           });
+
+          sendBack(){
+                this.props.sendBack{this.state.pointCoords};
+          }
           Keyboard.dismiss();
          // this.map.fitToCoordinates(pointCoords);
         } catch (error) {
           console.error(error);
         }
       }
+      async getRouteDirectionsTwo(destinationPlaceId, destinationName) {
+             var getRoute =  url +  "/directions/json?origin=" + this.state.lat+","
+                                          +this.state.long+"&destination=place_id:"+destinationPlaceId+"&key="+key;
+              try {
+
+                const json =  await request(getRoute);
+                console.log(json);
+
+                const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+
+                const pointCoords = points.map(point => {
+                  return { latitude: point[0], longitude: point[1] };
+                });
+
+
+
+                this.setState({
+                  pointCoords,
+                  predictions: [],
+                  destination: destinationName
+
+
+                });
+
+                sendBack(){
+                      this.props.sendBack{this.state.pointCoords};
+                }
+                Keyboard.dismiss();
+               // this.map.fitToCoordinates(pointCoords);
+              } catch (error) {
+                console.error(error);
+              }
+            }
 
 
     async onChangeDestination(destination) {
@@ -114,6 +160,26 @@ export default class SearchBar extends Component {
           console.error(err);
         }
       }
+
+      async onChangeDestinationTwo(destination) {
+
+
+              var onChangeDestination = url +"/place/autocomplete/json?key="+key+"&input="+destination+"&location="
+                                            +this.state.lat+","+this.state.long+"&radius="+2000;
+
+
+
+
+              try {
+               const json = await request(onChangeDestination);
+                this.setState({
+                  predictions: json.predictions
+                });
+              //  console.log(json);
+              } catch (err) {
+                console.error(err);
+              }
+            }
 
 
           incrStopCount(){
@@ -141,10 +207,81 @@ export default class SearchBar extends Component {
 
           }
 
+          onChangeTextTwo(text){
+                     this.dest = text;
+                     console.log(this.dest);
+                      this.onChangeDestinationDebouncedTwo(text);
+                      this.setState({ destination:text });
+
+                    }
+
 
          render(){
+                let marker = null;
+                let polyLine2 = null;
+
+
+            if (stopCount > 0) {
+                       //Creates marker and has callout for info on marker
+                       marker = (
+                                    <Marker
+                                      coordinate = {this.state.pointCoords[this.state.pointCoords.length - 1]}>
+                                      <MapView.Callout
+                                           style = {styles.popup}
+
+                                           >
+                                             <View style = {styles.insideOfPopup}>
+                                                   <Text style = {styles.nameText} >
+
+                                                       Hello
+
+                                                   </Text>
+                                            </View>
+                                    </MapView.Callout>
+                                    </Marker>
+                                  );
+
+                       polyLine2 = (
+                       <MapView>
+                       <Polyline
+                                   coordinates={this.state.pointCoords}
+                                   strokeWidth={4}
+                                   strokeColor="blue"
+                                                    />
+                                                    </MapView>
+
+                       );
+
+
+                                  }
+
             return(
               <View style = {styles.container}>
+
+                           <MapView
+                             ref={map => {
+                               this.map = map;
+                             }}
+                             style={styles.map}
+                                       region={{
+                                         latitude: this.state.latitude,
+                                         longitude: this.state.longitude,
+                                         latitudeDelta: 0.015,
+                                         longitudeDelta: 0.0121
+                                       }}
+                                       showsUserLocation={true}
+
+                           >
+                             <Polyline
+                               coordinates={this.state.pointCoords}
+                               strokeWidth={4}
+                               strokeColor="red"
+                             />
+
+                             {marker}
+                           </MapView>
+
+
               <View style = {styles.map}/>
                <SearchBarInput value = {this.test}
                                onChangeText = {this.onChangeText.bind(this)}
@@ -153,10 +290,10 @@ export default class SearchBar extends Component {
               {this.state.stopCount>0 ?
 
                <SearchBarInput value = {this.test}
-                                             onChangeText = {this.onChangeText.bind(this)}
+                                             onChangeText = {this.onChangeTextTwo.bind(this)}
                                              onSubmitEditing = {()=>{}}
                                                                                          />
-
+                       {polyLine2}
 
               :null}
               {!this.state.predictions == [] ? this.state.predictions.map(prediction => {
@@ -172,10 +309,20 @@ export default class SearchBar extends Component {
                         )
 
 
-
+wd
               :null}
               {this.state.stopCount==1 ? <MoreStops text = {"Add Stop"}     />: null}
               {this.state.stopCount==2 ? <MoreStops text = {"Remove Stop"} /> : null}
+
+              <View>
+                    <TouchableHighlight
+                    style = {styles.GO}
+                            onPress = {this.props.onSearch}
+                    >
+                          <Text> GO </View>
+                    </TouchableHighlight>
+              </View>
+
               </View>
             )
 
@@ -192,6 +339,18 @@ export default class SearchBar extends Component {
 
 
 const styles = StyleSheet.create({
+    Go: {
+            backgroundColor: "green",
+            marginTop: 150,
+            margin: 15,
+            padding: 15,
+            fontSize: 20,
+            paddingLeft: 30,
+            paddingRight: 30,
+            borderRadius: 15,
+            alignSelf: "center"
+    },
+
 
     stopButton: {
             backgroundColor: "white",
