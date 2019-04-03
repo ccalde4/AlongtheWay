@@ -5,6 +5,7 @@ var { winHeight, winWidth } = Dimensions.get('window');
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ButtonGroup, Header, Button } from 'react-native-elements';
 
+
   export default class ReviewForm extends Component{
 
   constructor(props){
@@ -39,6 +40,11 @@ import { ButtonGroup, Header, Button } from 'react-native-elements';
 
         return (
          <View style = {styles.Gui}   >
+         <Header
+                                   leftComponent={{ icon: 'menu', color: '#fff' }}
+                                   centerComponent={{ text: this.props.marker.name , style: { color: '#fff' } }}
+                                   rightComponent={<TouchableOpacity style = {styles.home} onPress = {this.props.onReview}/> }
+                                  />
 
                            {/*<View style = {styles.firstLine} >
                             <Text style = {{fontSize: 20}} > Review your experience at: {"\n"} {this.props.marker.name} </Text>
@@ -82,6 +88,7 @@ import { ButtonGroup, Header, Button } from 'react-native-elements';
                   </View>
 
 
+
               );
 
               }
@@ -91,12 +98,12 @@ import { ButtonGroup, Header, Button } from 'react-native-elements';
     const styles = StyleSheet.create({
 
           Gui: {
-            backgroundColor: 'white',
-
-           // height: winHeight,
-           // width: winWidth,
 
 
+           flex:1,
+    backgroundColor: 'white',
+            height: winHeight,
+            width: winWidth,
 
             },
 
@@ -105,13 +112,13 @@ import { ButtonGroup, Header, Button } from 'react-native-elements';
             top: 10,
             bottom: 20,
             height: 70,
-            //alignContent: 'flex-start',
-           // overflow: 'scroll',
+            alignContent: 'flex-start',
+           overflow: 'scroll',
             },
 
           commentBox: {
             top: 10,
-            //flex: 2.5,
+            flex: 2.5,
             height: 150,
             width: winWidth,
             overflow: 'scroll',
@@ -119,30 +126,30 @@ import { ButtonGroup, Header, Button } from 'react-native-elements';
             },
          textIn: {
             top: 10,
-            //flex:2.5,
+            flex:2.5,
             borderColor: 'black',
             borderWidth: 1.5,
             width: winWidth,
-            //height:150,
+            height:150,
             paddingLeft: 10,
             overflow: 'scroll',
             },
 
          stars: {
-           // flex: 1.5,
-            width: 100,
+            flex: 1.5,
+            width: 200,
             height: 30,
             alignSelf: 'center',
-            //overflow: 'hidden',
+            overflow: 'hidden',
             },
 
 
         enter: {
              height: 20,
-             bottom:20,
+             bottom:30,
              backgroundColor: 'limegreen',
 
-            // width: winWidth,
+             width: winWidth,
             },
 
         starText: {
@@ -164,15 +171,19 @@ import { ButtonGroup, Header, Button } from 'react-native-elements';
             },
 
          textBox: {
-            //flex:1,
+            flex:1,
             height: 70,
             width: winWidth,
              backgroundColor: 'gray',
              borderColor: 'black',
              borderWidth: 10,
-            // top: 110,
+            top: 110,
             },
-
+        home:{
+         width: 30,
+         height: 30,
+         backgroundColor: 'pink'
+        },
          button2: {
                 height: 30,
                 width: 30,

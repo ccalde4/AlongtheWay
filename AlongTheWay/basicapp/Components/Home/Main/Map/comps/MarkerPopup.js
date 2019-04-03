@@ -12,45 +12,25 @@ export default class MarkerPopup extends Component{
 
     constructor(props){
           super(props);
-          this.state = {
-            reviewClicked: false,
-            reviews: [],
-            isReviewing: false,
-            }
-
 
           }
-/*handleReviewPress(){
-this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
-}
-  addReview(userReview){
 
-         this.state.reviews.push(userReview);
-          console.log(this.state.reviews);
-          this.onReviewClick();
-         }
-    onReviewClick(){
-     this.setState( (previousState) => ({reviewClicked: !previousState.reviewClicked}) );
-     this.props.onReview();
-              }
-  onReview(){
-         this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
-         }*/
 
 
 
           render(){
           return(
 
-          <View style = {styles.popup}>
+          <View styles = { styles.popup}>
 
-           <Header
-                          leftComponent={{ icon: 'menu', color: '#fff' }}
-                          centerComponent={{ text: this.props.marker.name , style: { color: '#fff' } }}
-                          rightComponent={<TouchableOpacity style = {styles.home} onPress = {this.props.inMarker}/> }
-                         />
+                <Header
+                                      leftComponent={{ icon: 'menu', color: '#fff' }}
+                                      centerComponent={{ text: this.props.marker.name , style: { color: '#fff' } }}
+                                      rightComponent={<TouchableOpacity style = {styles.home} onPress = {this.props.inMarker}/> }
+                                     />
 
             <View style = {styles.insideOfPopup}>
+
            { this.props.marker.name !== null ?
                   <Text style = {styles.nameText}> {this.props.marker.name}  </Text> :
                   <Text> This location does not have a name on file </Text>
@@ -65,23 +45,34 @@ this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
                   }
 
 
-                         <Text style = {styles.locationText}> Phone: {this.props.marker.contact.displayPhone} {"\n"} </Text>
-            </View>
-               {/* <TouchableOpacity onPress = {console.log("review was Clicked") } underlayColor="white">
-                <View style={styles.reviewButton}>
-                <Text style = {styles.reviewText}> Write a review? </Text>
-                </View>
-                </TouchableOpacity>*/}
+                    <Text style = {styles.locationText}> Phone: {this.props.marker.contact.displayPhone} {"\n"} </Text>
+                    <Text style = {styles.reviewText}>
+                    Reviews from yelp: {"\n"}
+
+
+
+                  <Text>   {this.props.marker.reviews[0].user.name} {":"} {this.props.marker.reviews[0].rating} {"stars"} {"\n"} {this.props.marker.reviews[0].text} {"\n"}</Text>
+                     <Text>   {this.props.marker.reviews[1].user.name} {":"} {this.props.marker.reviews[1].rating} {"stars"} {"\n"} {this.props.marker.reviews[1].text} {"\n"}</Text>
+                     <Text>   {this.props.marker.reviews[2].user.name} {":"} {this.props.marker.reviews[2].rating} {"stars"} {"\n"} {this.props.marker.reviews[2].text} {"\n"}</Text>
+
+
+                   </Text>
 
 
 
 
+
+
+ </View>
 
 
            <Button title = {"Write a review?"}
                     onPress = {this.props.onReview}
                     />
-</View>
+
+     </View>
+
+
           );
 
 
@@ -90,13 +81,10 @@ this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
 }
 
 const styles = StyleSheet.create({
-  reviewPage:{
-  flex: 1,
-  //height: winHeight,
-  //width: winWidth,
-  },
+
+
   popup:{
-     //flex: 1,
+     flex: 1,
      //flexDirection: 'row',
      backgroundColor: 'white',
     // borderRadius: 30,
@@ -107,7 +95,9 @@ const styles = StyleSheet.create({
 
      },
      insideOfPopup:{
-     //flex: 1,
+
+     flex: 1,
+     backgroundColor:'white',
 
      },
       nameText:{
@@ -134,15 +124,15 @@ const styles = StyleSheet.create({
     reviewButton:{
     marginBottom: 30,
 
-        alignItems: 'center',
+     alignItems: 'center',
 
     },
 
     reviewText:{
-    color: 'blue',
+     backgroundColor:'white',
+    color: 'black',
     fontSize:16,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    textAlign: 'left',
     },
      home:{
          width: 30,

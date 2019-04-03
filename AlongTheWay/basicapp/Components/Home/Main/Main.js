@@ -271,7 +271,8 @@ export default class Main extends Component {
 
                 <ReviewForm addReview = {(userReview) => {this.addReview(userReview)}}
                             marker = {this.state.items[this.state.markerIndex]}
-                             inMarker = {this.onMarkerClicked.bind(this)}/>
+                             inMarker = {this.onMarkerClicked.bind(this)}
+                             onReview = {this.onReview.bind(this)/>
                  }
 
        </View>

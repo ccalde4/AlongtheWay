@@ -12,7 +12,7 @@ var foursquare;
 var venues;
 
 var finalArray;
-
+var reviews;
 class MasterAPI {
 
     constructor(){
@@ -23,6 +23,7 @@ class MasterAPI {
         this.foursquareReturns;
         this.foursquareParams;
         finalArray = [];
+        reviews: [];
         searchParameters = new Parameters();
         yelp = new Yelp();
         foursquare = new Foursquare();
@@ -38,9 +39,9 @@ class MasterAPI {
 
     async search(){
 
-    //let yp = await searchParameters.getYelpParams();
+    let yp = await searchParameters.getYelpParams();
     //console.log(this.yelpParams);
-    let tempYelp = await this.addFromProp(await yelp.search(searchParameters.getYelpParams()),'yelp') ;
+    let tempYelp = await this.addFromProp(await yelp.search(yp),'yelp') ;
     let changedYelp = await this.cloneObject(tempYelp);
 
     //console.log(tempYelp);
@@ -58,10 +59,20 @@ class MasterAPI {
     //this.foursquareReturns =  tempFoursquare;
     //finalArray = tempYemp2.concat(tempFoursquare2);
     //finalArray = (tempYelp.businesses).concat(tempFoursquare.response.venues);
+if(tempYelp != null){
 
-        let details = await this.getDetails(tempYelp);
+        let details = await this.getDetails(changedYelp);
+        //let detailsAndReviews = await this.getReviews(details);
+        console.log("l;adsgvuihergn");
+        console.log(details[0].reviews[0]);
         let uniformDetails = await this.makeUniform(details);
         return uniformDetails;
+
+}
+       // let details = await this.getDetails(changedYelp);
+       // let detailsAndReviews = await this.getReviews(details);
+        //let uniformDetails = await this.makeUniform(detailsAndReviews);
+        //return uniformDetails;
      //  return tempYelp;
     //let tempDetails = await this.getDetails(tempFoursquare);
     //console.log(tempDetails);
@@ -91,11 +102,14 @@ class MasterAPI {
     console.log("in details");
         if(((obj.places)[i]).from === 'yelp'){
             let temp = await yelp.getDetails((obj.places)[i].id);
+            temp['reviews'] = (await yelp.getReviews((obj.places)[i].id)).reviews;
+            console.log(temp.reviews);
             temp['from'] = 'yelp';
 
-            //console.log("u r in get details");
+
+            console.log("u r in get details");
             //console.log(temp);
-            finalArray[i]  = temp;
+            finalArray[i]  = await temp;
         }
         else if(obj.places[i].from === 'foursquare'){
              let temp = await foursquare.getDetails((obj.places)[i].id);
@@ -117,6 +131,11 @@ class MasterAPI {
 
        }
 
+        if(reviews !== null){
+        console.log(reviews);
+                return reviews}
+       }
+
     addFromProp(obj,from){
         if(from === 'yelp'){
             for(let i = 0; i < obj.businesses.length; i++){
@@ -126,7 +145,7 @@ class MasterAPI {
 
         }
 
-        else if(from == 'foursquare'){
+        else if(from === 'foursquare'){
              for(let i = 0; i < obj.response.venues.length; i++){
                         (obj.response.venues)[i].from = 'foursquare';
                         //console.log((obj.response.venues)[i]);
@@ -157,9 +176,12 @@ class MasterAPI {
         //console.log(obj);
         var uniform = []
         for(let i = 0; i < obj.length; i++){
-            uniform[i] = venues.makeUniformVenue(this.cloneObject(obj[i]));
-
+            uniform[i] = await venues.makeUniformVenue(this.cloneObject(obj[i]));
+            // console.log(obj.length);
+           // console.log(i);
+            // console.log(uniform[i].reviews[0].user.name);
         }
+
         if(uniform !== null){
         return uniform;
         }
