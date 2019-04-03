@@ -237,13 +237,13 @@ export default class SearchBar extends Component {
                                   );
 
                        polyLine2 = (
-                       <MapView>
+
                        <Polyline
                                    coordinates={this.state.pointCoords}
                                    strokeWidth={4}
                                    strokeColor="blue"
                                                     />
-                                                    </MapView>
+
 
                        );
 
