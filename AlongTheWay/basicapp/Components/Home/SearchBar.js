@@ -39,11 +39,9 @@ export default class SearchBar extends Component {
          destinations: [],
          predictions: [],
          pointCoords: [],
-
-         lat: 0,
-         long: 0
-
+         coordsArray: [],
          };
+
          this.onChangeDestinationDebounced = _.debounce(
                this.onChangeDestination,
                1000
@@ -53,17 +51,26 @@ export default class SearchBar extends Component {
               url = Config.getConfig().url2;
          }
 
+            /*
+                Sets lat and long from GPS
+            */
           componentDidMount() {
 
-           //  this.setState({
-               //                 latitude: this.props.latitude,
-               //                 longitude: this.props.longitude
-              //                });
+             this.setState({
+                                latitude: this.props.latitude,
+                                longitude: this.props.longitude
+                              });
            }
 
+        /*
+            gets lat and long and destination place and creates route
+            returns multiple loops
+            sent to Map to create polylines
+
+        */
     async getRouteDirections(destinationPlaceId, destinationName) {
-       var getRoute =  url +  "/directions/json?origin=" + this.props.lat+","
-                                    +this.props.long+"&destination=place_id:"+destinationPlaceId+"&key="+key;
+       var getRoute =  url +  "/directions/json?origin=" + this.state.latitude+","
+                                    +this.state.longitude+"&destination=place_id:"+destinationPlaceId+"&key="+key;
         try {
 
           const json =  await request(getRoute);
@@ -71,17 +78,20 @@ export default class SearchBar extends Component {
 
           const points = PolyLine.decode(json.routes[0].overview_polyline.points);
 
-          const pointCoords = points.map(point => {
+          const pointCoords = points.map((point, index) => {
             return { latitude: point[0], longitude: point[1] };
           });
               console.log(pointCoords);
-              this.props.polyline(pointCoords);
+              const newCoordsArray = [ ...this.state.coordsArray, pointCoords]
+              this.props.polyline(newCoordsArray);
 
           this.setState({
             pointCoords,
+            coordsArray: newCoordsArray,
             predictions: [],
-            destination: destinationName
-
+            destination: destinationName,
+            latitude: pointCoords[pointCoords.length -1][0],
+            longitude: pointCoords[pointCoords.length -1][1]
           });
           Keyboard.dismiss();
          // this.map.fitToCoordinates(pointCoords);
@@ -91,11 +101,15 @@ export default class SearchBar extends Component {
       }
 
 
+        /*
+            AutoComplete/Autofill for search bar
+
+        */
     async onChangeDestination(destination) {
 
 
         var onChangeDestination = url +"/place/autocomplete/json?key="+key+"&input="+destination+"&location="
-                                      +this.props.lat+","+this.props.long+"&radius="+2000;
+                                      +this.state.latitude+","+this.state.longitude+"&radius="+2000;
 
 
 
@@ -115,7 +129,7 @@ export default class SearchBar extends Component {
           incrStopCount(){
           let l = this.state.stopCount+1;
           this.setState({stopCount:l,predictions:[]});
-         // this.predictionClick();
+          this.predictionClick();
           }
 
           predictionClick(place_id,description){
@@ -125,7 +139,7 @@ export default class SearchBar extends Component {
                            description
                          );
 
-            //  this.incrStopCount();
+              this.incrStopCount();
 
           }
 
@@ -146,7 +160,7 @@ export default class SearchBar extends Component {
                                onChangeText = {this.onChangeText.bind(this)}
                                onSubmitEditing = {()=>{}}
                                                                            />
-              {this.state.stopCount>0 ?
+              {this.state.stopCount > 0 ?
 
                <SearchBarInput value = {this.test}
                                              onChangeText = {this.onChangeText.bind(this)}
@@ -170,9 +184,9 @@ export default class SearchBar extends Component {
 
 
               :null}
-           {/*   {this.state.stopCount==1 ? <MoreStops text = {"Add Stop"}     />: null}
+              {this.state.stopCount==1 ? <MoreStops text = {"Add Stop"}     />: null}
               {this.state.stopCount==2 ? <MoreStops text = {"Remove Stop"} /> : null}
-              */}
+
 
                                   <TouchableHighlight
                                   style = {styles.GO}
