@@ -22,7 +22,10 @@ export default class Venues{
                     displayPhone : '',
                     phone : '',
                     },
+              distance: 0,
               categories : [],
+              reviewCount: 0,
+              image_url: "",
                reviews : null,
                from : '',
 
@@ -68,7 +71,10 @@ export default class Venues{
                                 phone : obj.phone,
                                 displayPhone : obj.display_phone,
                          },
+                         image_url: obj.image_url,
                          rating : obj.rating,
+                         reviewCount: obj.reviewCount,
+                       distance: obj.distance,
                        categories : obj.categories,
                        reviews : obj.reviews,
                        from : 'yelp',
@@ -92,12 +98,14 @@ export default class Venues{
                                     country : obj.response.venue.location.country,
                                     state : obj.response.venue.location.state,
                                     displayAddress : obj.response.venue.location.formattedAddress,
+
                                     },
                             contact : {
                              phone : obj.response.venue.contact.phone,
                              displayPhone : obj.formattedPhone,
                             },
                            rating : obj.response.venue.rating,
+
                            categories : obj.categories,
                            reviews : obj.reviews,
                            from : 'foursquare',

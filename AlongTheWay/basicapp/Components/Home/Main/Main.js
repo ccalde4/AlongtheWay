@@ -1,11 +1,16 @@
 import React, {Component} from 'react';
 import { Text, View,StyleSheet,Keyboard, Dimensions,ActivityIndicator,PermissionsAndroid,Alert} from 'react-native';
+import { ButtonGroup, Header, Button, Overlay, Divider, Rating, ListItem } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import ControlBar from './Controls/Controls';
 import MapGui from './Map/Map';
 import DecoySearch from './comps/DecoySearch';
-
+import File from '../../../utils/FileSystem';
 import MasterAPI from '../../../APIs/MasterAPI';
 import MarkerSort from '../../../utils/MarkerSort';
+import MarkerPopup from './Map/comps/MarkerPopup';
+import ReviewForm from './Map/comps/ReviewForm';
+import MarkerList from './Map/comps/MarkerList';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -33,7 +38,9 @@ export default class Main extends Component {
                                 radius: this.props.radius,
                                 categories: '',
                                             },
-             markerDataFetched: false,
+             listClicked: false,
+             isReviewing: false,
+             markerClicked: false,
              center:         false,
              render:         false,
              region :        null,
@@ -44,7 +51,8 @@ export default class Main extends Component {
              gasClicked: false, restCLicked: false, artsClicked: false,
              medicalClicked: false, cornClicked:   false  , burritoClicked: false ,
              items:          [],
-             itemDetails:    [],
+              reviews: [],
+               markerIndex: 0,
 
            }
 
@@ -176,6 +184,28 @@ export default class Main extends Component {
         }
 
 
+        onMarkerClicked(index){
+
+       this.setState( (previousState) => ({markerClicked: !previousState.markerClicked} ) );
+        this.setState({markerIndex: index});
+        }
+        onReview(){
+         this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
+        }
+
+
+
+                 //function for adding reviews to reviews array, passed to ReviewForm and called by enter button
+         addReview(userReview){
+        this.state.reviews.push(userReview);
+        console.log(this.state.reviews);
+        this.onReview();
+                 }
+
+
+       inListView(){
+       this.setState( previousState => ( {listClicked: !previousState.listClicked} ) )
+       }
 
 //need to figure out a good way to do this elegantly
   async onFetchClicked(){
@@ -209,6 +239,9 @@ export default class Main extends Component {
        ||newState.render!==this.state.render
        ||newState.lat!==this.state.lat
        ||newProps.radius!==this.props.radius
+       ||newState.markerClicked!==this.state.markerClicked
+       ||newState.isReviewing !== this.state.isReviewing
+       || newState.listClicked !== this.state.listClicked
 
 
        )
@@ -239,7 +272,7 @@ export default class Main extends Component {
                 render = {this.state.render}
                 onRegionChange = {this.onRegionChange.bind(this)}
                 onCornClick = {this.onCornClicked.bind(this)}
-                //onMarkerClick = {this.onMarkerClicked.bind(this)}
+                onMarkerClick = {this.onMarkerClicked.bind(this)}
                 center = {this.state.center}
                />
 
@@ -272,6 +305,40 @@ export default class Main extends Component {
 
                />
             }
+            {<Header backgroundColor = 'transparent'
+              rightComponent={<Icon name = 'align-justify'
+                                    size = {32}
+                                    color = 'grey'
+                                    onPress = {this.inListView.bind(this)}/>}
+            />
+           }
+            {this.state.listClicked === false ? null :
+            <MarkerList markers = {this.state.items}
+                        onBackDropPress = {this.inListView.bind(this)}
+                        onListItemClicked ={this.onMarkerClicked.bind(this)} />
+
+            }
+
+
+            {
+                           this.state.markerClicked === false ? null :
+                                   <MarkerPopup marker = {this.state.items[this.state.markerIndex]}
+                                                inMarker = {this.onMarkerClicked.bind(this)}
+                                                onReview = {this.onReview.bind(this)}
+                                                />
+
+                            }
+
+
+             {
+                            this.state.isReviewing === false? null:
+
+                            <ReviewForm addReview = {(userReview) => {this.addReview(userReview)}}
+                                        marker = {this.state.items[this.state.markerIndex]}
+                                         //inMarker = {this.onMarkerClicked.bind(this)}
+                                         onReview = {this.onReview.bind(this)}
+                                         />
+                             }
 
        </View>
       );
@@ -308,12 +375,8 @@ export default class Main extends Component {
 }
 const styles = StyleSheet.create({
   Gui: {
-  flexDirection: 'column',
-  padding: 10,
-  flex:1,
-  backgroundColor: "gray",
-  justifyContent: "space-around",
-  alignItems: "center",
+   flex:1,
+    backgroundColor: "gray",
   },
 
   map: {

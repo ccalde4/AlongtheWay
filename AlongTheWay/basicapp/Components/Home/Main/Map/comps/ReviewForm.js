@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import { Text,TextInput, View,ScrollView, StyleSheet,Keyboard, Dimensions, TouchableOpacity,TouchableWithoutFeedback,KeyboardAvoidingView} from 'react-native';
 import StarRating from 'react-native-star-rating';
 var { winHeight, winWidth } = Dimensions.get('window');
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {  Header, Button, Overlay, Divider, Rating } from 'react-native-elements';
+
 
   export default class ReviewForm extends Component{
 
@@ -34,50 +37,53 @@ var { winHeight, winWidth } = Dimensions.get('window');
 
          }
     render() {
-    {winHeight, winWidth} ;
+
         return (
-         <View style = {styles.Gui}   >
+        <Overlay isVisible = {true} fullScreen = {true}>
+            <View>
+           <Header
 
-                           <View style = {styles.firstLine} >
-                            <Text style = {{fontSize: 20}} > Review your experience at: {"\n"} {this.props.name} </Text>
-                           </View>
-
-                             <ScrollView  keyboardShouldPersistTaps = {"never"} style = {styles.commentBox}>
-                                  <KeyboardAvoidingView  behavior = "padding" enabled>
-                                    <View style = {styles.textIn}>
-
-                                      <TextInput  placeholder = {'Leave a comment...'}
-                                                  onChangeText={(text) => this.setState({text})}
-                                                  value = {this.state.text}
+                                                 centerComponent={{ text: this.props.marker.name , style: { color: '#fff' } }}
+                                                 leftComponent={<Icon name = 'arrow-left'
+                                                                       color = 'white'
+                                                                       size = {32}
+                                                                       onPress = {this.props.onReview}/> }
                                                 />
 
-                                    </View>
-                                  </KeyboardAvoidingView>
-                             </ScrollView>
+            <View>
+            <ScrollView  keyboardShouldPersistTaps = {"never"} >
+            <KeyboardAvoidingView  behavior = "padding" enabled>
 
-                         <View style = {styles.stars}>
-                            <Text style = {styles.starText} > Rate your experience: </Text>
-                              <StarRating
-                                         disabled={false}
-                                         maxStars={5}
-                                         rating={this.state.starCount}
-                                         selectedStar={(rating) => this.onStarRatingPress(rating)}
-                                         fullStarColor = {'yellow'}
-                                       />
-                        <Text style = {styles.starText}> {this.state.starCount} stars </Text>
+            <View style = {styles.textBox}>
 
-                         </View>
+            <TextInput
+                style = {styles.textIn}
+            placeholder = {'Leave a comment...'}
+                onChangeText={(text) => this.setState({text})}
+                 value = {this.state.text}
+            />
+
+                                                </View>
+                                                </KeyboardAvoidingView>
+                                           </ScrollView>
 
 
-                            <View style = {styles.enter}>
-                           <TouchableOpacity onPress = {this.onEnterClick.bind(this)}>
 
-                                         <Text style = {styles.submitText}> Submit </Text>
+                                           <StarRating
+                                                      disabled={false}
+                                                      maxStars={5}
+                                                      rating={this.state.starCount}
+                                                      selectedStar={(rating) => this.onStarRatingPress(rating)}
+                                                      fullStarColor = {'yellow'}
+                                                    />
+                                     <Text style = {styles.starText}> {this.state.starCount} stars </Text>
 
-                           </TouchableOpacity>
-                           </View>
+     <Button title = "Submit" onPress = {this.onEnterClick.bind(this)}       />
 
-                  </View>
+        </View>
+            </View>
+                  </Overlay>
+
 
 
               );
@@ -89,20 +95,29 @@ var { winHeight, winWidth } = Dimensions.get('window');
     const styles = StyleSheet.create({
 
           Gui: {
-            flexDirection: 'column',
-            flex: 1,
-            flexWrap: 'wrap',
-            backgroundColor: 'white',
-            },
 
+
+           flex:1,
+    backgroundColor: 'white',
+            height: winHeight,
+            width: winWidth,
+
+            },
+            textBox:{
+            paddingTop: 50,
+             borderColor: 'black',
+             borderWidth: 1.5,
+             height:150,
+             padding: 10,
+
+            },
           firstLine: {
-            flex: 0.5,
-            flexShrink: 2,
+
             top: 10,
             bottom: 20,
             height: 70,
             alignContent: 'flex-start',
-            overflow: 'scroll',
+           overflow: 'scroll',
             },
 
           commentBox: {
@@ -114,47 +129,45 @@ var { winHeight, winWidth } = Dimensions.get('window');
 
             },
          textIn: {
-            top: 10,
-            flex:2.5,
+            padding: 10,
+            height: 50,
             borderColor: 'black',
-            borderWidth: 1.5,
-            width: winWidth,
-            height:150,
-            paddingLeft: 10,
+            borderWidth: 5,
             overflow: 'scroll',
             },
 
          stars: {
             flex: 1.5,
-            width: 300,
-            height: 60,
+            width: 200,
+            height: 30,
             alignSelf: 'center',
             overflow: 'hidden',
             },
 
 
         enter: {
-             height: 60,
-             bottom:20,
+             height: 20,
+             bottom:30,
              backgroundColor: 'limegreen',
+
              width: winWidth,
             },
 
         starText: {
-            fontSize: 24,
+            fontSize: 18,
             color: 'black',
             fontWeight: 'bold',
             textAlign: 'center',
-            lineHeight: 60,
+            lineHeight: 30,
             textAlignVertical: 'center',
             },
 
         submitText: {
-            fontSize: 24,
+            fontSize: 18,
             color: 'white',
             fontWeight: 'bold',
             textAlign: 'center',
-            lineHeight: 60,
+            lineHeight: 30,
             textAlignVertical: 'center',
             },
 
@@ -165,9 +178,13 @@ var { winHeight, winWidth } = Dimensions.get('window');
              backgroundColor: 'gray',
              borderColor: 'black',
              borderWidth: 10,
-             top: 110,
+            top: 110,
             },
-
+        home:{
+         width: 30,
+         height: 30,
+         backgroundColor: 'pink'
+        },
          button2: {
                 height: 30,
                 width: 30,
@@ -175,3 +192,50 @@ var { winHeight, winWidth } = Dimensions.get('window');
                 borderColor: 'black',
                 },
           });
+/* <View style = {styles.Gui}   >
+           <Header
+                                     leftComponent={{ icon: 'menu', color: '#fff' }}
+                                     centerComponent={{ text: this.props.marker.name , style: { color: '#fff' } }}
+                                     rightComponent={<TouchableOpacity style = {styles.home} onPress = {this.props.onReview}/> }
+                                    />
+
+                             <View style = {styles.firstLine} >
+                              <Text style = {{fontSize: 20}} > Review your experience at: {"\n"} {this.props.marker.name} </Text>
+                             </View>
+
+                               <ScrollView  keyboardShouldPersistTaps = {"never"} style = {styles.commentBox}>
+                                    <KeyboardAvoidingView  behavior = "padding" enabled>
+                                      <View style = {styles.textIn}>
+
+                                        <TextInput  placeholder = {'Leave a comment...'}
+                                                    onChangeText={(text) => this.setState({text})}
+                                                    value = {this.state.text}
+                                                  />
+
+                                      </View>
+                                    </KeyboardAvoidingView>
+                               </ScrollView>
+
+                           <View style = {styles.stars}>
+
+                                <StarRating
+                                           disabled={false}
+                                           maxStars={5}
+                                           rating={this.state.starCount}
+                                           selectedStar={(rating) => this.onStarRatingPress(rating)}
+                                           fullStarColor = {'yellow'}
+                                         />
+                          <Text style = {styles.starText}> {this.state.starCount} stars </Text>
+
+                           </View>
+
+
+                              <View style = {styles.enter}>
+                             <TouchableOpacity onPress = {this.onEnterClick.bind(this)}>
+
+                                           <Text style = {styles.submitText}> Submit </Text>
+
+                             </TouchableOpacity>
+                             </View>
+
+                    </View>*/
