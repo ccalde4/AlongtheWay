@@ -293,12 +293,18 @@ export default class Main extends Component {
                />
             }
             {<Header backgroundColor = 'transparent'
-              rightComponent={<Icon name = 'align-justify'
-                                    size = {32}
-                                    color = 'grey'
-                                    onPress = {this.inListView.bind(this)}/>}
-            />
-           }
+                          leftComponent= {<Icon name = 'align-justify'
+                                          size = {24}
+                                          color = 'grey'
+                                          onPress = {this.onBurritoClicked.bind(this)}/>}
+                          centerComponent = {<DecoySearch onSearch = {this.props.onSearch}/>}
+                          rightComponent={<Icon name = 'list-alt'
+                                                size = {24}
+                                                color = 'grey'
+                                                onPress = {this.inListView.bind(this)}/>}
+
+                        />
+                       }
             {this.state.listClicked === false ? null :
             <MarkerList markers = {this.state.items}
                         onBackDropPress = {this.inListView.bind(this)}

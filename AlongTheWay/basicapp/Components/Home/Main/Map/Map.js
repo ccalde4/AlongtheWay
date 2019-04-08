@@ -43,8 +43,6 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   handlePress(index){
 
        this.props.onMarkerClick(index);
-      
-
 
        }
 
