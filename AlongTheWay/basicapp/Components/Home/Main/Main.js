@@ -35,7 +35,7 @@ export default class Main extends Component {
                                 longitude:'-91.186256',
                                 query:'',
                                 limit: 30,
-                                radius: this.props.radius,
+                                radius: 2000,
                                 categories: '',
                                             },
              listClicked: false,
@@ -49,7 +49,7 @@ export default class Main extends Component {
              fetchClicked:   false , moreClicked:  false , localClicked: false  ,
              shopClicked:   false , outdoorsClicked: false , nightlifeClicked: false,
              gasClicked: false, restCLicked: false, artsClicked: false,
-             medicalClicked: false, cornClicked:   false  , burritoClicked: false ,
+             medicalClicked: false, optionsClicked: false ,
              items:          [],
               reviews: [],
                markerIndex: 0,
@@ -172,14 +172,8 @@ export default class Main extends Component {
          }
 
 
-        onCornClicked(){
-          this.setState( (previousState) => ({cornClicked: !previousState.cornClicked}) );
-          this.props.onReview();
-        }
-
-
-        onBurritoClicked(){
-          this.setState( (previousState) => ({burritoClicked: !previousState.burritoClicked }) );
+        onOptionsClicked(){
+          this.setState( (previousState) => ({optionsClicked: !previousState.optionsClicked }) );
           this.props.inOptions();
         }
 
@@ -213,16 +207,11 @@ export default class Main extends Component {
 
            masterAPI.setParams(this.state.params);
            let data = await masterAPI.search();
-
-          this.setState({items: data });
-
            let m = new MarkerSort('rating',10)
-         // let m = this.markerSort.sort(this.state.items);
-        //   m.setItems(data);
-           let x = m.sort(data);
-           console.log(x);
-             this.setState({items: x });
-              this.setState( (previousState) => ({center: !previousState.center}) );
+
+           m.sort(data);
+           this.setState({items: data });
+           this.setState( (previousState) => ({center: !previousState.center}) );
        }
 
 
@@ -271,7 +260,6 @@ export default class Main extends Component {
                 region = {this.state.region}
                 render = {this.state.render}
                 onRegionChange = {this.onRegionChange.bind(this)}
-                onCornClick = {this.onCornClicked.bind(this)}
                 onMarkerClick = {this.onMarkerClicked.bind(this)}
                 center = {this.state.center}
                />
@@ -300,18 +288,23 @@ export default class Main extends Component {
                 rest = {this.state.restClicked}       onRestClick = {this.onRestClicked.bind(this)}
                 arts = {this.state.artsClicked}       onArtsClick = {this.onArtsClicked.bind(this)}
                 medical = {this.state.medicalClicked}       onMedicalClick = {this.onMedicalClicked.bind(this)}
-                corn = {this.state.cornClicked}         onCornClick = {this.onCornClicked.bind(this)}
-                burrito = {this.state.burritoClicked}   onBurritoClick = {this.onBurritoClicked.bind(this)}
+                options = {this.state.optionsClicked}   onOptionsClick = {this.onOptionsClicked.bind(this)}
 
                />
             }
             {<Header backgroundColor = 'transparent'
-              rightComponent={<Icon name = 'align-justify'
-                                    size = {32}
-                                    color = 'grey'
-                                    onPress = {this.inListView.bind(this)}/>}
-            />
-           }
+                          leftComponent= {<Icon name = 'align-justify'
+                                          size = {24}
+                                          color = 'grey'
+                                          onPress = {this.onBurritoClicked.bind(this)}/>}
+                          centerComponent = {<DecoySearch onSearch = {this.props.onSearch}/>}
+                          rightComponent={<Icon name = 'list-alt'
+                                                size = {24}
+                                                color = 'grey'
+                                                onPress = {this.inListView.bind(this)}/>}
+
+                        />
+                       }
             {this.state.listClicked === false ? null :
             <MarkerList markers = {this.state.items}
                         onBackDropPress = {this.inListView.bind(this)}

@@ -107,8 +107,8 @@ export default class ControlBar extends Component {
 
           <FilterButton label = 'Options'
                         color = 'peru'
-                        clicked = {this.props.onBurritoClick}
-                        isPressed = {this.props.burrito} />
+                        clicked = {this.props.onOptionsClick}
+                        isPressed = {this.props.options} />
 
         </View>
 

@@ -41,16 +41,12 @@ let i = 0;
    return false;
 
    }
-   handlePress(pressedMarker){
-   this.setState((previousState) => ({markerClicked: !previousState.markerClicked}))
-   this.props.onMarkerClicked(pressedMarker);
-   <MarkerPopup location = {pressedMarker.response.venue.location}
-                                  name = {pressedMarker.response.venue.name}
-                                  id = {pressedMarker.response.venue.id}
-                                  contact = {pressedMarker.response.venue.contact}
-                                  rating = {pressedMarker.response.venue.rating}/>
+  handlePress(index){
 
-   }
+       this.props.onMarkerClick(index);
+
+       }
+
    fitMap(){
    this.map.fitToCoordinates(this.props.polyline);
    }
