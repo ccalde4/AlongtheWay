@@ -31,11 +31,12 @@ handlePress(index){
 
 
     return (
-    <ScrollView contentContainerStyle = {{paddingBottom: 70}}>
-     <View>
+
+
     <Overlay isVisible = {true}
              onBackdropPress = {this.props.onBackDropPress}
            >
+     <ScrollView contentContainerStyle = {{paddingBottom: 70}}>
 <View>
     {
    this.props.markers ?  this.props.markers.map((place,index) =>
@@ -63,10 +64,11 @@ handlePress(index){
     }
 
      </View>
+     </ScrollView>
      </Overlay>
 
-     </View>
-     </ScrollView>
+
+
     );
   }
 }
