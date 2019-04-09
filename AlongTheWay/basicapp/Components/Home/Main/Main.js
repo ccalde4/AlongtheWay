@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { ButtonGroup, Header, Button, Overlay, Divider, Rating, ListItem } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TouchableOpacity, Text, View,StyleSheet,Keyboard, Dimensions,ActivityIndicator,PermissionsAndroid,Alert} from 'react-native';
-import ControlBar from './Controls/Controls';
+import ControlBar from './Controls/Controls2';
 import MapGui from './Map/Map';
 import DecoySearch from './comps/DecoySearch';
 
@@ -54,16 +54,45 @@ export default class Main extends Component {
              shopClicked:   false  , outdoorsClicked: false , nightlifeClicked: false  ,
              gasClicked:    false  , restCLicked:     false , artsClicked:      false  ,
              medicalClicked: false , optionsClicked:  false ,
-             items:          [],
-             itemsWithoutDetails: [],
-             dist:           [],
-
-             reviews:        [],
+             items:                [],
+             itemsWithoutDetails:  [],
+             dist:                 [],
+             reviews:              [],
 
            }
 
 
             masterAPI = new MasterAPI();
+        }
+
+        async setLatLong(){
+
+
+                for(let i = 0; i < dist.length; i++){
+
+                    let x = this.state.params;
+                    x.latitude = dist[i].latitude;
+                    x.longitude = dist[i].longitude;
+                    this.setState({params:x})
+
+                    masterAPI.setParams(this.state.params);
+
+                    let y = await masterAPI.search();
+
+                    if(y !== -1){
+
+                     itemsWithoutDetails.push(y);
+
+                    }
+
+                    else{
+
+                    this.setState({throwAlert: true});
+
+                    }
+
+                    }
+
         }
 
 
@@ -220,12 +249,10 @@ export default class Main extends Component {
                     this.setState({dist:y});
                     this.setState( (previousState) => ({center: !previousState.center}) );
           }
-
          onMarkerClicked(index){
            this.setState( (previousState) => ({markerClicked: !previousState.markerClicked} ) );
            this.setState({markerIndex: index});
                 }
-
          onReview(){
             this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
                 }
@@ -241,79 +268,40 @@ export default class Main extends Component {
          inListView(){
            this.setState( previousState => ( {listClicked: !previousState.listClicked} ) )
          }
- async setLatLong(){
-
-        for(let i = 0; i < dist.length; i++){
-            let x = this.state.params;
-            x.latitude = dist[i].latitude;
-            x.longitude = dist[i].longitude;
-            this.setState({params:x})
-            masterAPI.setParams(this.state.params);
-            let y = await masterAPI.search();
-            if(y !== -1){
-             itemsWithoutDetails.push(y);
-            }
-            else{
-            this.setState({throwAlert: true});
-            }
 
 
-            }
-}
 
 //need to figure out a good way to do this elegantly
-  //need to figure out a good way to do this elegantly
-    async onFetchClicked(){
+  async onFetchClicked(){
 
+           masterAPI.setParams(this.state.params);
+                      let data = await masterAPI.searchAndGetDetails();
+                      let m = new MarkerSort('rating',this.state.numMarkersShown)
 
-             masterAPI.setParams(this.state.params);
+                       m.sort(data);
+                       let x = m.getTop();
+                      this.setState({items: x });
+                      this.setState( (previousState) => ({center: !previousState.center}) );
+       }
 
-
-             let data = await masterAPI.searchAndGetDetails();
-             if(data === -1){
-               this.setState({items: null});
-             }
-             else{
-             if(data.length > 3){
-             console.log("you are not supposed to be here");
-              let m = new MarkerSort('rating',this.state.numMarkersShown)
-                                    let x = m.sort(data);
-                                    //let x = m.getTop();
-                                    this.setState({items: x });
-             }
-             else{
-             this.setState({items: data });
-             }
-
-
-             }
-
-             this.setState( (previousState) => ({center: !previousState.center}) );
-         }
 
   shouldComponentUpdate(newProps,newState){
 
    return (
-          newState.foodClicked!==this.state.foodClicked
-              ||newState.shopClicked!==this.state.shopClicked
-              ||newState.landmarksClicked!==this.state.landmarksClicked
-              ||newState.outdoorsClicked!==this.state.outdoorsClicked
-              ||newState.localClicked!==this.state.localClicked
-              ||newState.moreClicked!==this.state.moreClicked
-              ||newState.shopClicked!==this.state.shopClicked
-              ||newState.outdoorsClicked!==this.state.outdoorsClicked
-              ||newState.nightlifeClicked!==this.state.nightlifeClicked
-              ||newState.gasClicked!==this.state.gasClicked
-              ||newState.restClicked!==this.state.restClicked
-              ||newState.center!==this.state.center
-              ||newState.render!==this.state.render
-              ||newState.lat!==this.state.lat
-              ||newProps.radius!==this.props.radius
-              ||newState.markerClicked!==this.state.markerClicked
-              ||newState.isReviewing !== this.state.isReviewing
-              || newState.listClicked !== this.state.listClicked
-              ||newProps.polyline!==this.props.polyline
-
+         newState.foodClicked!==this.state.foodClicked
+       ||newState.shopClicked!==this.state.shopClicked
+       ||newState.landmarksClicked!==this.state.landmarksClicked
+       ||newState.outdoorsClicked!==this.state.outdoorsClicked
+       ||newState.localClicked!==this.state.localClicked
+       ||newState.moreClicked!==this.state.moreClicked
+       ||newState.center!==this.state.center
+       ||newState.render!==this.state.render
+       ||newProps.lat!==this.props.lat
+       ||newProps.radius!==this.props.radius
+       ||newProps.polyline!==this.props.polyline
+        ||newState.markerClicked!==this.state.markerClicked
+        ||newState.isReviewing !== this.state.isReviewing
+        || newState.listClicked !== this.state.listClicked
        )
 
 
@@ -352,10 +340,7 @@ export default class Main extends Component {
            }
 
 
-            {/*
-               this.props.lat === null ? null :
-              <DecoySearch onSearch = {this.props.onSearch}/>
-            */ }
+
            {
               this.props.lat === null ? null :
                  <ControlBar
@@ -378,45 +363,47 @@ export default class Main extends Component {
                   />
               }
              {<Header backgroundColor = 'transparent'
-                                      leftComponent= {<Icon name = 'align-justify'
-                                                      size = {24}
-                                                      color = 'grey'
-                                                      onPress = {this.onOptionsClicked.bind(this)}/>}
-                                      centerComponent = {<DecoySearch onSearch = {this.props.onSearch}/>}
-                                      rightComponent={<Icon name = 'list-alt'
-                                                            size = {24}
-                                                            color = 'grey'
-                                                            onPress = {this.inListView.bind(this)}/>}
+                leftComponent = {<Icon name = 'align-justify'
+                                      size = {24}
+                                      color = 'grey'
+                                      onPress = {this.onOptionsClicked.bind(this)}/>}
+
+                 centerComponent = {<DecoySearch onSearch = {this.props.onSearch}/>}
+
+                 rightComponent = {<Icon name = 'list-alt'
+                                       size = {24}
+                                       color = 'grey'
+                                       onPress = {this.inListView.bind(this)}/>}
 
                                     />
                                    }
-                        {this.state.listClicked === false ? null :
-                        <MarkerList markers = {this.state.items}
-                                    onBackDropPress = {this.inListView.bind(this)}
-                                    onListItemClicked ={this.onMarkerClicked.bind(this)} />
+            {this.state.listClicked === false ? null :
+              <MarkerList markers = {this.state.items}
+                          onBackDropPress = {this.inListView.bind(this)}
+                          onListItemClicked ={this.onMarkerClicked.bind(this)} />
 
-                        }
+            }
 
 
-                        {
-                                       this.state.markerClicked === false ? null :
-                                               <MarkerPopup marker = {this.state.items[this.state.markerIndex]}
-                                                            inMarker = {this.onMarkerClicked.bind(this)}
-                                                            onReview = {this.onReview.bind(this)}
+            {
+             this.state.markerClicked === false ? null :
+                  <MarkerPopup marker = {this.state.items[this.state.markerIndex]}
+                               inMarker = {this.onMarkerClicked.bind(this)}
+                               onReview = {this.onReview.bind(this)}
                                                             />
 
-                                        }
+           }
 
 
-                         {
-                                        this.state.isReviewing === false? null:
+           {
+             this.state.isReviewing === false? null:
 
-                                        <ReviewForm addReview = {(userReview) => {this.addReview(userReview)}}
-                                                    marker = {this.state.items[this.state.markerIndex]}
+               <ReviewForm addReview = {(userReview) => {this.addReview(userReview)}}
+                           marker = {this.state.items[this.state.markerIndex]}
                                                      //inMarker = {this.onMarkerClicked.bind(this)}
-                                                     onReview = {this.onReview.bind(this)}
+                           onReview = {this.onReview.bind(this)}
                                                      />
-                                         }
+           }
 
        </View>
 
