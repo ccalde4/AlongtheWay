@@ -241,8 +241,25 @@ export default class Main extends Component {
          inListView(){
            this.setState( previousState => ( {listClicked: !previousState.listClicked} ) )
          }
+ async setLatLong(){
+
+        for(let i = 0; i < dist.length; i++){
+            let x = this.state.params;
+            x.latitude = dist[i].latitude;
+            x.longitude = dist[i].longitude;
+            this.setState({params:x})
+            masterAPI.setParams(this.state.params);
+            let y = await masterAPI.search();
+            if(y !== -1){
+             itemsWithoutDetails.push(y);
+            }
+            else{
+            this.setState({throwAlert: true});
+            }
 
 
+            }
+}
 
 //need to figure out a good way to do this elegantly
   //need to figure out a good way to do this elegantly
