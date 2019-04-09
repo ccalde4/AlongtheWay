@@ -35,9 +35,10 @@ export default class Main extends Component {
                                 longitude:'-91.186256',
                                 query:'',
                                 limit: 30,
-                                radius: 2000,
-                                categories: '',
+                                radius: this.props.radius,
+                                categories: [],
                                             },
+             numMarkersShown: 20,
              listClicked: false,
              isReviewing: false,
              markerClicked: false,
@@ -67,13 +68,30 @@ export default class Main extends Component {
 
        }
 
-       changeQuery(query){
-       let x = this.state.params;
-       x.query = query;
-       this.setState( {params:x} );
 
-       }
+        addToCategories(category){
+        let x = this.state.params;
+        (x.categories).push(category);
 
+        this.setState( {params:x});
+         console.log(x.categories);
+           this.setState( {params:x});
+
+
+        }
+
+        removeFromCategories(category){
+        let x = this.state.params;
+
+        for(let i = 0; i < x.categories.length; i++){
+            if((x.categories)[i] == category){
+                x.categories.splice(i,1)
+            }
+        }
+        console.log(x.categories);
+        this.setState( {params:x});
+
+        }
 
         onRedClicked(){
           this.setState({
@@ -92,24 +110,29 @@ export default class Main extends Component {
         onFoodClicked(){
 
         console.log("this is food when clicked");
-          this.setState({ localClicked: false});
-          this.setState({ landmarksClicked: false});
-          this.setState({ shopClicked: false});
+         // this.setState({ localClicked: false});
+          //this.setState({ landmarksClicked: false});
+         // this.setState({ shopClicked: false});
+         !this.state.foodClicked ? this.addToCategories("food,restaurants") : this.removeFromCategories("food,restaurants");
           this.setState( (previousState) => ({foodClicked: !previousState.foodClicked}) );
 
-            this.changeQuery("Food");
+
+            //this.addToCategories("restaurants,food");
+
 
 
         }
 
 
         onLandmarksClicked(){
-        this.setState({ localClicked: false});
-        this.setState({ foodClicked: false});
-        this.setState({ shopClicked: false});
+       // this.setState({ localClicked: false});
+        //this.setState({ foodClicked: false});
+        //this.setState({ shopClicked: false});
+        //this.state.landmarksClicked == true ? this.addToCategories("landmarks") : this.removeFromCategories("landmarks");
+        !this.state.landmarksClicked ? this.addToCategories("landmarks") : this.removeFromCategories("landmarks");
         this.setState( (previousState) => ({landmarksClicked: !previousState.landmarksClicked}) );
 
-         this.changeQuery("Landmarks");
+
 
 
         }
@@ -121,48 +144,57 @@ export default class Main extends Component {
 
 
         onLocalClicked(){
-         this.setState({ landmarksClicked: false});
-         this.setState({ foodClicked: false});
-         this.setState({ shopClicked: false});
+         //this.setState({ landmarksClicked: false});
+         //this.setState({ foodClicked: false});
+         //this.setState({ shopClicked: false});
+         !this.state.localClicked ? this.addToCategories("localflavor") : this.removeFromCategories("localflavor");
          this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
-         this.changeQuery("Local");
+
+
 
          }
 
 
          onShopClicked(){
-         this.setState({ landmarksClicked: false});
-         this.setState({ foodClicked: false});
-         this.setState({ localClicked: false});
+         //this.setState({ landmarksClicked: false});
+         //this.setState({ foodClicked: false});
+         //this.setState({ localClicked: false});
+          !this.state.shopClicked ? this.addToCategories("shopping") : this.removeFromCategories("shopping");
          this.setState((previousState) => ( {shopClicked: !previousState.shopClicked} ));
 
-          this.changeQuery("Shop");
+
 
           }
 
 
 
          onOutdoorsClicked(){
+          !this.state.outdoorsClicked ? this.addToCategories("active") : this.removeFromCategories("active");
          this.setState((previousState) => ( {outdoorsClicked: !previousState.outdoorsClicked} ));
 
           }
 
          onNightlifeClicked(){
+          !this.state.nightlifeClicked ? this.addToCategories("nightlife") : this.removeFromCategories("nightlife");
          this.setState((previousState) => ( {nightlifeClicked: !previousState.nightlifeClicked} ));
 
          }
          onGasClicked(){
+          !this.state.gasClicked ? this.addToCategories("servicestations") : this.removeFromCategories("servicestations");
          this.setState((previousState) => ( {gasClicked: !previousState.gasClicked} ));
 
          }
 
          onRestClicked(){
+          !this.state.restClicked ? this.addToCategories("hotelstravel") : this.removeFromCategories("hotelstravel");
          this.setState((previousState) => ( {restClicked: !previousState.restClicked} ));
 
          }
 
          onArtsClicked(){
+          !this.state.artsClicked ? this.addToCategories("arts") : this.removeFromCategories("arts");
          this.setState((previousState) => ( {artsClicked: !previousState.artsClicked} ));
+
 
          }
 
@@ -178,10 +210,10 @@ export default class Main extends Component {
         }
 
 
-        onMarkerClicked(index){
 
-       this.setState( (previousState) => ({markerClicked: !previousState.markerClicked} ) );
-        this.setState({markerIndex: index});
+        onMarkerClicked(index){
+            this.setState( (previousState) => ({markerClicked: !previousState.markerClicked} ) );
+            this.setState({markerIndex: index});
         }
         onReview(){
          this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
@@ -207,10 +239,11 @@ export default class Main extends Component {
 
            masterAPI.setParams(this.state.params);
            let data = await masterAPI.search();
-           let m = new MarkerSort('rating',10)
+           let m = new MarkerSort('rating',this.state.numMarkersShown)
 
-           m.sort(data);
-           this.setState({items: data });
+            m.sort(data);
+            let x = m.getTop();
+           this.setState({items: x });
            this.setState( (previousState) => ({center: !previousState.center}) );
        }
 
@@ -267,10 +300,6 @@ export default class Main extends Component {
            }
 
 
-            {
-               this.state.lat === null ? null :
-              <DecoySearch onSearch = {this.props.onSearch}/>
-             }
            {
               this.state.lat === null ? null :
                <ControlBar
@@ -296,7 +325,7 @@ export default class Main extends Component {
                           leftComponent= {<Icon name = 'align-justify'
                                           size = {24}
                                           color = 'grey'
-                                          onPress = {this.onBurritoClicked.bind(this)}/>}
+                                          onPress = {this.onOptionsClicked.bind(this)}/>}
                           centerComponent = {<DecoySearch onSearch = {this.props.onSearch}/>}
                           rightComponent={<Icon name = 'list-alt'
                                                 size = {24}
