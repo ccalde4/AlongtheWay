@@ -35,24 +35,40 @@ class MasterAPI {
 
 
     }
-
     async search(){
+    let yp = await searchParameters.getYelpParams();
+        let yelpReturn = await yelp.search(yp);
+       if(yelpReturn.total !== 0){
+            return yelpReturn;
+            }
+        else{
+        return -1
+        }
+    }
+    async searchAndGetDetails(){
 
     let yp = await searchParameters.getYelpParams();
     console.log(yp);
-    let tempYelp = await this.addProp(await yelp.search(yp),'yelp') ;
-    console.log(tempYelp);
-    let changedYelp = await this.cloneObject(tempYelp);
-        if(tempYelp != null){
+    let yelpReturn = await yelp.search(yp);
+    console.log(yelpReturn);
+    if(yelpReturn.total !== 0){
+        let tempYelp = await this.addProp(yelpReturn,'yelp') ;
+        console.log(tempYelp);
 
-        let details = await this.getDetails(changedYelp);
-        //let detailsAndReviews = await this.getReviews(details);
+            if(tempYelp.total !== 0){
+            let changedYelp = await this.cloneObject(tempYelp);
+            console.log(changedYelp);
+            let details = await this.getDetails(changedYelp);
+            let uniformDetails = await this.makeUniform(details);
+            //console.log(uniform)
+            console.log(uniformDetails.length);
+            return uniformDetails;
+        }
+     }
+     else{
+     return (-1);
+     }
 
-        //console.log(details[0].reviews[0]);
-        let uniformDetails = await this.makeUniform(details);
-        return uniformDetails;
-
-    }
     }
 
     /*removeDuplicates(allResultsArray, breakPoint)

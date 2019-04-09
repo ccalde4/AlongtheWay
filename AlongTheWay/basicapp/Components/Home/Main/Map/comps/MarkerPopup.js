@@ -20,6 +20,68 @@ export default class MarkerPopup extends Component{
 
 
 
+    /*
+const styles = StyleSheet.create({
+
+
+  popup:{
+     flex: 1,
+     //flexDirection: 'row',
+     backgroundColor: 'white',
+    // borderRadius: 30,
+    height: winHeight,
+   width: winWidth,
+     //justifyContent: 'center',
+     //alignItems: 'center'
+
+     },
+     insideOfPopup:{
+
+     flex: 1,
+     backgroundColor:'white',
+
+     },
+      nameText:{
+      textAlign: 'center',
+        color: 'black',
+         fontSize: 24,
+         fontWeight: 'bold',
+
+
+         },
+      locationText:{
+      fontSize:14,
+      textAlign: 'center',
+
+
+      },
+
+    ratingText:{
+    color:'black',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    },
+    reviewButton:{
+    marginBottom: 30,
+
+     alignItems: 'center',
+
+    },
+
+    reviewText:{
+     backgroundColor:'white',
+    color: 'black',
+    fontSize:16,
+    textAlign: 'left',
+    },
+     home:{
+         width: 30,
+         height: 30,
+         backgroundColor: 'pink'
+        },
+
+});*/
 checkImage(){
 return(this.props.marker.image_url !== '' && this.props.marker.image_url !== null);
 }

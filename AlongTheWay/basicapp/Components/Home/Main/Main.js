@@ -55,7 +55,7 @@ export default class Main extends Component {
              gasClicked:    false  , restCLicked:     false , artsClicked:      false  ,
              medicalClicked: false , optionsClicked:  false ,
              items:          [],
-             items2:         [],
+             itemsWithoutDetails: [],
              dist:           [],
 
              reviews:        [],
@@ -220,10 +220,12 @@ export default class Main extends Component {
                     this.setState({dist:y});
                     this.setState( (previousState) => ({center: !previousState.center}) );
           }
+
          onMarkerClicked(index){
            this.setState( (previousState) => ({markerClicked: !previousState.markerClicked} ) );
            this.setState({markerIndex: index});
                 }
+
          onReview(){
             this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
                 }
@@ -243,36 +245,58 @@ export default class Main extends Component {
 
 
 //need to figure out a good way to do this elegantly
-  async onFetchClicked(){
+  //need to figure out a good way to do this elegantly
+    async onFetchClicked(){
 
-           masterAPI.setParams(this.state.params);
-                      let data = await masterAPI.search();
-                      let m = new MarkerSort('rating',this.state.numMarkersShown)
 
-                       m.sort(data);
-                       let x = m.getTop();
-                      this.setState({items: x });
-                      this.setState( (previousState) => ({center: !previousState.center}) );
-       }
+             masterAPI.setParams(this.state.params);
 
+
+             let data = await masterAPI.searchAndGetDetails();
+             if(data === -1){
+               this.setState({items: null});
+             }
+             else{
+             if(data.length > 3){
+             console.log("you are not supposed to be here");
+              let m = new MarkerSort('rating',this.state.numMarkersShown)
+                                    let x = m.sort(data);
+                                    //let x = m.getTop();
+                                    this.setState({items: x });
+             }
+             else{
+             this.setState({items: data });
+             }
+
+
+             }
+
+             this.setState( (previousState) => ({center: !previousState.center}) );
+         }
 
   shouldComponentUpdate(newProps,newState){
 
    return (
-         newState.foodClicked!==this.state.foodClicked
-       ||newState.shopClicked!==this.state.shopClicked
-       ||newState.landmarksClicked!==this.state.landmarksClicked
-       ||newState.outdoorsClicked!==this.state.outdoorsClicked
-       ||newState.localClicked!==this.state.localClicked
-       ||newState.moreClicked!==this.state.moreClicked
-       ||newState.center!==this.state.center
-       ||newState.render!==this.state.render
-       ||newProps.lat!==this.props.lat
-       ||newProps.radius!==this.props.radius
-       ||newProps.polyline!==this.props.polyline
-        ||newState.markerClicked!==this.state.markerClicked
-        ||newState.isReviewing !== this.state.isReviewing
-        || newState.listClicked !== this.state.listClicked
+          newState.foodClicked!==this.state.foodClicked
+              ||newState.shopClicked!==this.state.shopClicked
+              ||newState.landmarksClicked!==this.state.landmarksClicked
+              ||newState.outdoorsClicked!==this.state.outdoorsClicked
+              ||newState.localClicked!==this.state.localClicked
+              ||newState.moreClicked!==this.state.moreClicked
+              ||newState.shopClicked!==this.state.shopClicked
+              ||newState.outdoorsClicked!==this.state.outdoorsClicked
+              ||newState.nightlifeClicked!==this.state.nightlifeClicked
+              ||newState.gasClicked!==this.state.gasClicked
+              ||newState.restClicked!==this.state.restClicked
+              ||newState.center!==this.state.center
+              ||newState.render!==this.state.render
+              ||newState.lat!==this.state.lat
+              ||newProps.radius!==this.props.radius
+              ||newState.markerClicked!==this.state.markerClicked
+              ||newState.isReviewing !== this.state.isReviewing
+              || newState.listClicked !== this.state.listClicked
+              ||newProps.polyline!==this.props.polyline
+
        )
 
 

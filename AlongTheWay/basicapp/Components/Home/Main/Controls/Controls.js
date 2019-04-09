@@ -57,7 +57,8 @@ export default class ControlBar extends Component {
 
               <FilterButton label = 'Local'
                             color = 'crimson'
-                            clicked = {()=>{this.props.local}}   />
+                            clicked = {this.props.onLocalClick}
+                            isPressed = {this.props.local}/>
 
               <FilterButton label = 'Shop'
                             color = 'peachpuff'
@@ -100,7 +101,7 @@ export default class ControlBar extends Component {
                         clicked = {this.props.onArtsClick}
                         isPressed = {this.props.arts}   />
 
-          <FilterButton label = 'Medical'
+          <FilterButton label = 'Emergency'
                         color = 'paleturquoise'
                         clicked = {this.props.onMedicalClick}
                         isPressed = {this.props.medical}    />

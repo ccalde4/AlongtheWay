@@ -25,6 +25,8 @@ export default class Parameters{
 		this.params.limit = obj.limit;
 
 		if(obj.categories){
+		    console.log("set params categories:")
+		    console.log(obj.categories[0]);
 			this.params['categories'] = obj.categories;
 		}
 
@@ -56,22 +58,46 @@ export default class Parameters{
 
 
 
-    getYelpParams(){
+   getYelpParams(){
         var yelpParams = {
             latitude: this.params.latitude,
             longitude: this.params.longitude,
-            term: (this.params.searchTerm).toLowerCase(),
+            //term: (this.params.searchTerm).toLowerCase(),
             radius: this.params.radius,
             //categories: this.categories,
             limit: this.params.limit,
 
         }
-        if(this.categories){
-            yelpParams['categories'] = this.params.categories;
+        console.log(this.params.categories);
+        if(this.params.categories){
+
+
+            yelpParams['categories'] = this.getCategories();
+        }
+        if(this.params.searchTerm != ''){
+        yelpParams['term'] = (this.params.searchTerm).toLowerCase();
         }
    return (yelpParams);
     }
 
+    getCategories(){
+    let x = '';
+
+            for(let i = 0; i < this.params.categories.length; i++){
+
+                if(i == 0 ){
+                    x = "" + this.params.categories[0];
+                }
+                else
+                    x += ","+this.params.categories[i];
+                    console.log(x);
+                    console.log(this.params.categories.length);
+                if(i === this.params.categories.length-1){
+                    return x;
+                }
+            }
+
+    }
     getFoursquareParams(){
     var foursquareParams = {
         ll:this.params.latitude+','+this.params.longitude,
@@ -81,6 +107,7 @@ export default class Parameters{
     }
     return (foursquareParams);
     }
+
 
 
 
