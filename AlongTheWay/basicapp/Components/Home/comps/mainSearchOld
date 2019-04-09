@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TextInput, StyleSheet, Text, View, Keyboard, TouchableHighlight, TouchableOpacity,Button,Dimensions,ScrollView} from "react-native";
+import { TextInput, StyleSheet, Text, View, Keyboard, TouchableHighlight, TouchableOpacity,Button,Dimensions} from "react-native";
 import MapView, { Polyline, Marker,Callout } from "react-native-maps";
 import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
@@ -22,16 +22,17 @@ export default class SearchBar extends Component {
         super(props);
 
         this.state ={
-          inSearch: false,
           stopCount: 0,
-          focus: 1,
-          destination: [""],
+         destination: [""],
 
          predictions: [],
          pointCoords: [],
          };
 
-
+         this.onChangeDestinationDebounced = _.debounce(
+               this.onChangeDestination,
+               1000
+             );
 
               key = Config.getConfig().creds.key;
               url = Config.getConfig().url2;
@@ -57,12 +58,9 @@ export default class SearchBar extends Component {
             return { latitude: point[0], longitude: point[1] };
           });
         // console.log(pointCoords.length);
-       // const newCoordsArray = [...this.state.CoordsArray, pointCoords]
-       // this.props.CoordsArray
 
           this.setState({
             pointCoords,
-
             predictions: [],
             destination: destinationName
 
@@ -77,69 +75,95 @@ export default class SearchBar extends Component {
 
       }
 
-      onFocus(index){
-        this.setState({focus:index});
+    async onChangeDestination(destination) {
+
+        var onChangeDestination = url +"/place/autocomplete/json?key="+key+"&input="+destination+"&location="
+                                      +this.props.lat+","+this.props.long+"&radius="+2000;
+
+        try {
+         const json = await request(onChangeDestination);
+          this.setState({
+            predictions: json.predictions
+          });
+        //  console.log(json);
+        } catch (err) {
+          console.error(err);
+        }
       }
 
-        inSearch(){
-          this.setState( (previousState) => ({inSearch: !previousState.inSearch}) );
 
-        }
+
 
 
 
          render(){
-
-
             return(
 
             <View style = {styles.container}>
 
-               <SearchBarInput index = {1}
-                               inSearch = {this.state.inSearch}
-                               onFocus = {this.onFocus.bind(this)}
-                               focus = {this.state.focus}
+               <SearchBarInput
                                onSubmitEditing = {()=>{}}
                                lat = {this.props.lat}
                                long = {this.props.long}
-                               Search =  {this.inSearch.bind(this)}
                                                                            />
-               <SearchBarInput index = {2}
-                               inSearch = {this.state.inSearch}
-                               onFocus = {this.onFocus.bind(this)}
-                               focus = {this.state.focus}
-                               onSubmitEditing = {()=>{}}
-                               lat = {this.props.lat}
-                               long = {this.props.long}
-                               Search =  {this.inSearch.bind(this)}
-                                                                           />
-               <SearchBarInput index = {3}
-                               inSearch = {this.state.inSearch}
-                               onFocus = {this.onFocus.bind(this)}
-                               focus = {this.state.focus}
-                               onSubmitEditing = {()=>{}}
-                               lat = {this.props.lat}
-                               long = {this.props.long}
-                               Search =  {this.inSearch.bind(this)}
-                                                                           />
+
+
             </View>
-            );
+            )
 
 
          }
 
      }
 
+
+
 const styles = StyleSheet.create({
 
-container: {
-flex: 1,
-width: winWidth,
-height: winHeight,
-backgroundColor: 'lightblue'
-}
+
+
+
+    container: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "blue"
+
+      },
+    map: {
+        ...StyleSheet.absoluteFillObject
+      },
 
 
 });
 
+/// SearchBarInput backup
 
+       if(this.state.focused){
+                return(<View/>)
+
+              }
+    return(
+        <View>
+         <TextInput  value = {this.state.destination}
+                     placeholder="Enter destination..."
+                     style={styles.Stops}
+                     clearButtonMode= {"always"}
+                     onChangeText = {this.onChangeText.bind(this)}
+                     onSubmitEditing = {()=>{}}
+                     onFocus = {this.onFocus.bind(this)}
+                                                         />
+              {!this.state.predictions == [] ? this.state.predictions.map(prediction => {
+
+                    return(
+                     <Predictions
+                               onClick = {this.addStop.bind(this)}
+                               key = {prediction.id}
+                                     {...prediction}
+                                                                     />
+                            );})
+
+               :null}
+         </View>
+
+
+
+    );

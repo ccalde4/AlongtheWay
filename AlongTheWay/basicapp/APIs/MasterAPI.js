@@ -10,9 +10,9 @@ var searchParameters;
 var yelp;
 var foursquare;
 var venues;
-var distArray;
+
 var finalArray;
-var reviews;
+
 class MasterAPI {
 
     constructor(){
@@ -20,9 +20,9 @@ class MasterAPI {
         this.params;
         this.yelpParams;
         this.yelpReturn;
-
+        this.foursquareReturns;
+        this.foursquareParams;
         finalArray = [];
-        distArray = [];
         searchParameters = new Parameters();
         yelp = new Yelp();
         foursquare = new Foursquare();
@@ -38,20 +38,39 @@ class MasterAPI {
 
     async search(){
 
-    let yp = await searchParameters.getYelpParams();
+    //let yp = await searchParameters.getYelpParams();
     //console.log(this.yelpParams);
-    let tempYelp = await this.addProp(await yelp.search(yp),'yelp') ;
+    let tempYelp = await this.addFromProp(await yelp.search(searchParameters.getYelpParams()),'yelp') ;
     let changedYelp = await this.cloneObject(tempYelp);
-        if(tempYelp != null){
 
-        let details = await this.getDetails(changedYelp);
-        //let detailsAndReviews = await this.getReviews(details);
+    //console.log(tempYelp);
+    //console.log(changedYelp)
+    /*//let temp = addFromProp(tempYelp, yelp);
 
-        //console.log(details[0].reviews[0]);
+    //await console.log(tempYelp.businesses[9]);
+    //let tempYelpLength = await tempYelp.businesses.length;
+    //await console.log(tempYelpLength);
+    //this.yelpReturns =  tempYelp;
+    //let fp = await searchParameters.getFoursquareParams();
+    //console.log(fp);*/
+    //let tempFoursquare = await addFromProp( await foursquare.search(searchParameters.getFoursquareParams()), 'foursquare');
+    //console.log(tempFoursquare);
+    //this.foursquareReturns =  tempFoursquare;
+    //finalArray = tempYemp2.concat(tempFoursquare2);
+    //finalArray = (tempYelp.businesses).concat(tempFoursquare.response.venues);
+
+        let details = await this.getDetails(tempYelp);
         let uniformDetails = await this.makeUniform(details);
         return uniformDetails;
+     //  return tempYelp;
+    //let tempDetails = await this.getDetails(tempFoursquare);
+    //console.log(tempDetails);
+    //console.log(tempYelp.total);
 
-}
+    //finalPlacesArray = await this.removeDuplicates(tempYelp.concat(tempFoursquare), tempYelpLength);
+    //return (finalPlacesArray);
+
+    //console.log(tempFoursquare);
     }
 
     /*removeDuplicates(allResultsArray, breakPoint)
@@ -69,17 +88,14 @@ class MasterAPI {
     async getDetails(obj){
 
     for(let i = 0; i < obj.places.length; i++){
-   // console.log("in details");
+    console.log("in details");
         if(((obj.places)[i]).from === 'yelp'){
             let temp = await yelp.getDetails((obj.places)[i].id);
-            temp['reviews'] = (await yelp.getReviews((obj.places)[i].id)).reviews;
-           // console.log(temp.reviews);
             temp['from'] = 'yelp';
-
 
             //console.log("u r in get details");
             //console.log(temp);
-            finalArray[i]  = await temp;
+            finalArray[i]  = temp;
         }
         else if(obj.places[i].from === 'foursquare'){
              let temp = await foursquare.getDetails((obj.places)[i].id);
@@ -101,19 +117,16 @@ class MasterAPI {
 
        }
 
-
-
-    addProp(obj,from){
+    addFromProp(obj,from){
         if(from === 'yelp'){
             for(let i = 0; i < obj.businesses.length; i++){
                 (obj.businesses[i]).from = 'yelp';
-                distArray[i] = obj.businesses[i].distance;
-                //console.log(distArray[i]);
+                //console.log(obj.businesses[i]);
             }
 
         }
 
-        else if(from === 'foursquare'){
+        else if(from == 'foursquare'){
              for(let i = 0; i < obj.response.venues.length; i++){
                         (obj.response.venues)[i].from = 'foursquare';
                         //console.log((obj.response.venues)[i]);
@@ -144,21 +157,18 @@ class MasterAPI {
         //console.log(obj);
         var uniform = []
         for(let i = 0; i < obj.length; i++){
-            let place = this.cloneObject(obj[i]);
-            place['distance'] = distArray[i]/1609.34;
-            uniform[i] = await venues.makeUniformVenue(place);
-             console.log(uniform[i].distance);
-           // console.log(i);
-            // console.log(uniform[i].reviews[0].user.name);
-        }
+            uniform[i] = venues.makeUniformVenue(this.cloneObject(obj[i]));
 
+        }
         if(uniform !== null){
         return uniform;
         }
     }
 
 
-
+isEmpty(){
+return (this.params === null);
+}
 
 }
 export default MasterAPI;

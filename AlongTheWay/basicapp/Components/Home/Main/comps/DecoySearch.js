@@ -31,12 +31,13 @@ layout: {
 opacity: .9,
 justifyContent: 'center',
 paddingLeft: 10,
-width: 300,
+width: 340,
 height: 50,
 borderRadius: 50,
-//position: 'absolute',
-//top: 15,
+position: 'absolute',
+top: 15,
 backgroundColor: 'lightgray'
+
 }
 
 });

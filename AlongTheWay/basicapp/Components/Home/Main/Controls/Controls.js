@@ -25,59 +25,34 @@ export default class ControlBar extends Component {
          {/* // First five buttons displayed by default  */}
      <View style = {styles.row}>
 
-       <FilterButton label = 'Re Center'
-                     color = 'crimson'
-                     clicked = {this.props.onRedClick}   />
+                     <FilterButton label = 'Re Center'
+                                   color = 'crimson'
+                                   clicked = {this.props.onRedClick}   />
 
-       <FilterButton label = 'Food'
-                     color = 'darksalmon'
-                     clicked = {this.props.onFoodClick}
-                     isPressed = {this.props.food}      />
+                     <FilterButton label = 'Pizza'
+                                   color = 'darksalmon'
+                                   clicked = {this.props.onPizzaClick}
+                                   isPressed = {this.props.pizza}      />
 
-       <FilterButton label = 'Landmarks'
-                     color = 'darkkhaki'
-                     clicked = {this.props.onLandmarksClick}
-                     isPressed = {this.props.landmarks}     />
+                     <FilterButton label = 'Coffee'
+                                   color = 'darkkhaki'
+                                   clicked = {this.props.onCoffeeClick}
+                                   isPressed = {this.props.coffee}     />
 
-       <FilterButton label = 'Fetch Data'
-                     color = 'darkolivegreen'
-                     clicked = {this.props.onFetchClick}
-                     isPressed = {this.props.fetch}      />
+                     <FilterButton label = 'Fetch Data'
+                                   color = 'darkolivegreen'
+                                   clicked = {this.props.onFetchClick}
+                                   isPressed = {this.props.fetch}      />
 
-       <FilterButton label = ' More '
-                     color = 'teal'
-                     clicked = {this.onMoreClicked.bind(this)}
-                     isPressed = {this.props.more}       />
-
-
-
-       </View>
-
-        <View style = {styles.row}>
-
-              <FilterButton label = 'Local'
-                            color = 'crimson'
-                            clicked = {()=>{this.props.local}}   />
-
-              <FilterButton label = 'Shop'
-                            color = 'peachpuff'
-                            clicked = {this.props.onShopClick}
-                            isPressed = {this.props.shop}  />
-
-             <FilterButton label = 'Outdoors'
-                            color = 'lightcoral'
-                            clicked = {this.props.onOutdoorsClick}
-                            isPressed = {this.props.outdoors}   />
-
-              <FilterButton label = 'Nightlife'
-                             color = 'mediumaquamarine'
-                             clicked = {this.props.onNightlifeClick}
-                             isPressed = {this.props.nightlife}   />
+                     <FilterButton label = ' More '
+                                   color = 'teal'
+                                   clicked = {this.onMoreClicked.bind(this)}
+                                   isPressed = {this.props.more}       />
 
 
 
+                     </View>
 
-              </View>
 
 
            {/* //Conditional rendering of buttons to be displayed if More is clicked  */}
@@ -85,30 +60,30 @@ export default class ControlBar extends Component {
 
          <View style = {styles.row}>
 
-          <FilterButton label = 'Gas'
+          <FilterButton label = 'Burgers'
                         color = 'peachpuff'
-                        clicked = {this.props.onGasClick}
-                        isPressed = {this.props.gas}  />
+                        clicked = {this.props.onBurgerClick}
+                        isPressed = {this.props.burger}  />
 
-          <FilterButton label = 'Rest'
+          <FilterButton label = 'Chicken'
                         color = 'lightcoral'
-                        clicked = {this.props.onRestClick}
-                        isPressed = {this.props.rest}   />
+                        clicked = {this.props.onLocalClick}
+                        isPressed = {this.props.local}   />
 
-          <FilterButton label = 'Arts'
+          <FilterButton label = 'Parks'
                         color = 'mediumaquamarine'
-                        clicked = {this.props.onArtsClick}
-                        isPressed = {this.props.arts}   />
+                        clicked = {this.props.onParksClick}
+                        isPressed = {this.props.parks}   />
 
-          <FilterButton label = 'Medical'
+          <FilterButton label = 'Review'
                         color = 'paleturquoise'
-                        clicked = {this.props.onMedicalClick}
-                        isPressed = {this.props.medical}    />
+                        clicked = {this.props.onCornClick}
+                        isPressed = {this.props.corn}    />
 
           <FilterButton label = 'Options'
                         color = 'peru'
-                        clicked = {this.props.onOptionsClick}
-                        isPressed = {this.props.options} />
+                        clicked = {this.props.onBurritoClick}
+                        isPressed = {this.props.burrito} />
 
         </View>
 

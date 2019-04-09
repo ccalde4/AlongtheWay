@@ -46,7 +46,7 @@ phoneSearch(phoneNum){
 
     }*/
  search(obj){
-    //console.log(obj);
+    console.log(obj);
     var config = Config.getConfig();
     var urlString = config.apiUrl + "/search?" + querystring.stringify(obj);
     var headers =  {
@@ -70,7 +70,6 @@ phoneSearch(phoneNum){
    }
 
    getReviews(place_id){
-  // console.log("in yelp reviews");
    var config = Config.getConfig();
           var urlString = config.apiUrl + "/" + place_id +"/reviews";
           var headers =  {

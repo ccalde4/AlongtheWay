@@ -1,7 +1,11 @@
 import * as RNFS from 'react-native-fs';
+//import Files2 from './Files2';
+
 
 export default class File {
 constructor(){
+
+
 var RNFS = require('react-native-fs');
 }
 
@@ -10,13 +14,8 @@ var RNFS = require('react-native-fs');
 
   createFile(file, content){
     var path = RNFS.DocumentDirectoryPath + file;
-    RNFS.writeFile(path, content, 'utf8')
-     .then((success) => {
-      // console.log('FILE WRITTEN!');
-      })
-     .catch((err) => {
-       console.log(err.message);
-     });
+   return RNFS.writeFile(path, content, 'utf8')
+
 
   }
 
@@ -24,14 +23,8 @@ var RNFS = require('react-native-fs');
 
     var path = RNFS.DocumentDirectoryPath + file;
 
-    return RNFS.unlink(path)
-        .then(() => {
-          console.log('FILE DELETED');
-        })
-        // `unlink` will throw an error, if the item to unlink does not exist
-        .catch((err) => {
-          console.log(err.message);
-        });
+    return RNFS.unlink(path);
+
   }
 
 
@@ -42,19 +35,14 @@ var RNFS = require('react-native-fs');
 
     fileRead(path){
         var filepath = RNFS.DocumentDirectoryPath + path;
-        console.log('Read File');
+
         return RNFS.readFile(filepath,'utf8');
     }
 
     fileWrite(path,content){
         var filepath = RNFS.DocumentDirectoryPath + path;
-        RNFS.writeFile(filepath,content)
-            .then((success) => {
-            //   console.log('FILE WRITTEN!');
-            })
-            .catch((err) => {
-            console.log(err.message);
-            });
+        return  RNFS.writeFile(filepath,content)
+
 
 
 

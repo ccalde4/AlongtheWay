@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet, Dimensions,TouchableOpacity} from 'react-native';
 import MapView, {Marker,Circle, Animated,Callout,Polyline} from 'react-native-maps';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import mapstyle1 from './styles/mapstyle1';
 import mapstyle2 from './styles/mapstyle2';
 import mapstyle3 from './styles/mapstyle3';
@@ -11,16 +10,14 @@ const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-   let i = 0;
+
   export default class MapGui extends Component {
     constructor(props){
     super(props);
     this.state = {
-
     markerClicked: false,
-    Color: ["red","lightblue","blue"]
     }
-  //  console.log("file:///data/user/0/com.alongtheway/cache/7udede_15@2.625x.png");
+
    // this.handlePress = this.handlePress.bind(this);
     }
 
@@ -36,11 +33,6 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
        if(this.props.polyline!==newProps.polyline){
          return true;
        }
-       if(this.props.dist!==newProps.dist){
-                return true;
-              }
-
-
 
    if(this.props.render!==newProps.render){
      return true;
@@ -60,8 +52,6 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
    }
    fitMap(){
       if(this.props.polyline){
-
-
     return this.map.fitToCoordinates(this.props.polyline);
     }
     else{
@@ -72,10 +62,12 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
    render(){
    console.log("I rendered!!! at MapGui");
    //console.log(this.props.polyline);
-
+     if(this.props.polyline){
+       // this.fitMap();
+     }
 
    return(
-      <MapView    onLayout = {()=>{}}
+      <MapView    onLayout = {this.fitMap.bind(this)}
                   ref = {(map)=>{this.map = map}}
                   mapType = {this.props.mapsType}
                   provider = {'google'}
@@ -100,48 +92,20 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
         <Marker
                         coordinate = {this.props.polyline[this.props.polyline.length-1]}
                         title = {'Destination'}
-                        pinColor = {"purple"}
-             >
-               <Icon name = "map-pin" size = {40} color = "orange"/>
-             </Marker>
+                        pinColor = {'blue'}
+
+
+             />
+
 
        :null}
-
-
-
-
-
-       {/* this.props.dist  ? this.props.dist.map((item,index)=>{ return(
-
-            <Circle                 key = {index}
-                                    center = {item}
-                                    radius = {40000}
-                                    strokeColor = { 'lightgray' }
-                                    fillColor = { 'rgba(230,238,255,0.5)' }
-
-                         />
-
-       )
-
-       })
-
-       :null */}
-       { this.props.dist ? this.props.dist.map((item,index)=>{ return(
-
-                   <Marker                 tracksViewChanges = {false}
-                                           key = {index}
-                                           coordinate = {item}
-                                           title = {""+index}
-                                           pinColor = {'green'}
-
-                                >
-                     <Icon name = "map-pin" size = {17} color = "orange"/>
-                   </Marker>
-              )
-
-              })
-
-              :null}
+       { this.props.polyline ? <Polyline
+                                      coordinates={this.props.polyline}
+                                      strokeWidth={4}
+                                       strokeColor="lightblue"
+                       />
+                       : null
+       }
        <Circle
                  center = {{latitude: this.props.lat,
                             longitude: this.props.long }}
@@ -150,13 +114,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
                  fillColor = { 'rgba(230,238,255,0.5)' }
 
        />
-           { this.props.polyline ? <Polyline            onLayout = {this.fitMap.bind(this)}
-                                                        coordinates={this.props.polyline}
-                                                        strokeWidth={4}
-                                                        strokeColor="blue"
-                                         />
-                                         : null
-                         }
+
 
 
          {
@@ -218,3 +176,14 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
   });
+//polyline multiple
+{ this.props.polyline ?
+            this.props.polyline.map((Coords, index)=>
+       <Polyline
+                                     index={index}
+                                     coordinates={Coords}
+                                     strokeWidth={4}
+                                     strokeColor={this.state.Color[i++]}
+                       />)
+                       : null
+       }
