@@ -37,6 +37,7 @@ borderRadius: 50,
 //position: 'absolute',
 //top: 15,
 backgroundColor: 'lightgray'
+
 }
 
 });

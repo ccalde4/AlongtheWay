@@ -39,8 +39,9 @@ class MasterAPI {
     async search(){
 
     let yp = await searchParameters.getYelpParams();
-    //console.log(this.yelpParams);
+    console.log(yp);
     let tempYelp = await this.addProp(await yelp.search(yp),'yelp') ;
+    console.log(tempYelp);
     let changedYelp = await this.cloneObject(tempYelp);
         if(tempYelp != null){
 
@@ -51,7 +52,7 @@ class MasterAPI {
         let uniformDetails = await this.makeUniform(details);
         return uniformDetails;
 
-}
+    }
     }
 
     /*removeDuplicates(allResultsArray, breakPoint)
@@ -102,7 +103,7 @@ class MasterAPI {
        }
 
 
-
+    //add try catch to catch when no places can be found
     addProp(obj,from){
         if(from === 'yelp'){
             for(let i = 0; i < obj.businesses.length; i++){

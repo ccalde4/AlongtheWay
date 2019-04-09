@@ -107,7 +107,8 @@ export default class Venues{
                            rating : obj.response.venue.rating,
 
                            categories : obj.categories,
-                           reviews : obj.reviews,
+                           reviews :  obj.reviews,
+
                            from : 'foursquare',
                            }
 

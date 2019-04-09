@@ -1,0 +1,169 @@
+import React, { Component } from "react";
+import { TextInput, StyleSheet, Text, View, Keyboard, TouchableHighlight, TouchableOpacity,Button,Dimensions} from "react-native";
+import MapView, { Polyline, Marker,Callout } from "react-native-maps";
+import _ from "lodash";
+import PolyLine from "@mapbox/polyline";
+import request from '../../APIs/_lib/request';
+import Config from '../../APIs/Google/config/config';
+import SearchBarInput from './comps/SearchBarInput';
+import MoreStops from './comps/MoreStop';
+import Predictions from './comps/Predictions';
+var { winHeight, winWidth } = Dimensions.get('window');
+var key;
+var url;
+export default class SearchBar extends Component {
+
+       sendBack(){
+        this.props.sendBack(this.state.destination);
+
+       }
+
+        constructor(props){
+        super(props);
+
+        this.state ={
+          stopCount: 0,
+         destination: [""],
+
+         predictions: [],
+         pointCoords: [],
+         };
+
+         this.onChangeDestinationDebounced = _.debounce(
+               this.onChangeDestination,
+               1000
+             );
+
+              key = Config.getConfig().creds.key;
+              url = Config.getConfig().url2;
+         }
+     addStop(destinationPlaceId,destinationName){
+     let x = this.state.destination;
+     x[this.state.stopCount] = destinationName;
+     this.setState({destination:x});
+     this.setState({predictions:[]});
+
+     }
+
+
+    async getRouteDirections(destinationPlaceId, destinationName) {
+       var getRoute =  url +  "/directions/json?origin=" + this.props.lat+","
+                                    +this.props.long+"&destination=place_id:"+destinationPlaceId+"&key="+key;
+        try {
+          const json =  await request(getRoute);
+
+          const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+
+          const pointCoords = points.map(point => {
+            return { latitude: point[0], longitude: point[1] };
+          });
+        // console.log(pointCoords.length);
+
+          this.setState({
+            pointCoords,
+            predictions: [],
+            destination: destinationName
+
+          });
+
+          Keyboard.dismiss();
+          this.props.polyline(pointCoords);
+
+        } catch (error) {
+          console.error(error);
+        }
+
+      }
+
+    async onChangeDestination(destination) {
+
+        var onChangeDestination = url +"/place/autocomplete/json?key="+key+"&input="+destination+"&location="
+                                      +this.props.lat+","+this.props.long+"&radius="+2000;
+
+        try {
+         const json = await request(onChangeDestination);
+          this.setState({
+            predictions: json.predictions
+          });
+        //  console.log(json);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+
+
+
+
+
+         render(){
+            return(
+
+            <View style = {styles.container}>
+
+               <SearchBarInput
+                               onSubmitEditing = {()=>{}}
+                               lat = {this.props.lat}
+                               long = {this.props.long}
+                                                                           />
+
+
+            </View>
+            )
+
+
+         }
+
+     }
+
+
+
+const styles = StyleSheet.create({
+
+
+
+
+    container: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "blue"
+
+      },
+    map: {
+        ...StyleSheet.absoluteFillObject
+      },
+
+
+});
+
+/// SearchBarInput backup
+
+       if(this.state.focused){
+                return(<View/>)
+
+              }
+    return(
+        <View>
+         <TextInput  value = {this.state.destination}
+                     placeholder="Enter destination..."
+                     style={styles.Stops}
+                     clearButtonMode= {"always"}
+                     onChangeText = {this.onChangeText.bind(this)}
+                     onSubmitEditing = {()=>{}}
+                     onFocus = {this.onFocus.bind(this)}
+                                                         />
+              {!this.state.predictions == [] ? this.state.predictions.map(prediction => {
+
+                    return(
+                     <Predictions
+                               onClick = {this.addStop.bind(this)}
+                               key = {prediction.id}
+                                     {...prediction}
+                                                                     />
+                            );})
+
+               :null}
+         </View>
+
+
+
+    );

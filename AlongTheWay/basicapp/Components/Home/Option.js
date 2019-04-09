@@ -84,9 +84,9 @@ constructor(props){
 
                   <Slider
                    style={{ width: 400 }}
-                   step={10}
-                   minimumValue={50}
-                   maximumValue={5000}
+                   step={0.5}
+                   minimumValue={0}
+                   maximumValue={25}
                    value={this.state.radius}
                    onValueChange={(val)=>{this.updateRadius(val)}}
                   />
@@ -240,7 +240,7 @@ constructor(props){
 
 
 
-      this.props.onRadiusChange(this.state.radius);
+      this.props.onRadiusChange(Number((this.state.radius*1609.34).toFixed(0)));
 
       if(this.state.index==0){
             this.props.onMapChange('standard');

@@ -4,7 +4,7 @@ import firebase from 'react-native-firebase';
 import Main from './Home/Main/Main';
 import SearchBar from './Home/SearchBar';
 import Options from './Home/Option';
-import ReviewForm from './Home/ReviewForm';
+
 import Save from  '../utils/AutoSave';
 import files from '../utils/Files';
 import Initialize from '../utils/Initialize';
@@ -65,13 +65,13 @@ export default class App extends Component {
         initialized : false,
         isSearching : false,
         inOptions: false,
-        isReviewing: false,
+
         latitude: null,
         longitude: null,
-        radius: 1000,
+        radius: 1609,
         polyline: null,
         desc: "",
-        reviews: [],
+
         mapsType: 'standard',
         close: false
      }
@@ -112,18 +112,10 @@ export default class App extends Component {
        }
 
          //toggle for review page, passed to ControlBar through Main and called by a button
-       onReview(){
-       this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
-       }
+
 
          //function for adding reviews to reviews array, passed to ReviewForm and called by enter button
-       addReview(userReview){
 
-         this.state.reviews.push(userReview);
-          console.log(this.state.reviews);
-         // this.onReview();
-         this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
-         }
        goTo(item){
         console.log(item)
        }
@@ -158,16 +150,13 @@ export default class App extends Component {
            if(this.state.inOptions)
            {
            return( <Options onRadiusChange = {this.onRadiusChange.bind(this)}
-                            radius = {this.state.radius}
+                            radius = {Number((this.state.radius/1609.34).toFixed(1))}
                             onMapChange = {(map)=>{this.onMapChange(map)}}
                             inOptions = {this.inOptions.bind(this)} />)
 
           }
-             //returns ReviewForm if true
-          if(this.state.isReviewing)
-          {
-             return( <ReviewForm addReview = {(userReview) => {this.addReview(userReview)}}/> );
-          }
+
+
               //return SearchBar view if true
           if(this.state.isSearching)
           {
@@ -192,7 +181,7 @@ export default class App extends Component {
                           mapsType = {this.state.mapsType}
                           desc = {this.state.desc}
                           close = {this.fakeClose.bind(this)}
-                          onReview = {this.onReview.bind(this)}/>);
+                          />);
 
 
 

@@ -10,13 +10,12 @@ const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-let i = 0;
+
   export default class MapGui extends Component {
     constructor(props){
     super(props);
     this.state = {
     markerClicked: false,
-    Color: ["red","blue","black","green"]
     }
 
    // this.handlePress = this.handlePress.bind(this);
@@ -34,6 +33,8 @@ let i = 0;
        if(this.props.polyline!==newProps.polyline){
          return true;
        }
+      // if(this.props.markers !== newProps.markers){
+       //return true}
 
    if(this.props.render!==newProps.render){
      return true;
@@ -92,14 +93,11 @@ let i = 0;
 
 
        :null}
-       { this.props.polyline ?
-       this.props.polyline.map((pointCoords, index) =>
-                <MapView.Polyline
-                         index={index}
-                         coordinates={pointCoords}
+       { this.props.polyline ?<Polyline
+                         coordinates={this.props.polyline}
                          strokeWidth={4}
-                         strokeColor={this.state.Color[i++]}
-                       /> )
+                         strokeColor="red"
+                       />
                        : null
        }
        <Circle

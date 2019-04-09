@@ -1,0 +1,159 @@
+const SearchBarInput =({value,onChangeText,onSubmitEditing}) => (
+                            <View>
+                              <TextInput
+                                   placeholder="Enter destination..."
+                                   style={styles.Stops}
+                                   value={value}
+                                   clearButtonMode="always"
+                                   onChangeText = {onChangeText}
+                                   onSubmitEditing = {onSubmitEditing}
+                              />
+
+                            </View>
+                               );
+
+
+ //
+
+ render(){
+             return(
+
+             <View style = {styles.container}>
+               <View style = {styles.map}/>
+                <SearchBarInput value = {this.state.destination[0]}
+                                display = {this.state.destination}
+                                onChangeText = {this.onChangeText.bind(this)}
+                                onSubmitEditing = {()=>{}}
+                                                                            />
+
+
+               {!this.state.predictions == [] ? this.state.predictions.map(prediction => {
+
+                    return(
+                     <Predictions
+                               onClick = {this.addStop.bind(this)}
+                               key = {prediction.id}
+                                     {...prediction}
+                                                                     />
+                            );})
+
+               :null}
+
+                <TouchableHighlight  style = {styles.GO}
+                                     onPress = {this.props.onSearch}
+                                                                       >
+                       <Text> GO </Text>
+                </TouchableHighlight>
+             </View>
+             )
+
+
+          }
+
+    //
+
+
+     onChangeText(text){
+            this.onChangeDestinationDebounced(text);
+
+            let x = this.state.destination
+            x[this.state.stopCount] = text;
+            this.setState({ destination:x });
+            }
+
+
+
+
+
+            const styles = StyleSheet.create({
+               Go:{
+               width: 50,
+               height: 50
+
+               },
+                stopButton: {
+                 backgroundColor: "white",
+                 marginTop: 15,
+                 margin: 10,
+                 padding: 15,
+                 fontSize: 20,
+                 paddingLeft: 10,
+                 paddingRight: 10,
+                 borderRadius: 15,
+                 textDecorationColor: "red"
+                },
+
+                bottomButton: {
+                    backgroundColor: "white",
+                    marginTop: 50,
+                    margin: 20,
+                    padding: 15,
+                    fontSize: 30,
+                    paddingLeft: 30,
+                    paddingRight: 30,
+                    borderRadius: 10,
+                    alignSelf: "center"
+                },
+
+               suggestions: {
+                  backgroundColor: "white",
+                  padding: 5,
+                  fontSize: 18,
+                  borderWidth: 0.5,
+                  marginLeft: 5,
+                  marginRight: 5
+                },
+                suggestionsTwo: {
+                backgroundColor: "white",
+                padding: 5,
+                fontSize: 18,
+                borderWidth: 0.5,
+                marginLeft: 5,
+                marginRight: 5
+               },
+                destinationInput: {
+                  height: 40,
+                  borderWidth: 0.5,
+                  marginTop: 50,
+                  borderRadius: 10,
+                  marginLeft: 5,
+                  marginRight: 5,
+                  padding: 5,
+                  backgroundColor: "white"
+                },
+                Stops: {
+                 height: 40,
+                 borderWidth: 0.5,
+                 marginTop: 10,
+                 borderRadius: 10,
+                 marginLeft: 5,
+                 marginRight: 5,
+                 padding: 5,
+                 backgroundColor: "white"
+                },
+                container: {
+                    ...StyleSheet.absoluteFillObject
+                  },
+                map: {
+                    ...StyleSheet.absoluteFillObject
+                  },
+                popup:{
+                  flex: 0.75,
+                  flexDirection: 'row',
+                  backgroundColor: 'white',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+
+                 },
+
+                insideOfPopup:{
+                flex: 0.8,
+
+                       },
+                nameText:{
+                color: 'black',
+                fontSize: 24,
+                fontWeight: 'bold',
+                }
+
+            });
