@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import FilterButton from './comps/FilterButton';
-
+import BottomDrawer from 'rn-bottom-drawer';
 
 export default class ControlBar extends Component {
    constructor(props){
@@ -20,7 +20,12 @@ export default class ControlBar extends Component {
 
   render() {
     return (
+<BottomDrawer
+               containerHeight={350}
+               offset={10}
+               startUp = {false}
 
+             >
     <View style ={styles.layout} >
          {/* // First five buttons displayed by default  */}
      <View style = {styles.row}>
@@ -57,7 +62,8 @@ export default class ControlBar extends Component {
 
               <FilterButton label = 'Local'
                             color = 'crimson'
-                            clicked = {()=>{this.props.local}}   />
+                            clicked = {this.props.onLocalClick}
+                            isPressed = {this.props.local}/>
 
               <FilterButton label = 'Shop'
                             color = 'peachpuff'
@@ -74,21 +80,13 @@ export default class ControlBar extends Component {
                              clicked = {this.props.onNightlifeClick}
                              isPressed = {this.props.nightlife}   />
 
+              <FilterButton label = 'Gas'
+                                     color = 'peachpuff'
+                                     clicked = {this.props.onGasClick}
+                                     isPressed = {this.props.gas}  />
+    </View>
+<View style = {styles.row}>
 
-
-
-              </View>
-
-
-           {/* //Conditional rendering of buttons to be displayed if More is clicked  */}
-        {this.state.isMoreClicked ?
-
-         <View style = {styles.row}>
-
-          <FilterButton label = 'Gas'
-                        color = 'peachpuff'
-                        clicked = {this.props.onGasClick}
-                        isPressed = {this.props.gas}  />
 
           <FilterButton label = 'Rest'
                         color = 'lightcoral'
@@ -111,12 +109,8 @@ export default class ControlBar extends Component {
                         isPressed = {this.props.options} />
 
         </View>
-
-       : null}
-
-
-     </View>
-
+        </View>
+    </BottomDrawer>
 
     );
   }
@@ -132,8 +126,9 @@ justifyContent: 'space-around',
 alignItems: 'center',
 width: 420,
 height: 150,
-position: 'absolute',
+//position: 'absolute',
 bottom: 20,
+top: 10,
 
 },
 row: {

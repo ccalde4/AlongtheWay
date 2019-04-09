@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { ButtonGroup, Header, Button, Overlay, Divider, Rating, ListItem } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TouchableOpacity, Text, View,StyleSheet,Keyboard, Dimensions,ActivityIndicator,PermissionsAndroid,Alert} from 'react-native';
-import ControlBar from './Controls/Controls2';
+import ControlBar from './Controls/Controls';
 import MapGui from './Map/Map';
 import DecoySearch from './comps/DecoySearch';
 
