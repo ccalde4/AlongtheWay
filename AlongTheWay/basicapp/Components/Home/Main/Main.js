@@ -68,11 +68,11 @@ export default class Main extends Component {
         async setLatLong(){
 
 
-                for(let i = 0; i < dist.length; i++){
+                for(let i = 0; i < this.state.dist.length; i++){
 
                     let x = this.state.params;
-                    x.latitude = dist[i].latitude;
-                    x.longitude = dist[i].longitude;
+                    x.latitude = this.state.dist[i].latitude;
+                    x.longitude = this.state.dist[i].longitude;
                     this.setState({params:x})
 
                     masterAPI.setParams(this.state.params);
@@ -80,14 +80,15 @@ export default class Main extends Component {
                     let y = await masterAPI.search();
 
                     if(y !== -1){
-
-                     itemsWithoutDetails.push(y);
-
+                    let z = this.state.itemsWithoutDetails;
+                    z = z.push(y);
+                    this.setState({itemsWithoutDetails: z});
+                                          console.log("z"+z.length);
                     }
 
                     else{
 
-                    this.setState({throwAlert: true});
+                 //   this.setState({throwAlert: true});
 
                     }
 
@@ -182,7 +183,10 @@ export default class Main extends Component {
          }
 
          onMoreClicked(){
+           this.setLatLong();
            this.setState( (previousState) => ({moreClicked: !previousState.moreClicked}) );
+                console.log(this.state.itemsWithoutDetails.length);
+                console.log(this.state.items.length);
 
          }
 
