@@ -4,7 +4,7 @@ import {StyleSheet,TouchableOpacity,Text} from 'react-native';
  const MoreStops = ({text,onPress}) =>(
 
                     <TouchableOpacity style = {styles.stopButton}
-                                      onPress = {() =>{}}
+                                      onPress = {onPress}
                     >
                           <Text style = {styles.text}>  {text} </Text>
                     </TouchableOpacity>

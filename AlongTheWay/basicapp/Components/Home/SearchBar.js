@@ -1,26 +1,16 @@
 import React, { Component } from "react";
-import {
-  TextInput,
-  StyleSheet,
-  Text,
-  View,
-  Keyboard,
-  TouchableHighlight,
-  TouchableOpacity
-} from "react-native";
+import { TextInput, StyleSheet, Text, View, Keyboard, TouchableHighlight, TouchableOpacity,Button,Dimensions,ScrollView} from "react-native";
 import MapView, { Polyline, Marker,Callout } from "react-native-maps";
 import _ from "lodash";
-import Button from 'react-native';
 import PolyLine from "@mapbox/polyline";
 import request from '../../APIs/_lib/request';
 import Config from '../../APIs/Google/config/config';
 import SearchBarInput from './comps/SearchBarInput';
 import MoreStops from './comps/MoreStop';
 import Predictions from './comps/Predictions';
-var dest = "";
+var { winHeight, winWidth } = Dimensions.get('window');
 var key;
 var url;
-var stopCount;
 export default class SearchBar extends Component {
 
        sendBack(){
@@ -30,262 +20,189 @@ export default class SearchBar extends Component {
 
         constructor(props){
         super(props);
+
         this.state ={
-         stopCount: 0,
-         error: "",
-         latitude: 0,
-         longitude: 0,
-         destination: "",
-         destinations: [],
-         predictions: [],
-         pointCoords: [],
-
-         lat: 0,
-         long: 0
-
+          inSearch: false,
+          stopCount: 0,
+          focus: 0,
+          force: false,
+          destination: [" "],
+          destinationId:[" "],
+          predictions: [],
+          pointCoords: [],
+          CoordsArray: [],
          };
-         this.onChangeDestinationDebounced = _.debounce(
-               this.onChangeDestination,
-               1000
-             );
 
               key = Config.getConfig().creds.key;
               url = Config.getConfig().url2;
          }
 
-          componentDidMount() {
 
-           //  this.setState({
-               //                 latitude: this.props.latitude,
-               //                 longitude: this.props.longitude
-              //                });
-           }
+     addStop(destinationPlaceId,destinationName){
+          let x = this.state.destination;
+          x[this.state.stopCount] = destinationName;
+          this.setState({destination:x});
+          this.setState({predictions:[]});
 
-    async getRouteDirections(destinationPlaceId, destinationName) {
-       var getRoute =  url +  "/directions/json?origin=" + this.props.lat+","
-                                    +this.props.long+"&destination=place_id:"+destinationPlaceId+"&key="+key;
-        try {
+     }
 
+
+
+      onFocus(index){
+        this.setState({focus:index});
+      }
+
+      inSearch(){
+          this.setState( (previousState) => ({inSearch: !previousState.inSearch}) );
+        }
+
+
+       updateDestinations(index,destId,destName){
+           let x = this.state.destinationId;
+           x[index] = destId;
+           this.setState({destinationId:x});
+
+           let y = this.state.destination;
+           y[index] = destName;
+           this.setState({destination:y});
+
+        }
+       removeDestination(index){
+           let x = this.state.destinationId;
+           x[index] = " ";
+           // x = x.splice(index,1);
+           this.setState({destinationId:x});
+
+           let y = this.state.destination;
+           y[index] = " ";
+          // y = y.splice(index);
+           this.setState({destination:y});
+
+
+         }
+       addSearchBar(){
+                   if(this.state.destination[this.state.destination.length-1]=== " "){
+                      return;
+                   }
+                   let x = this.state.destinationId;
+                   x.push(" ");
+                   this.setState({destinationId:x});
+
+                   let y = this.state.destination;
+                   y.push(" ");
+                   this.setState({destination:y});
+                   this.setState( (previousState) => ({force: !previousState.force}) );
+
+                  }
+
+       async  getRoute(){
+            var waypoints = "place_id:"+this.state.destinationId[0];
+            for(let i = 1; i<this.state.destinationId.length-1; i++){
+                if(this.state.destinationId[i] ===" "){
+                   continue;
+                }
+                else{
+                       waypoints += "|" + "place_id:" + this.state.destinationId[i]
+                }
+             }
+             var end = this.state.destinationId[this.state.destinationId.length-1];
+            //  console.log(waypoints);
+
+
+           try {
+           let getRoute =  url +  "/directions/json?origin=" + this.props.lat+","+this.props.long+
+                  "&destination=place_id:"+end+"&waypoints="+waypoints+"&key="+key;
+          // console.log(destination);
           const json =  await request(getRoute);
-        //  console.log(json);
-
+         // console.log(json);
           const points = PolyLine.decode(json.routes[0].overview_polyline.points);
-
           const pointCoords = points.map(point => {
             return { latitude: point[0], longitude: point[1] };
-          });
-              console.log(pointCoords);
-              this.props.polyline(pointCoords);
+           });
 
-          this.setState({
-            pointCoords,
-            predictions: [],
-            destination: destinationName
+         //  console.log(pointCoords);
+           this.props.polyline(pointCoords);
+           this.props.onSearch();
 
-          });
-          Keyboard.dismiss();
-         // this.map.fitToCoordinates(pointCoords);
+
         } catch (error) {
           console.error(error);
         }
-      }
 
 
-    async onChangeDestination(destination) {
+         }
 
 
-        var onChangeDestination = url +"/place/autocomplete/json?key="+key+"&input="+destination+"&location="
-                                      +this.props.lat+","+this.props.long+"&radius="+2000;
-
-
-
-
-        try {
-         const json = await request(onChangeDestination);
-          this.setState({
-            predictions: json.predictions
-          });
-        //  console.log(json);
-        } catch (err) {
-          console.error(err);
-        }
-      }
-
-
-          incrStopCount(){
-          let l = this.state.stopCount+1;
-          this.setState({stopCount:l,predictions:[]});
-         // this.predictionClick();
-          }
-
-          predictionClick(place_id,description){
-
-           this.getRouteDirections(
-                           place_id,
-                           description
-                         );
-
-            //  this.incrStopCount();
-
-          }
-
-          onChangeText(text){
-           this.dest = text;
-           console.log(this.dest);
-            this.onChangeDestinationDebounced(text);
-            this.setState({ destination:text });
-
-          }
 
 
          render(){
+
+          // console.log("!"+this.state.destination[0]+"1");
             return(
-              <View style = {styles.container}>
-              <View style = {styles.map}/>
-               <SearchBarInput value = {this.test}
-                               onChangeText = {this.onChangeText.bind(this)}
-                               onSubmitEditing = {()=>{}}
-                                                                           />
-              {this.state.stopCount>0 ?
 
-               <SearchBarInput value = {this.test}
-                                             onChangeText = {this.onChangeText.bind(this)}
-                                             onSubmitEditing = {()=>{}}
-                                                                                         />
+            <View style = {styles.container}>
 
+                  { this.state.destination.map((item,index)=>{
+                     let starter;
+                     if(index ==0){
+                        starter = true;
+                     }else{
+                         starter = false;
+                     }
 
-              :null}
-              {!this.state.predictions == [] ? this.state.predictions.map(prediction => {
+                  return(
 
-                   return(
-                    <Predictions
-                              onClick = {this.predictionClick.bind(this)}
-                              key = {prediction.id}
-                                    {...prediction}
-                                                                    />
-                           )
-                         }
-                        )
-
-
-
-              :null}
-           {/*   {this.state.stopCount==1 ? <MoreStops text = {"Add Stop"}     />: null}
-              {this.state.stopCount==2 ? <MoreStops text = {"Remove Stop"} /> : null}
-              */}
-
-                                  <TouchableHighlight
-                                  style = {styles.GO}
-                                          onPress = {this.props.onSearch}
-                                  >
-                                        <Text> GO </Text>
-                                  </TouchableHighlight>
-                   </View>
-            )
+                   <SearchBarInput start = {starter}
+                                   name = {this.state.destination[index]}
+                                   key = {index}
+                                   index = {index}
+                                   add = {this.updateDestinations.bind(this)}
+                                   remove = {this.removeDestination.bind(this)}
+                                   inSearch = {this.state.inSearch}
+                                   onFocus = {this.onFocus.bind(this)}
+                                   focus = {this.state.focus}
+                                   onSubmitEditing = {()=>{}}
+                                   lat = {this.props.lat}
+                                   long = {this.props.long}
+                                   Search =  {this.inSearch.bind(this)}
+                                                                                                       />)
 
 
+                   }) }
+
+                  { !this.state.inSearch && this.state.destination[this.state.destination.length-1] !== " "?
+                      <MoreStops text = {"Add a stop"}
+                                 onPress = {this.addSearchBar.bind(this)}  /> : null}
+
+
+                  {this.state.destination.length>=1&&!this.state.inSearch &&
+                                                     this.state.destination[this.state.destination.length-1] !== " " ?
+
+                       <MoreStops text = {"Go"}
+                                  onPress = {this.getRoute.bind(this)}  /> : null}
+
+                     { !this.state.inSearch ?
+                        <MoreStops text = {"Cancel"}
+                                   onPress = {this.props.onSearch}  /> : null}
+
+
+            </View>
+            );
 
 
          }
 
      }
 
-
-
 const styles = StyleSheet.create({
-   Go:{
-   width: 50,
-   height: 50
 
-   },
-    stopButton: {
-            backgroundColor: "white",
-                    marginTop: 15,
-                    margin: 10,
-                    padding: 15,
-                    fontSize: 20,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                    borderRadius: 15,
-                    textDecorationColor: "red"
+container: {
+flex: 1,
+width: winWidth,
+height: winHeight,
+backgroundColor: 'lightblue'
+}
 
-        },
-
-    bottomButton: {
-        backgroundColor: "white",
-        marginTop: 50,
-        margin: 20,
-        padding: 15,
-        fontSize: 30,
-        paddingLeft: 30,
-        paddingRight: 30,
-        borderRadius: 10,
-        alignSelf: "center"
-    },
-
-   suggestions: {
-      backgroundColor: "white",
-      padding: 5,
-      fontSize: 18,
-      borderWidth: 0.5,
-      marginLeft: 5,
-      marginRight: 5
-    },
-    suggestionsTwo: {
-          backgroundColor: "white",
-          padding: 5,
-          fontSize: 18,
-          borderWidth: 0.5,
-          marginLeft: 5,
-          marginRight: 5
-        },
-    destinationInput: {
-      height: 40,
-      borderWidth: 0.5,
-      marginTop: 50,
-      borderRadius: 10,
-      marginLeft: 5,
-      marginRight: 5,
-      padding: 5,
-      backgroundColor: "white"
-    },
-    Stops: {
-          height: 40,
-          borderWidth: 0.5,
-          marginTop: 10,
-          borderRadius: 10,
-          marginLeft: 5,
-          marginRight: 5,
-          padding: 5,
-          backgroundColor: "white"
-        },
-    container: {
-        ...StyleSheet.absoluteFillObject
-      },
-    map: {
-        ...StyleSheet.absoluteFillObject
-      },
-    popup:{
-           flex: 0.75,
-           flexDirection: 'row',
-           backgroundColor: 'white',
-          // borderRadius: 30,
-          // height: winHeight,
-          //width: winWidth,
-           justifyContent: 'center',
-           alignItems: 'center'
-
-           },
-
-    insideOfPopup:{
-           flex: 0.8,
-
-           },
-    nameText:{
-                   color: 'black',
-                    fontSize: 24,
-                    fontWeight: 'bold',
-                    }
 
 });
 

@@ -9,7 +9,7 @@ const FilterButton = ({clicked,label,isPressed,color})=>(
 
             <TouchableOpacity onPress = {clicked}>
 
-             <View style ={{alignItems: 'center', borderRadius: 30, width: 30, height: 30, backgroundColor: color}} >
+             <View style ={{alignItems: 'center', borderRadius: 50, width: 50, height: 50, backgroundColor: color}} >
                  { isPressed ? <View style ={styles.checked}/> : <View style ={styles.unchecked}/>}
               </View>
 
@@ -33,15 +33,15 @@ const FilterButton = ({clicked,label,isPressed,color})=>(
 )
 const styles = StyleSheet.create({
 unchecked:{
-top: 5,
-borderRadius: 30,
+top: 15,
+borderRadius: 50,
 width: 20,
 height: 20,
 backgroundColor: 'whitesmoke'
 
 },
 checked:{
-top: 5,
+top: 15,
 borderRadius: 50,
 width: 20,
 height: 20,

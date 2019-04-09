@@ -5,10 +5,9 @@ import {StyleSheet,TouchableHighlight,Text,View} from 'react-native';
 class Predictions extends PureComponent {
 
            onClick(){
-          // console.log(this.props.place_id);
-         //  console.log(this.props.description);
-          this.props.onClick(this.props.place_id,this.props.description);
 
+          this.props.onClick(this.props.place_id,this.props.description);
+           //console.log(this.props.place_id+" "+this.props.description);
            }
 
 

@@ -4,7 +4,7 @@ import firebase from 'react-native-firebase';
 import Main from './Home/Main/Main';
 import SearchBar from './Home/SearchBar';
 import Options from './Home/Option';
-
+import ReviewForm from './Home/ReviewForm';
 import Save from  '../utils/AutoSave';
 import files from '../utils/Files';
 import Initialize from '../utils/Initialize';
@@ -57,7 +57,7 @@ export default class App extends Component {
         }
 
      constructor(props){
-    console.log("IN APP");
+   // console.log("IN APP");
      super(props);
 
 
@@ -65,27 +65,18 @@ export default class App extends Component {
         initialized : false,
         isSearching : false,
         inOptions: false,
-
+        isReviewing: false,
         latitude: null,
         longitude: null,
-        radius: 1609,
+        radius: 1000,
         polyline: null,
         desc: "",
-
+        reviews: [],
         mapsType: 'standard',
         close: false
      }
 
-     firebase.auth()
-       .signInAnonymously()
-       .then(credential => {
-         if (credential) {
-          // console.log('default app user ->', credential.user.toJSON());
-         }
-       });
-      /*  fetch("https://us-central1-fir-demo-6977a.cloudfunctions.net/helloWorld")
-              .then((response)=>{console.log(response)})
-              .catch((err)=>{console.log(err)}) */
+
 
      }
 
@@ -102,6 +93,11 @@ export default class App extends Component {
        this.setState({desc:des});
 
        }
+     async  save(){
+       files.radius = this.state.radius;
+
+       await  Save.save();
+       }
 
         //function for updating radius, passed to Option and called by slider
        onRadiusChange(radius){
@@ -112,10 +108,18 @@ export default class App extends Component {
        }
 
          //toggle for review page, passed to ControlBar through Main and called by a button
-
+       onReview(){
+       this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
+       }
 
          //function for adding reviews to reviews array, passed to ReviewForm and called by enter button
+       addReview(userReview){
 
+         this.state.reviews.push(userReview);
+          console.log(this.state.reviews);
+         // this.onReview();
+         this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
+         }
        goTo(item){
         console.log(item)
        }
@@ -138,25 +142,28 @@ export default class App extends Component {
           //this.setState({close:true});
          }
       render(){
-      console.log(this.state.latitude);
+     // console.log(this.state.latitude);
        if(this.state.latitude==null){
         return (<View/>);
        }
       if(!this.state.initialized){
         return (<View/>);
       }
-    console.log("rending App")
+   // console.log("rending App")
                //returns Options page if true
            if(this.state.inOptions)
            {
            return( <Options onRadiusChange = {this.onRadiusChange.bind(this)}
-                            radius = {Number((this.state.radius/1609.34).toFixed(1))}
+                            radius = {this.state.radius}
                             onMapChange = {(map)=>{this.onMapChange(map)}}
                             inOptions = {this.inOptions.bind(this)} />)
 
           }
-
-
+             //returns ReviewForm if true
+          if(this.state.isReviewing)
+          {
+             return( <ReviewForm addReview = {(userReview) => {this.addReview(userReview)}}/> );
+          }
               //return SearchBar view if true
           if(this.state.isSearching)
           {
@@ -180,8 +187,9 @@ export default class App extends Component {
                           polyline ={this.state.polyline}
                           mapsType = {this.state.mapsType}
                           desc = {this.state.desc}
+                          save = {this.save.bind(this)}
                           close = {this.fakeClose.bind(this)}
-                          />);
+                          onReview = {this.onReview.bind(this)}/>);
 
 
 
@@ -192,7 +200,7 @@ export default class App extends Component {
          //window.addEventListener('beforeunload', this.componentCleanup);
            let l = await Initialize.start();
 
-               console.log("in app"+files.radius);
+             //  console.log("in app"+files.radius);
            let testLoad2 = 'standard';
            files.mapsType = testLoad2;
            files.index = 0;

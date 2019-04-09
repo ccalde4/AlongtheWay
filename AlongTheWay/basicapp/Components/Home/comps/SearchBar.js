@@ -1,217 +1,145 @@
 import React, { Component } from "react";
-import {
-  TextInput,
-  StyleSheet,
-  Text,
-  View,
-  Keyboard,
-  TouchableHighlight,
-  TouchableOpacity
-} from "react-native";
-import MapView, { Polyline, Marker } from "react-native-maps";
+import { TextInput, StyleSheet, Text, View, Keyboard, TouchableHighlight, TouchableOpacity,Button,Dimensions,ScrollView} from "react-native";
+import MapView, { Polyline, Marker,Callout } from "react-native-maps";
 import _ from "lodash";
 import PolyLine from "@mapbox/polyline";
+import request from '../../APIs/_lib/request';
+import Config from '../../APIs/Google/config/config';
+import SearchBarInput from './comps/SearchBarInput';
+import MoreStops from './comps/MoreStop';
+import Predictions from './comps/Predictions';
+var { winHeight, winWidth } = Dimensions.get('window');
+var key;
+var url;
+export default class SearchBar extends Component {
 
+       sendBack(){
+        this.props.sendBack(this.state.destination);
 
-export default class App extends Component {
+       }
+
         constructor(props){
         super(props);
+
         this.state ={
-         error: "",
-         latitude: 0,
-         longitude: 0,
-         destination: "",
+          inSearch: false,
+          stopCount: 0,
+          focus: 1,
+          destination: [""],
+
          predictions: [],
-         pointCoords: []
-
+         pointCoords: [],
          };
-         this.onChangeDestinationDebounced = _.debounce(
-               this.onChangeDestination,
-               1000
-             );
+
+
+
+              key = Config.getConfig().creds.key;
+              url = Config.getConfig().url2;
          }
+     addStop(destinationPlaceId,destinationName){
+     let x = this.state.destination;
+     x[this.state.stopCount] = destinationName;
+     this.setState({destination:x});
+     this.setState({predictions:[]});
 
-          componentDidMount() {
-             navigator.geolocation.getCurrentPosition(
-               position => {
-                 this.setState({
-                   latitude: position.coords.latitude,
-                   longitude: position.coords.longitude
-                 });
-               },
-               error => console.error(error),
-               { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 }
-             );
-           }
-
-    async getRouteDirections(destinationPlaceId, destinationName) {
-    const apiKey = 'AIzaSyCvfftvHMnURvTGkaiVyHQMdcYsGZsCVNs';
-        try {
-          const response = await fetch(
-            `https://maps.googleapis.com/maps/api/directions/json?origin=
-            ${this.state.latitude
-            },${
-              this.state.longitude
-            }&destination=place_id:${destinationPlaceId}&key=${apiKey}`
-          );
-          const json = await response.json();
-          console.log(json);
-          const points = PolyLine.decode(json.routes[0].overview_polyline.points);
-          const pointCoords = points.map(point => {
-            return { latitude: point[0], longitude: point[1] };
-          });
-          this.setState({
-            pointCoords,
-            predictions: [],
-            destination: destinationName
-          });
-          Keyboard.dismiss();
-          this.map.fitToCoordinates(pointCoords);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-
-    async onChangeDestination(destination) {
-    const apiKey = 'AIzaSyCvfftvHMnURvTGkaiVyHQMdcYsGZsCVNs';
-        const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=
-        ${apiKey}
-        &input=${destination}&location=${this.state.latitude},${
-          this.state.longitude
-        }&radius=2000`;
-        console.log(apiUrl);
-        try {
-          const result = await fetch(apiUrl);
-          const json = await result.json();
-          this.setState({
-            predictions: json.predictions
-          });
-          console.log(json);
-        } catch (err) {
-          console.error(err);
-        }
-      }
-
-      render() {
-         let marker = null;
-         let distanceButton = null;
-
-         if (this.state.pointCoords.length > 1) {
-           marker = (
-             <Marker
-               coordinate={this.state.pointCoords[this.state.pointCoords.length - 1]}
-             />
-           );
-
-           distanceButton = (
-           <View style = {styles.bottomButton}>
-               <Text style = {styles.bottomButtonText}> Distance Time </Text>
-           </View>)
-         }
-
-         const predictions = this.state.predictions.map(prediction => (
-           <TouchableHighlight
-             onPress={() =>
-               this.getRouteDirections(
-                 prediction.place_id,
-                 prediction.description
-               )
-
-             }
-             key={prediction.id}
-           >
-             <View>
-               <Text style={styles.suggestions}>
-                 {prediction.description}
-               </Text>
-             </View>
-           </TouchableHighlight>
-         ));
-
-         return (
-           <View style={styles.container}>
-             <MapView
-               ref={map => {
-                 this.map = map;
-               }}
-               style={styles.map}
-                         region={{
-                           latitude: this.state.latitude,
-                           longitude: this.state.longitude,
-                           latitudeDelta: 0.015,
-                           longitudeDelta: 0.0121
-                         }}
-                         showsUserLocation={true}
-
-             >
-               <Polyline
-                 coordinates={this.state.pointCoords}
-                 strokeWidth={4}
-                 strokeColor="red"
-               />
-               {marker}
-             </MapView>
-             <TextInput
-               placeholder="Enter destination..."
-               style={styles.destinationInput}
-               value={this.state.destination}
-               clearButtonMode="always"
-               onChangeText={destination => {
-                 console.log(destination);
-                 this.setState({ destination });
-                 this.onChangeDestinationDebounced(destination);
-               }}
-             />
-             {predictions}
-             {distanceButton}
-
-           </View>
-         );
-       }
      }
 
 
+    async getRouteDirections(destinationPlaceId, destinationName) {
+       var getRoute =  url +  "/directions/json?origin=" + this.props.lat+","
+                                    +this.props.long+"&destination=place_id:"+destinationPlaceId+"&key="+key;
+        try {
+          const json =  await request(getRoute);
+
+          const points = PolyLine.decode(json.routes[0].overview_polyline.points);
+
+          const pointCoords = points.map(point => {
+            return { latitude: point[0], longitude: point[1] };
+          });
+        // console.log(pointCoords.length);
+       // const newCoordsArray = [...this.state.CoordsArray, pointCoords]
+       // this.props.CoordsArray
+
+          this.setState({
+            pointCoords,
+
+            predictions: [],
+            destination: destinationName
+
+          });
+
+          Keyboard.dismiss();
+          this.props.polyline(pointCoords);
+
+        } catch (error) {
+          console.error(error);
+        }
+
+      }
+
+      onFocus(index){
+        this.setState({focus:index});
+      }
+
+        inSearch(){
+          this.setState( (previousState) => ({inSearch: !previousState.inSearch}) );
+
+        }
 
 
 
+         render(){
+
+
+            return(
+
+            <View style = {styles.container}>
+
+               <SearchBarInput index = {1}
+                               inSearch = {this.state.inSearch}
+                               onFocus = {this.onFocus.bind(this)}
+                               focus = {this.state.focus}
+                               onSubmitEditing = {()=>{}}
+                               lat = {this.props.lat}
+                               long = {this.props.long}
+                               Search =  {this.inSearch.bind(this)}
+                                                                           />
+               <SearchBarInput index = {2}
+                               inSearch = {this.state.inSearch}
+                               onFocus = {this.onFocus.bind(this)}
+                               focus = {this.state.focus}
+                               onSubmitEditing = {()=>{}}
+                               lat = {this.props.lat}
+                               long = {this.props.long}
+                               Search =  {this.inSearch.bind(this)}
+                                                                           />
+               <SearchBarInput index = {3}
+                               inSearch = {this.state.inSearch}
+                               onFocus = {this.onFocus.bind(this)}
+                               focus = {this.state.focus}
+                               onSubmitEditing = {()=>{}}
+                               lat = {this.props.lat}
+                               long = {this.props.long}
+                               Search =  {this.inSearch.bind(this)}
+                                                                           />
+            </View>
+            );
+
+
+         }
+
+     }
 
 const styles = StyleSheet.create({
 
-    bottomButton: {
-        backgroundColor: "white",
-        marginTop: 475,
-        margin: 20,
-        padding: 15,
-        fontSize: 22,
-        paddingLeft: 30,
-        paddingRight: 30,
-        alignSelf: "center"
-    },
+container: {
+flex: 1,
+width: winWidth,
+height: winHeight,
+backgroundColor: 'lightblue'
+}
 
-   suggestions: {
-      backgroundColor: "white",
-      padding: 5,
-      fontSize: 18,
-      borderWidth: 0.5,
-      marginLeft: 5,
-      marginRight: 5
-    },
-    destinationInput: {
-      height: 40,
-      borderWidth: 0.5,
-      marginTop: 50,
-      borderRadius: 10,
-      marginLeft: 5,
-      marginRight: 5,
-      padding: 5,
-      backgroundColor: "white"
-    },
-    container: {
-        ...StyleSheet.absoluteFillObject
-      },
-    map: {
-        ...StyleSheet.absoluteFillObject
-      }
 
 });
+
 
