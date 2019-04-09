@@ -278,15 +278,22 @@ export default class Main extends Component {
 //need to figure out a good way to do this elegantly
   async onFetchClicked(){
 
-           masterAPI.setParams(this.state.params);
-                      let data = await masterAPI.searchAndGetDetails();
-                      let m = new MarkerSort('rating',this.state.numMarkersShown)
+             masterAPI.setParams(this.state.params);
+                        let data = await masterAPI.searchAndGetDetails();
 
-                       m.sort(data);
-                       let x = m.getTop();
-                      this.setState({items: x });
-                      this.setState( (previousState) => ({center: !previousState.center}) );
-       }
+      if(data.length > 3){
+       let m = new MarkerSort('rating',this.state.numMarkersShown)
+        m.sort(data);
+        let x = m.getTop();
+        this.setState({items: x });
+      }
+      else{
+      this.setState({items: data });
+      }
+
+                        this.setState( (previousState) => ({center: !previousState.center}) );
+         }
+
 
 
   shouldComponentUpdate(newProps,newState){
