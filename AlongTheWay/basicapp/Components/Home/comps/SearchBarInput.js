@@ -20,11 +20,7 @@ var url;
            cancel: true,
 
           }
-
-          /*
-            Gives a certain amount of time to display the predictions so it does not
-            try to create the predictions too quickly for performance
-          */
+          //function that prevents too many calls to google
           this.onChangeDestinationDebounced = _.debounce(
                          this.onChangeDestination,
                          1000
@@ -34,11 +30,7 @@ var url;
           url = Config.getConfig().url2;
        }
 
-       /*
-        sends the input from the search bar and when retrieved from the url
-        it is sent to predictions to display on the search bar
-
-       */
+       //function that calls google for suggestions
        async onChangeDestination(destination) {
 
                var onChangeDestination = url +"/place/autocomplete/json?key="+key+"&input="+destination+"&location="
@@ -54,6 +46,8 @@ var url;
                  console.error(err);
                }
              }
+
+             //logic to handle when the cancel button is clicked
           onCancel(){
            if(this.props.start){
               this.setState({ destination: " "});
@@ -64,32 +58,35 @@ var url;
           this.setState({cancel:false});
           this.props.remove(this.props.index);
           }
-
+            //function to keep track of what is typed
          onChangeText(text){
          this.onChangeDestinationDebounced(text);
          this.setState({ destination:text });
          }
+
+            //function call by prediction Component that adds stop and exits searching screen
          addStop(destinationPlaceId,destinationName){
 
             this.setState({ destination:destinationName });
             this.setState({ destinationId:destinationPlaceId });
             this.setState({predictions: []});
-           // console.log(destinationName+" "+destinationPlaceId);
+
             this.props.add(this.props.index,destinationPlaceId,destinationName)
             this.setState( (previousState) => ({focused: !previousState.focused}) );
             this.props.Search();
             Keyboard.dismiss();
          }
+
            onSubmit(){
-                      this.setState({predictions: [],destination: " ",destinationPlaceId: " "})
-                     //  this.setState( (previousState) => ({focused: !previousState.focused}) );
-                     //  this.props.Search();
-                       Keyboard.dismiss();
+            this.setState({predictions: [],destination: " ",destinationPlaceId: " "})
+            Keyboard.dismiss();
 
 
            }
+
+           //function to handle searchbars that are not being used to prevent funky rendering
          onFocus(){
-        // console.log(this.props.index);
+
          this.setState( (previousState) => ({focused: !previousState.focused}) );
          this.props.onFocus(this.props.index);
          this.props.Search();
@@ -138,7 +135,7 @@ var url;
 
           );
          }else{
-         //   console.log(this.state.focused);
+
          return(
          <View style = {styles.container}>
           <TextInput  value = {this.state.destination}

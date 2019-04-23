@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import { ButtonGroup, Header, Button, Overlay, Divider, Rating, ListItem } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TouchableOpacity, Text, View,StyleSheet,Keyboard, Dimensions,ActivityIndicator,PermissionsAndroid,Alert} from 'react-native';
-import ControlBar from './Controls/Controls';
+import ControlBar from './Controls/Controls2';
 import MapGui from './Map/Map';
 import DecoySearch from './comps/DecoySearch';
-
+import _ from "lodash";
 import MasterAPI from '../../../APIs/MasterAPI';
 import MarkerSort from '../../../utils/MarkerSort';
 import Distance from  '../../../utils/Distance';
@@ -35,9 +35,9 @@ export default class Main extends Component {
              params:{
                                 latitude: '30.414175',
                                 longitude:'-91.186256',
-                                query:'donuts',
-                                limit: 30,
-                                radius: this.props.radius,
+                                query:'',
+                                limit: 20,
+                                radius: 1000,
                                 categories: [],
                                             },
              numMarkersShown: 20,
@@ -65,63 +65,42 @@ export default class Main extends Component {
             masterAPI = new MasterAPI();
         }
 
-        async setLatLong(){
+        // kinda of a hack func to get radius to update properly
+          up(rad){
+            let p = this.state.params;
+            p.latitude = this.props.lat;
+            p.longitude = this.props.long;
+            p.radius = rad;
+            this.setState({params:p});
+            console.log(p);
+            this.setState( (previousState) => ({center: !previousState.center}) );
 
-
-                for(let i = 0; i < this.state.dist.length; i++){
-
-                    let x = this.state.params;
-                    x.latitude = this.state.dist[i].latitude;
-                    x.longitude = this.state.dist[i].longitude;
-                    this.setState({params:x})
-
-                    masterAPI.setParams(this.state.params);
-
-                    let y = await masterAPI.search();
-
-                    if(y !== -1){
-                    let z = this.state.itemsWithoutDetails;
-                    z = z.push(y);
-                    this.setState({itemsWithoutDetails: z});
-                                          console.log("z"+z.length);
-                    }
-
-                    else{
-
-                 //   this.setState({throwAlert: true});
-
-                    }
-
-                    }
-
-        }
-
-
+           }
+        //function for keeping track of region map is rendering
        onRegionChange(region){
-         this.setState({region})
+           this.setState({region})
 
        }
-
-       //changes the query term
-       changeQuery(query){
-       let x = this.state.params;
-       x.query = query;
-       this.setState( {params:x} );
+        //changes the query term
+         changeQuery(query){
+              let x = this.state.params;
+            x.query = query;
+           this.setState( {params:x} );
 
        }
-       //adds user-chosen category to the categories parameter
+        //adds user-chosen category to the categories parameter
        addToCategories(category){
                let x = this.state.params;
                (x.categories).push(category);
 
                this.setState( {params:x});
-               this.setState( {params:x});
+
+                  this.setState( {params:x});
 
 
                }
-
-        //removes a category from parameters upon user request
-       removeFromCategories(category){
+          //removes a category from parameters upon user request
+        removeFromCategories(category){
                let x = this.state.params;
 
                for(let i = 0; i < x.categories.length; i++){
@@ -129,16 +108,17 @@ export default class Main extends Component {
                        x.categories.splice(i,1)
                    }
                }
-             this.setState( {params:x});
+
+               this.setState( {params:x});
 
                }
-       onOptionsClicked(){
-        this.setState( (previousState) => ({optionsClicked: !previousState.optionsClicked }) );
-        this.props.inOptions();
-                       }
+         onOptionsClicked(){
+                 this.setState( (previousState) => ({optionsClicked: !previousState.optionsClicked }) );
+                 this.props.inOptions();
+                   }
 
-
-        onRedClicked(){
+              // This is the recenter button
+         onRedClicked(){
           this.setState({
             region: {
                latitude: this.props.lat,
@@ -151,102 +131,98 @@ export default class Main extends Component {
 
         }
 
-
+         //toggle
          onFoodClicked(){
-            !this.state.foodClicked ? this.addToCategories("food,restaurants") : this.removeFromCategories("food,restaurants");
+
+          !this.state.foodClicked ? this.addToCategories("food,restaurants") : this.removeFromCategories("food,restaurants");
            this.setState( (previousState) => ({foodClicked: !previousState.foodClicked}) );
+
 
          }
 
-
+           //toggle
          onLandmarksClicked(){
+
          !this.state.landmarksClicked ? this.addToCategories("landmarks") : this.removeFromCategories("landmarks");
          this.setState( (previousState) => ({landmarksClicked: !previousState.landmarksClicked}) );
 
 
-
-
          }
-
+          //toggle
          onMoreClicked(){
-           this.setLatLong();
-           this.setState( (previousState) => ({moreClicked: !previousState.moreClicked}) );
 
+           this.setState( (previousState) => ({moreClicked: !previousState.moreClicked}) );
+             //   console.log(this.state.itemsWithoutDetails.length);
+              //  console.log(this.state.items.length);
 
          }
 
-
+          //toggle
          onLocalClicked(){
           !this.state.localClicked ? this.addToCategories("localflavor") : this.removeFromCategories("localflavor");
           this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
-
-
-
           }
 
-
+          //toggle
           onShopClicked(){
            !this.state.shopClicked ? this.addToCategories("shopping") : this.removeFromCategories("shopping");
           this.setState((previousState) => ( {shopClicked: !previousState.shopClicked} ));
-
-
-
            }
 
 
-
+          //toggle
           onOutdoorsClicked(){
            !this.state.outdoorsClicked ? this.addToCategories("active") : this.removeFromCategories("active");
           this.setState((previousState) => ( {outdoorsClicked: !previousState.outdoorsClicked} ));
 
            }
-
+          //toggle
           onNightlifeClicked(){
            !this.state.nightlifeClicked ? this.addToCategories("nightlife") : this.removeFromCategories("nightlife");
           this.setState((previousState) => ( {nightlifeClicked: !previousState.nightlifeClicked} ));
 
           }
+          //toggle
           onGasClicked(){
            !this.state.gasClicked ? this.addToCategories("servicestations") : this.removeFromCategories("servicestations");
           this.setState((previousState) => ( {gasClicked: !previousState.gasClicked} ));
 
           }
-
+          //toggle
           onRestClicked(){
            !this.state.restClicked ? this.addToCategories("hotelstravel") : this.removeFromCategories("hotelstravel");
           this.setState((previousState) => ( {restClicked: !previousState.restClicked} ));
 
           }
-
+          //toggle
           onArtsClicked(){
            !this.state.artsClicked ? this.addToCategories("arts") : this.removeFromCategories("arts");
           this.setState((previousState) => ( {artsClicked: !previousState.artsClicked} ));
 
-
           }
 
+         //this is actually the route button to draw markers along route
           onMedicalClicked(){
           this.setState((previousState) => ( {medicalClicked: !previousState.medicalClicked} ));
-               let d = new Distance();
+             // Distance reads the polyline array and gives desired lat and longs to search across route
+                   let d = new Distance();
+
                    let y =  d.getParsedDist(this.props.polyline);
                     this.setState({dist:y});
                     this.setState( (previousState) => ({center: !previousState.center}) );
           }
 
-
-          //function for handling events that occur when a marker is clicked
+        //function for handling events that occur when a marker is clicked
          onMarkerClicked(index){
            this.setState( (previousState) => ({markerClicked: !previousState.markerClicked} ) );
            this.setState({markerIndex: index});
                 }
-
-
-         //function for signalling when user clicks on review page
+       //function for signalling when user clicks on review page
          onReview(){
             this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
                 }
 
-        //function for adding reviews to reviews array, passed to ReviewForm and called by enter button
+       //function for adding reviews to reviews array, passed to ReviewForm and called by enter button
         addReview(userReview){
              this.state.reviews.push(userReview);
              console.log(this.state.reviews);
@@ -260,28 +236,41 @@ export default class Main extends Component {
 
 
 
-        //searches and sorts the chosen categories of places by calling masterAPI and MarkerSort
-        async onFetchClicked(){
+        //passed into main and used to generate suggestions
+       //searches and sorts the chosen categories of places by calling masterAPI and MarkerSort
+      async onFetchClicked(t){
 
-             masterAPI.setParams(this.state.params);
-                        let data = await masterAPI.searchAndGetDetails();
+            let p = this.state.params;
+                       p.latitude = t.coordinate.latitude;
+                       p.longitude = t.coordinate.longitude;
 
-            if(data.length > 3){
-                let m = new MarkerSort('rating',this.state.numMarkersShown)
-                m.sort(data);
-                let x = m.getTop();
-                this.setState({items: x });
-            }
-            else{
-                this.setState({items: data });
-            }
+           masterAPI.setParams(p);
+                      let data = await masterAPI.searchAndGetDetails();
+                      let m = new MarkerSort('rating',this.state.numMarkersShown)
+
+                    let x =  m.sort(data);
+
+                      this.setState({items: x });
+                      this.setState( (previousState) => ({center: !previousState.center}) );
+       }
+
+    //overloaded function to search just your current area with fetch clicked button
+       async  onFetchClicked2(){
+         // console.log("____________________________________________-");
+         masterAPI.setParams(this.state.params);
+           let data = await masterAPI.searchAndGetDetails();
+           let m = new MarkerSort('rating',this.state.numMarkersShown);
+
+            let x =  m.sort(data);
+            this.setState({items: x });
             this.setState( (previousState) => ({center: !previousState.center}) );
-         }
+       }
 
-
-
+   //used to update screen if data used in them is old
   shouldComponentUpdate(newProps,newState){
-
+     if(newProps.radius!==this.props.radius){
+       this.up(newProps.radius);
+     }
    return (
          newState.foodClicked!==this.state.foodClicked
        ||newState.shopClicked!==this.state.shopClicked
@@ -297,12 +286,13 @@ export default class Main extends Component {
         ||newState.markerClicked!==this.state.markerClicked
         ||newState.isReviewing !== this.state.isReviewing
         || newState.listClicked !== this.state.listClicked
+        || newState.params !== this.state.params
        )
 
 
 
   }
-
+        //This is where the map, controls, and list view of places are rendered
      render()
      {
      //console.log("I rendered!!!")
@@ -327,7 +317,7 @@ export default class Main extends Component {
                 region = {this.state.region}
                 render = {this.state.render}
                 onRegionChange = {this.onRegionChange.bind(this)}
-               // onCornClick = {this.onCornClicked.bind(this)}
+                fetch = {this.onFetchClicked.bind(this)}
                 onMarkerClick = {this.onMarkerClicked.bind(this)}
                 center = {this.state.center}
                />
@@ -343,7 +333,7 @@ export default class Main extends Component {
                    red = {this.state.redClicked}                 onRedClick = {this.onRedClicked.bind(this)}
                    food = {this.state.foodClicked}               onFoodClick = {this.onFoodClicked.bind(this)}
                    landmarks = {this.state.landmarksClicked}     onLandmarksClick = {this.onLandmarksClicked.bind(this)}
-                   fetch = {this.state.fetchClicked}             onFetchClick = {this.onFetchClicked.bind(this)}
+                   fetch = {this.state.fetchClicked}             onFetchClick = {this.onFetchClicked2.bind(this)}
                    more = {this.state.moreClicked}               onMoreClick = {this.onMoreClicked.bind(this)}
                    local = {this.state.localClicked}             onLocalClick = {this.onLocalClicked.bind(this)}
                    shop = {this.state.shopClicked}               onShopClick = {this.onShopClicked.bind(this)}
@@ -404,11 +394,7 @@ export default class Main extends Component {
 
       );
   }
-     save(){
-      this.props.save();
 
-
-     }
     //Getting current location
         componentDidMount() {
 
@@ -420,17 +406,7 @@ export default class Main extends Component {
      }});
 
 
-
     }
-
-
-
-     async componentWillUnmount(){
-           files.lat = this.state.lat;
-           files.long = this.state.long;
-
-
-            }
 
 
 }

@@ -6,8 +6,9 @@
        calculated = [];
 
     }
-
+      //function for getting an array of lat longs that are the required distance apart from an arrray of lat,longs
      getParsedDist(arr){
+       // y is the hardcoded desired distance between each lat long
       let y = 11/2 +11;
       console.log(y);
        let k = 0;
@@ -33,12 +34,11 @@
          }
 
 
-       // console.log(arr.length);
-      //  console.log(calculated.length);
+
         return calculated;
 
      }
-
+          //distance between formula for lat long
         getSpaced(lat1,long1,lat2,long2){
 
 
@@ -55,35 +55,12 @@
          return d;
 
 
-
-
-
         }
 
 
      deg2rad(deg) {
        return deg * (Math.PI/180)
      }
-
-
-
-
- /*for(let i = 0; i<arr.length-1;i++){
-           let x = this.getSpaced(arr[i].latitude,arr[i].longitude,arr[i+1].latitude,arr[i+1].longitude);
-           console.log(x);
-            if( x < 25){
-              continue;
-            }
-            else{
-
-            calculated[j] = arr[i];
-            j++;
-            }
-
-       }*/
-
-
-
 
 
   }

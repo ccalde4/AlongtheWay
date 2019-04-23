@@ -6,6 +6,8 @@ var { winHeight, winWidth} = Dimensions.get('window');
 
 /*MarkerList handles the presentation and events associated with the list view of the markers*/
 export default class MarkerList extends Component {
+
+
 constructor(props) {
     super(props);
     this.state = {
@@ -14,15 +16,22 @@ constructor(props) {
 
   }
 
-
 /*signals main that a venue was clicked*/
-    handlePress(index){
-        this.props.onListItemClicked(index);
+handlePress(index){
+
+     this.props.onListItemClicked(index);
+
 
      }
-    render() {
+
+
+  render() {
+
+
     return (
-        <Overlay isVisible = {true}
+
+
+    <Overlay isVisible = {true}
              onBackdropPress = {this.props.onBackDropPress}
            >
      <ScrollView contentContainerStyle = {{paddingBottom: 70}}>

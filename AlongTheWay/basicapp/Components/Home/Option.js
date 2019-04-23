@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, View, Slider, Text,TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ButtonGroup, Header, Button } from 'react-native-elements';
-import files from '../../utils/Files';
 
+//options page
 export default class Options extends Component {
 
 
@@ -19,12 +19,12 @@ constructor(props){
 
 
    }
-    //updates main index state
+
     updateIndex = (index) => {
          this.setState({index});
     }
 
-    //updates main radius state
+      //updates radius on slider
      updateRadius(radius){
      this.setState({radius:radius});
 
@@ -44,17 +44,7 @@ constructor(props){
 
 
 
-          <View style = {styles.group}>
 
-                 <ButtonGroup
-                  selectedBackgroundColor="pink"
-                  onPress={this.updateIndex}
-                  selectedIndex={this.state.index}
-                  buttons={['Standard', 'Satellite']}
-                  containerStyle={{height: 30}}
-                 />
-
-          </View>
 
 
 
@@ -84,27 +74,21 @@ constructor(props){
   }
 
 
-       //set settings from saved files
+
      async componentWillMount(){
        this.setState({radius:this.props.radius});
-       this.setState({index:files.index});
+
       }
 
 
 
 
-    //save settings when exiting options page
+      //sends updated radius to App to be rendered  and used accordingly
      async componentWillUnmount(){
 
       this.props.onRadiusChange(this.state.radius);
 
-      if(this.state.index==0){
-            this.props.onMapChange('standard');
-            }
-            else{
-            this.props.onMapChange('satellite');
-            }
-          files.index = this.state.index;
+
      }
 
 

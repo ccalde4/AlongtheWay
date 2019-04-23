@@ -1,6 +1,8 @@
 import { Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import React, {Component} from 'react';
 
+
+ //reuseable component for rendering a button with a name, indicator for if pressed and function to called when clicked
 const FilterButton = ({clicked,label,isPressed,color})=>(
 
 

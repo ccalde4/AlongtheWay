@@ -1,33 +1,40 @@
 import * as RNFS from 'react-native-fs';
-//import Files2 from './Files2';
-
 
 export default class File {
 constructor(){
-
-
 var RNFS = require('react-native-fs');
 }
 
-// require the module
 
-//creates a file in default Android path using file name, and a string as its content
+
+  //creates file in Android path using file name and string as content
   createFile(file, content){
     var path = RNFS.DocumentDirectoryPath + file;
-   return RNFS.writeFile(path, content, 'utf8')
-
+    RNFS.writeFile(path, content, 'utf8')
+     .then((success) => {
+      // console.log('FILE WRITTEN!');
+      })
+     .catch((err) => {
+       console.log(err.message);
+     });
 
   }
-
+    //delete file by passing name
   deleteFile (file){
 
     var path = RNFS.DocumentDirectoryPath + file;
 
-    return RNFS.unlink(path);
-
+    return RNFS.unlink(path)
+        .then(() => {
+          console.log('FILE DELETED');
+        })
+        // `unlink` will throw an error, if the item to unlink does not exist
+        .catch((err) => {
+          console.log(err.message);
+        });
   }
 
-
+   //checks if file exists
     fileExists(path){
        var filepath = RNFS.DocumentDirectoryPath + path;
        return RNFS.exists(filepath);
@@ -35,15 +42,19 @@ var RNFS = require('react-native-fs');
 
     fileRead(path){
         var filepath = RNFS.DocumentDirectoryPath + path;
-
+        console.log('Read File');
         return RNFS.readFile(filepath,'utf8');
     }
-
-    //Used to either overwrite or append to a currently existing file
+      //creates or appends to file
     fileWrite(path,content){
         var filepath = RNFS.DocumentDirectoryPath + path;
-        return  RNFS.writeFile(filepath,content)
-
+        RNFS.writeFile(filepath,content)
+            .then((success) => {
+            //   console.log('FILE WRITTEN!');
+            })
+            .catch((err) => {
+            console.log(err.message);
+            });
 
 
 

@@ -13,17 +13,13 @@ var key;
 var url;
 export default class SearchBar extends Component {
 
-       sendBack(){
-        this.props.sendBack(this.state.destination);
 
-       }
 
         constructor(props){
         super(props);
 
         this.state ={
           inSearch: false,
-          stopCount: 0,
           focus: 0,
           force: false,
           destination: [" "],
@@ -37,28 +33,20 @@ export default class SearchBar extends Component {
               url = Config.getConfig().url2;
          }
 
-    /*
-        Adding stops
-    */
-     addStop(destinationPlaceId,destinationName){
-          let x = this.state.destination;
-          x[this.state.stopCount] = destinationName;
-          this.setState({destination:x});
-          this.setState({predictions:[]});
-
-     }
 
 
 
+
+    //function to keep track of what searbarInput is focused on
       onFocus(index){
         this.setState({focus:index});
       }
-
+    //function to keep track if inSearch to help with proper rendering
       inSearch(){
           this.setState( (previousState) => ({inSearch: !previousState.inSearch}) );
         }
 
-
+         //function to update the destination from searhcbar if edited
        updateDestinations(index,destId,destName){
            let x = this.state.destinationId;
            x[index] = destId;
@@ -70,10 +58,7 @@ export default class SearchBar extends Component {
 
         }
 
-        /*
-            Takes out selected state and rermoves it from search
-
-        */
+        //removes this destination from destinations array
        removeDestination(index){
            let x = this.state.destinationId;
            x[index] = " ";
@@ -87,6 +72,8 @@ export default class SearchBar extends Component {
 
 
          }
+
+         // function to add a new searchbar when addstop is clicked
        addSearchBar(){
                    if(this.state.destination[this.state.destination.length-1]=== " "){
                       return;
@@ -101,12 +88,7 @@ export default class SearchBar extends Component {
                    this.setState( (previousState) => ({force: !previousState.force}) );
 
                   }
-
-
-    /*
-        gets Rouge then sets state and maps polyline to send back to be created
-
-    */
+            //When go is Clicked this is this generates query to goo to return polyline going through each waypoint
        async  getRoute(){
             var waypoints = "place_id:"+this.state.destinationId[0];
             for(let i = 1; i<this.state.destinationId.length-1; i++){
@@ -149,7 +131,7 @@ export default class SearchBar extends Component {
 
          render(){
 
-          // console.log("!"+this.state.destination[0]+"1");
+         //Handles logic of when to render Go or Add Stop button and also the searchbars
             return(
 
             <View style = {styles.container}>

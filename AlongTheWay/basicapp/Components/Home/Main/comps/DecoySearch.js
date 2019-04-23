@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 
 
-
+ //button used to bring user to actual searchbar
 export default class DecoySearch extends Component {
 
 

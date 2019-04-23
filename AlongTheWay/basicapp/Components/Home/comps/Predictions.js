@@ -1,16 +1,9 @@
 import React, {PureComponent}from 'react';
 import {StyleSheet,TouchableHighlight,Text,View} from 'react-native';
 
-
+// prediction button used to render suggested location and clickable to add to route
 class Predictions extends PureComponent {
 
-
-/*
-        Retrieves predictions and displays the predictions from the
-        Search and has a onclick feature to send back to getRoute
-
-
-*/
            onClick(){
 
           this.props.onClick(this.props.place_id,this.props.description);

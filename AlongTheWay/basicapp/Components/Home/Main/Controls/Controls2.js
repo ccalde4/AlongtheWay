@@ -10,14 +10,14 @@ export default class ControlBar extends Component {
           isMoreClicked: false
           }
      }
-
+   //Old function not used atm use to render more buttons to the screen when called
      onMoreClicked(){
        this.setState( (previousState) => ({ isMoreClicked: !previousState.isMoreClicked }) );
        this.props.onMoreClick()
 
      }
 
-
+    // Where buttons are rendered
   render() {
     return (
 
@@ -49,7 +49,7 @@ export default class ControlBar extends Component {
                                        clicked = {this.props.onFetchClick}
                                        isPressed = {this.props.fetch}      />
 
-                         <FilterButton label = ' More '
+                         <FilterButton label = '  '
                                        color = 'teal'
                                        clicked = {this.onMoreClicked.bind(this)}
                                        isPressed = {this.props.more}       />
@@ -88,7 +88,7 @@ export default class ControlBar extends Component {
 
                    <FilterButton label = 'Gas'
                                  color = 'peachpuff'
-                                 clicked = {this.props.onGasClick}
+                                 clicked = {()=>{}}
                                  isPressed = {this.props.gas}  />
 
                    <FilterButton label = 'Rest'
@@ -101,7 +101,7 @@ export default class ControlBar extends Component {
                                  clicked = {this.props.onArtsClick}
                                  isPressed = {this.props.arts}   />
 
-                   <FilterButton label = 'Emergency'
+                   <FilterButton label = 'Route'
                                  color = 'paleturquoise'
                                  clicked = {this.props.onMedicalClick}
                                  isPressed = {this.props.medical}    />

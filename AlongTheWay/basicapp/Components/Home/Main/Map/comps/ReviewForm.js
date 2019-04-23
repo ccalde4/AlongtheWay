@@ -5,7 +5,7 @@ var { winHeight, winWidth } = Dimensions.get('window');
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {  Header, Button, Overlay, Divider, Rating } from 'react-native-elements';
 
-/*handles the presentation and events associated with the ratings and review page*/
+
   export default class ReviewForm extends Component{
 
   constructor(props){
@@ -27,7 +27,7 @@ import {  Header, Button, Overlay, Divider, Rating } from 'react-native-elements
         starCount: rating
      });
     }
-    //sends written review and rating to Main when submit is clicked
+     //sends written review and rating to Main when submit is clicked
      onEnterClick(){
 
           let userReview =
@@ -194,50 +194,3 @@ import {  Header, Button, Overlay, Divider, Rating } from 'react-native-elements
                 borderColor: 'black',
                 },
           });
-/* <View style = {styles.Gui}   >
-           <Header
-                                     leftComponent={{ icon: 'menu', color: '#fff' }}
-                                     centerComponent={{ text: this.props.marker.name , style: { color: '#fff' } }}
-                                     rightComponent={<TouchableOpacity style = {styles.home} onPress = {this.props.onReview}/> }
-                                    />
-
-                             <View style = {styles.firstLine} >
-                              <Text style = {{fontSize: 20}} > Review your experience at: {"\n"} {this.props.marker.name} </Text>
-                             </View>
-
-                               <ScrollView  keyboardShouldPersistTaps = {"never"} style = {styles.commentBox}>
-                                    <KeyboardAvoidingView  behavior = "padding" enabled>
-                                      <View style = {styles.textIn}>
-
-                                        <TextInput  placeholder = {'Leave a comment...'}
-                                                    onChangeText={(text) => this.setState({text})}
-                                                    value = {this.state.text}
-                                                  />
-
-                                      </View>
-                                    </KeyboardAvoidingView>
-                               </ScrollView>
-
-                           <View style = {styles.stars}>
-
-                                <StarRating
-                                           disabled={false}
-                                           maxStars={5}
-                                           rating={this.state.starCount}
-                                           selectedStar={(rating) => this.onStarRatingPress(rating)}
-                                           fullStarColor = {'yellow'}
-                                         />
-                          <Text style = {styles.starText}> {this.state.starCount} stars </Text>
-
-                           </View>
-
-
-                              <View style = {styles.enter}>
-                             <TouchableOpacity onPress = {this.onEnterClick.bind(this)}>
-
-                                           <Text style = {styles.submitText}> Submit </Text>
-
-                             </TouchableOpacity>
-                             </View>
-
-                    </View>*/

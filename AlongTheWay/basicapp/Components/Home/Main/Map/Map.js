@@ -15,13 +15,8 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   export default class MapGui extends Component {
     constructor(props){
     super(props);
-    this.state = {
 
 
-    Color: ["red","lightblue","blue"]
-    }
-  //  console.log("file:///data/user/0/com.alongtheway/cache/7udede_15@2.625x.png");
-   // this.handlePress = this.handlePress.bind(this);
     }
 
 
@@ -58,7 +53,6 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
    fitMap(){
       if(this.props.polyline){
 
-
     return this.map.fitToCoordinates(this.props.polyline);
     }
     else{
@@ -67,8 +61,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
    }
 
    render(){
-   console.log("I rendered!!! at MapGui");
-   //console.log(this.props.polyline);
+
 
 
    return(
@@ -125,12 +118,12 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
        :null }
        { this.props.dist ? this.props.dist.map((item,index)=>{ return(
 
-                   <Marker                 tracksViewChanges = {false}
+                   <Marker                 title = {"Search Around Here!"}
+                                           tracksViewChanges = {false}
                                            key = {index}
                                            coordinate = {item}
-                                           title = {""+index}
                                            pinColor = {'green'}
-
+                                           onPress = {(e)=>{this.props.fetch(e.nativeEvent)}}
                                 >
                      <Icon name = "map-pin" size = {17} color = "orange"/>
                    </Marker>

@@ -120,12 +120,6 @@ return(this.props.marker.image_url !== '' && this.props.marker.image_url !== nul
      }
 
 
-
-
-
-
-
-
      </View>
 
      </ScrollView>
