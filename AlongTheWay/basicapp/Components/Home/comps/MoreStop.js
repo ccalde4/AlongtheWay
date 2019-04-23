@@ -1,6 +1,10 @@
 import React from 'react';
 import {StyleSheet,TouchableOpacity,Text} from 'react-native';
 
+
+/*
+        Button to create more stops once clicked
+*/
  const MoreStops = ({text,onPress}) =>(
 
                     <TouchableOpacity style = {styles.stopButton}

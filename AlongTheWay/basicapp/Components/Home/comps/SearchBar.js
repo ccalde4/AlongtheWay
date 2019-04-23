@@ -44,7 +44,11 @@ export default class SearchBar extends Component {
 
      }
 
+    /*
 
+        Gets Route and retrieves the json and decodes and creates a polyline of coord arrays to be sent
+        back and empties predictions
+    */
     async getRouteDirections(destinationPlaceId, destinationName) {
        var getRoute =  url +  "/directions/json?origin=" + this.props.lat+","
                                     +this.props.long+"&destination=place_id:"+destinationPlaceId+"&key="+key;
@@ -94,6 +98,7 @@ export default class SearchBar extends Component {
             return(
 
             <View style = {styles.container}>
+
 
                <SearchBarInput index = {1}
                                inSearch = {this.state.inSearch}

@@ -20,6 +20,11 @@ var url;
            cancel: true,
 
           }
+
+          /*
+            Gives a certain amount of time to display the predictions so it does not
+            try to create the predictions too quickly for performance
+          */
           this.onChangeDestinationDebounced = _.debounce(
                          this.onChangeDestination,
                          1000
@@ -28,6 +33,12 @@ var url;
           key = Config.getConfig().creds.key;
           url = Config.getConfig().url2;
        }
+
+       /*
+        sends the input from the search bar and when retrieved from the url
+        it is sent to predictions to display on the search bar
+
+       */
        async onChangeDestination(destination) {
 
                var onChangeDestination = url +"/place/autocomplete/json?key="+key+"&input="+destination+"&location="

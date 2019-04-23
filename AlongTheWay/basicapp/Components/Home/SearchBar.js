@@ -37,7 +37,9 @@ export default class SearchBar extends Component {
               url = Config.getConfig().url2;
          }
 
-
+    /*
+        Adding stops
+    */
      addStop(destinationPlaceId,destinationName){
           let x = this.state.destination;
           x[this.state.stopCount] = destinationName;
@@ -67,6 +69,11 @@ export default class SearchBar extends Component {
            this.setState({destination:y});
 
         }
+
+        /*
+            Takes out selected state and rermoves it from search
+
+        */
        removeDestination(index){
            let x = this.state.destinationId;
            x[index] = " ";
@@ -95,6 +102,11 @@ export default class SearchBar extends Component {
 
                   }
 
+
+    /*
+        gets Rouge then sets state and maps polyline to send back to be created
+
+    */
        async  getRoute(){
             var waypoints = "place_id:"+this.state.destinationId[0];
             for(let i = 1; i<this.state.destinationId.length-1; i++){
