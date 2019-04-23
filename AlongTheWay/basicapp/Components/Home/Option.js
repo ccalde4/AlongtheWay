@@ -19,12 +19,12 @@ constructor(props){
 
 
    }
-
+    //updates main index state
     updateIndex = (index) => {
          this.setState({index});
     }
 
-
+    //updates main radius state
      updateRadius(radius){
      this.setState({radius:radius});
 
@@ -84,7 +84,7 @@ constructor(props){
   }
 
 
-
+       //set settings from saved files
      async componentWillMount(){
        this.setState({radius:this.props.radius});
        this.setState({index:files.index});
@@ -93,7 +93,7 @@ constructor(props){
 
 
 
-
+    //save settings when exiting options page
      async componentWillUnmount(){
 
       this.props.onRadiusChange(this.state.radius);
