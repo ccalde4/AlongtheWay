@@ -102,25 +102,26 @@ export default class Main extends Component {
 
        }
 
+       //changes the query term
        changeQuery(query){
        let x = this.state.params;
        x.query = query;
        this.setState( {params:x} );
 
        }
-
+       //adds user-chosen category to the categories parameter
        addToCategories(category){
                let x = this.state.params;
                (x.categories).push(category);
 
                this.setState( {params:x});
-              //  console.log(x.categories);
-                  this.setState( {params:x});
+               this.setState( {params:x});
 
 
                }
 
-               removeFromCategories(category){
+        //removes a category from parameters upon user request
+       removeFromCategories(category){
                let x = this.state.params;
 
                for(let i = 0; i < x.categories.length; i++){
@@ -128,13 +129,12 @@ export default class Main extends Component {
                        x.categories.splice(i,1)
                    }
                }
-              // console.log(x.categories);
-               this.setState( {params:x});
+             this.setState( {params:x});
 
                }
-               onOptionsClicked(){
-                         this.setState( (previousState) => ({optionsClicked: !previousState.optionsClicked }) );
-                         this.props.inOptions();
+       onOptionsClicked(){
+        this.setState( (previousState) => ({optionsClicked: !previousState.optionsClicked }) );
+        this.props.inOptions();
                        }
 
 
@@ -153,27 +153,13 @@ export default class Main extends Component {
 
 
          onFoodClicked(){
-
-         console.log("this is food when clicked");
-          // this.setState({ localClicked: false});
-           //this.setState({ landmarksClicked: false});
-          // this.setState({ shopClicked: false});
-          !this.state.foodClicked ? this.addToCategories("food,restaurants") : this.removeFromCategories("food,restaurants");
+            !this.state.foodClicked ? this.addToCategories("food,restaurants") : this.removeFromCategories("food,restaurants");
            this.setState( (previousState) => ({foodClicked: !previousState.foodClicked}) );
-
-
-             //this.addToCategories("restaurants,food");
-
-
 
          }
 
 
          onLandmarksClicked(){
-        // this.setState({ localClicked: false});
-         //this.setState({ foodClicked: false});
-         //this.setState({ shopClicked: false});
-         //this.state.landmarksClicked == true ? this.addToCategories("landmarks") : this.removeFromCategories("landmarks");
          !this.state.landmarksClicked ? this.addToCategories("landmarks") : this.removeFromCategories("landmarks");
          this.setState( (previousState) => ({landmarksClicked: !previousState.landmarksClicked}) );
 
@@ -185,16 +171,12 @@ export default class Main extends Component {
          onMoreClicked(){
            this.setLatLong();
            this.setState( (previousState) => ({moreClicked: !previousState.moreClicked}) );
-                console.log(this.state.itemsWithoutDetails.length);
-                console.log(this.state.items.length);
+
 
          }
 
 
          onLocalClicked(){
-          //this.setState({ landmarksClicked: false});
-          //this.setState({ foodClicked: false});
-          //this.setState({ shopClicked: false});
           !this.state.localClicked ? this.addToCategories("localflavor") : this.removeFromCategories("localflavor");
           this.setState((previousState) => ( {localClicked: !previousState.localClicked} ));
 
@@ -204,9 +186,6 @@ export default class Main extends Component {
 
 
           onShopClicked(){
-          //this.setState({ landmarksClicked: false});
-          //this.setState({ foodClicked: false});
-          //this.setState({ localClicked: false});
            !this.state.shopClicked ? this.addToCategories("shopping") : this.removeFromCategories("shopping");
           this.setState((previousState) => ( {shopClicked: !previousState.shopClicked} ));
 
@@ -253,45 +232,50 @@ export default class Main extends Component {
                     this.setState({dist:y});
                     this.setState( (previousState) => ({center: !previousState.center}) );
           }
+
+
+          //function for handling events that occur when a marker is clicked
          onMarkerClicked(index){
            this.setState( (previousState) => ({markerClicked: !previousState.markerClicked} ) );
            this.setState({markerIndex: index});
                 }
+
+
+         //function for signalling when user clicks on review page
          onReview(){
             this.setState( previousState => ( {isReviewing: !previousState.isReviewing} ) );
                 }
 
-                 //function for adding reviews to reviews array, passed to ReviewForm and called by enter button
+        //function for adding reviews to reviews array, passed to ReviewForm and called by enter button
         addReview(userReview){
              this.state.reviews.push(userReview);
              console.log(this.state.reviews);
              this.onReview();
                          }
 
-
+        //function for signalling when the list view is clicked
          inListView(){
            this.setState( previousState => ( {listClicked: !previousState.listClicked} ) )
          }
 
 
 
-//need to figure out a good way to do this elegantly
-  async onFetchClicked(){
+        //searches and sorts the chosen categories of places by calling masterAPI and MarkerSort
+        async onFetchClicked(){
 
              masterAPI.setParams(this.state.params);
                         let data = await masterAPI.searchAndGetDetails();
 
-      if(data.length > 3){
-       let m = new MarkerSort('rating',this.state.numMarkersShown)
-        m.sort(data);
-        let x = m.getTop();
-        this.setState({items: x });
-      }
-      else{
-      this.setState({items: data });
-      }
-
-                        this.setState( (previousState) => ({center: !previousState.center}) );
+            if(data.length > 3){
+                let m = new MarkerSort('rating',this.state.numMarkersShown)
+                m.sort(data);
+                let x = m.getTop();
+                this.setState({items: x });
+            }
+            else{
+                this.setState({items: data });
+            }
+            this.setState( (previousState) => ({center: !previousState.center}) );
          }
 
 

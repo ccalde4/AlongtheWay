@@ -13,6 +13,8 @@ var venues;
 var distArray;
 var finalArray;
 var reviews;
+
+/*MasterAPI class allows both yelp and foursquare APIs to be called and returns uniform venue objects*/
 class MasterAPI {
 
     constructor(){
@@ -29,12 +31,13 @@ class MasterAPI {
         venues = new Venues();
 
     }
-
+    //sets the parameters for the api search
     setParams(params){
         searchParameters.setParams(params);
 
 
     }
+    //searches the API and returns 1 if API search comes up empty
     async search(){
     let yp = await searchParameters.getYelpParams();
         let yelpReturn = await yelp.search(yp);
@@ -45,6 +48,10 @@ class MasterAPI {
         return -1
         }
     }
+
+    /*searches API and immediately gets the details for each venue
+    returns a venue component with desired attributes if API search does not come up empty,
+    else, returns -1*/
     async searchAndGetDetails(){
 
     let yp = await searchParameters.getYelpParams();
@@ -71,31 +78,15 @@ class MasterAPI {
 
     }
 
-    /*removeDuplicates(allResultsArray, breakPoint)
-    {
-    for(let i = 0; i< breakPoint;i++){
-    console.log(allResultsArray[i]);
-        for(let j = breakPoint; j < foursquare_array.length; j++){
-            if((foursquare_array.response.venues)[j].address === (yelp_array.businesses)[i].address1){
-            console.log((yelp_array.businesses)[j].address1);
-            }e
-        }
-    }
-    }*/
+
 
     async getDetails(obj){
 
     for(let i = 0; i < obj.places.length; i++){
-   // console.log("in details");
         if(((obj.places)[i]).from === 'yelp'){
             let temp = await yelp.getDetails((obj.places)[i].id);
             temp['reviews'] = (await yelp.getReviews((obj.places)[i].id)).reviews;
-           // console.log(temp.reviews);
-            temp['from'] = 'yelp';
-
-
-            //console.log("u r in get details");
-            //console.log(temp);
+           temp['from'] = 'yelp';
             finalArray[i]  = await temp;
         }
         else if(obj.places[i].from === 'foursquare'){
@@ -119,7 +110,8 @@ class MasterAPI {
        }
 
 
-    //add try catch to catch when no places can be found
+    /*adds "from" to more easily distinguish between API returns and
+     adds "distance" property to distArray to use in the uniform component later*/
     addProp(obj,from){
         if(from === 'yelp'){
             for(let i = 0; i < obj.businesses.length; i++){
@@ -139,6 +131,7 @@ class MasterAPI {
          }
          return obj;
 }
+/*makes object more uniform by replacing API property with "places" to avoid more if-statements down the line*/
     cloneObject(obj){
         if(obj.businesses){
             obj['places'] = obj.businesses;
@@ -155,19 +148,16 @@ class MasterAPI {
          }
          return obj;
     }
-
+/*makes a uniform venue object that contains only the information desired and
+makes working with multiple API returns easier*/
     async makeUniform(obj){
-        //console.log(obj.length);
-        //console.log(obj);
-        var uniform = []
+         var uniform = []
         for(let i = 0; i < obj.length; i++){
             let place = this.cloneObject(obj[i]);
             place['distance'] = distArray[i]/1609.34;
             uniform[i] = await venues.makeUniformVenue(place);
              console.log(uniform[i].distance);
-           // console.log(i);
-            // console.log(uniform[i].reviews[0].user.name);
-        }
+       }
 
         if(uniform !== null){
         return uniform;

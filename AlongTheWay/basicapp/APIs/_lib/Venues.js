@@ -1,4 +1,4 @@
-
+/*makes uniform venue object with only the data desired*/
 export default class Venues{
 
     constructor(){
@@ -33,7 +33,7 @@ export default class Venues{
        }
 
     }
-
+//determines which API format to cater to by checking the "from" prop in the passed object
     makeUniformVenue(obj){
 
         if(obj.places.from === 'yelp'){

@@ -47,7 +47,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
    }
 
-
+//handles the event when a marker is pressed
    handlePress(index){
 
           this.props.onMarkerClick(index);

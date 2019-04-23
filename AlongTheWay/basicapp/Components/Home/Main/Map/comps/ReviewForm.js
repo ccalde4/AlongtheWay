@@ -5,7 +5,7 @@ var { winHeight, winWidth } = Dimensions.get('window');
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {  Header, Button, Overlay, Divider, Rating } from 'react-native-elements';
 
-
+/*handles the presentation and events associated with the ratings and review page*/
   export default class ReviewForm extends Component{
 
   constructor(props){
@@ -21,11 +21,13 @@ import {  Header, Button, Overlay, Divider, Rating } from 'react-native-elements
    componentWillUnmount(){
            Keyboard.dismiss()
    }
+   //changes the backend star rating to match the rating that the user inputs
     onStarRatingPress(rating) {
         this.setState({
         starCount: rating
      });
     }
+    //sends written review and rating to Main when submit is clicked
      onEnterClick(){
 
           let userReview =

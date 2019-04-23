@@ -3,6 +3,8 @@ import {View, Dimensions,StyleSheet,ScrollView, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ButtonGroup, Header, Button, Overlay, Divider, Rating, ListItem } from 'react-native-elements';
 var { winHeight, winWidth} = Dimensions.get('window');
+
+/*MarkerList handles the presentation and events associated with the list view of the markers*/
 export default class MarkerList extends Component {
 constructor(props) {
     super(props);
@@ -13,27 +15,14 @@ constructor(props) {
   }
 
 
-
-handlePress(index){
-     //console.log(index);
-     this.props.onListItemClicked(index);
-    // this.setState((previousState) => ({markerClicked: !previousState.markerClicked}))
-
+/*signals main that a venue was clicked*/
+    handlePress(index){
+        this.props.onListItemClicked(index);
 
      }
-
-
-
-
-
-  render() {
-
-
-
+    render() {
     return (
-
-
-    <Overlay isVisible = {true}
+        <Overlay isVisible = {true}
              onBackdropPress = {this.props.onBackDropPress}
            >
      <ScrollView contentContainerStyle = {{paddingBottom: 70}}>

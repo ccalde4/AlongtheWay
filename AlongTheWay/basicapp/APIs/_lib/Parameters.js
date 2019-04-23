@@ -1,11 +1,4 @@
-
-	//var latitude;
-	//var longitude;
-	//var searchTerm;
-	//var radius;
-	//var limit;
-	//var categories;
-
+/*Parameters class sets the parameters for yelp and foursquare in their required terms and format*/
 export default class Parameters{
 	constructor(){
 	this.params = {
@@ -17,6 +10,7 @@ export default class Parameters{
 	}
 
 }
+/*sets the parameters of the object passed*/
 	setParams(obj){
 		this.params.latitude = obj.latitude;
 		this.params.longitude = obj.longitude;
@@ -79,8 +73,8 @@ export default class Parameters{
         }
    return (yelpParams);
     }
-
-    getCategories(){
+//adds multiple categories to yelp search in the appropriate format
+getCategories(){
     let x = '';
 
             for(let i = 0; i < this.params.categories.length; i++){
